@@ -52,9 +52,9 @@ along with (Plugin Name). If not, see (http://link to your plugin license).
 
 //TODO: Test for curl enabled or wordpress requirement
 // resource: https://github.com/forestlim12/mindbody_api_php_explore
-add_shortcode('mbotest', 'mbotest');
+add_shortcode('accesstoken', 'accesstoken');
 
-function mbotest( $atts = [], $content = null) {
+function accesstoken( $atts = [], $content = null) {
 
 	$headers = array();
 	$headers['Content-Type'] = 'application/json';
@@ -73,37 +73,75 @@ function mbotest( $atts = [], $content = null) {
 	);
 
 	if ( is_wp_error( $response ) ) {
-	   $error_message = $response->get_error_message();
-	   return "Something went wrong: " . $error_message;
+		$error_message = $response->get_error_message();
+		return "Something went wrong: " . $error_message;
 	} else {
-	   echo 'Response: <pre>';
-	   print_r( json_decode($response['body']) );
-	   echo '</pre>';
-	   return;
+		$response_body = json_decode($response['body']);
+		
+		echo 'Response: <pre>';
+		print_r( $response_body );
+		echo '</pre>';
+		echo 'Access Token: <pre>';
+		print_r( $response_body->AccessToken );
+		echo '</pre>';
+		return;
 	}
-	
-	/*
-	$ch = curl_init();
 
-	curl_setopt($ch, CURLOPT_URL, 'https://api.mindbodyonline.com/public/v6/usertoken/issue');
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_POST, 1);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, "{\n    \"Username\": \"Siteowner\",\n    \"Password\": \"apitest1234\"\n}");
+}
+
+add_shortcode('usersignup', 'usersignup');
+
+function usersignup( $atts = [], $content = null) {
 
 	$headers = array();
-	$headers[] = 'Content-Type: application/json';
-	$headers[] = 'Api-Key: a3f5be6229744000b9bc25f603e80c45';
-	$headers[] = 'Siteid: -99';
-	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	$headers['Content-Type'] = 'application/json';
+	$headers['Api-Key'] = 'a3f5be6229744000b9bc25f603e80c45';
+	$headers['Siteid'] = '-99';
+	
+	$response = wp_remote_post( 'https://api.mindbodyonline.com/public/v6/client/requiredclientfields', array(
+		'method' => 'GET',
+		'timeout' => 45,
+		'httpversion' => '1.0',
+		'blocking' => true,
+		'headers' => $headers,
+		'body' => array( 'Username' => 'Siteowner', 'Password' => 'apitest1234' ),
+    	'cookies' => array()
+		)
+	);
 
-	$result = curl_exec($ch);
-	print_r($result);
-	if (curl_errno($ch)) {
-		echo 'Error:' . curl_error($ch);
+	if ( is_wp_error( $response ) ) {
+		$error_message = $response->get_error_message();
+		return "Something went wrong: " . $error_message;
+	} else {
+		$response_body = json_decode($response['body']);
+		
+		$requiredFields = $response_body->RequiredClientFields;
+		
+		$requiredFieldsInputs = '';
+
+        if(!empty($requiredFields)) {
+
+            // Force single element $requiredFields into array form
+            if (!is_array($requiredFields)){
+
+                $requiredFields = array($requiredFields);
+            }
+
+            foreach($requiredFields as $field) {
+
+                $requiredFieldsInputs .= "<label for='$field'>{$field}</label> <input type='text' name='data[Client][$field]' id='$field' required /><br />";
+
+            }
+        }
+        echo 'Current PHP version: ' . phpversion();
+        echo "<form>";
+        echo $requiredFieldsInputs;
+        echo "</form>";
+		echo 'Response: <pre>';
+		print_r( $response_body );
+		echo '</pre>';
+		return;
 	}
-	curl_close($ch);
-	//{"TokenType":"Bearer","AccessToken":"08d482c1e5c542bab1a4d39b8f4645f3f9488be57fb940e8b5ef26ee75d81fcb","User":{"Id":100000324,"FirstName":"Site","LastName":"Owner","Type":"Staff"}}
-	*/
 
 }
 ?>
