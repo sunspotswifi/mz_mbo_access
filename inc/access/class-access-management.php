@@ -1,8 +1,8 @@
 <?php
 namespace MZ_MBO_Access\Inc\Access;
 
-use MZ_Mindbody as MZMBO;
-use MZ_Mindbody\Inc\Core as Core;
+use MZ_Mindbody as MZ;
+use MZ_MBO_Access\Inc\Core as Core;
 use MZ_Mindbody\Inc\Client as Client;
 use MZ_Mindbody\Inc\Common as Common;
 use MZ_Mindbody\Inc\Common\Interfaces as Interfaces;
@@ -60,36 +60,47 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
         $this->atts = shortcode_atts(array(
             'some_attribute' => 'foobar'
         ), $atts);
+        
+        $this->atts = $atts;
+        
+        $this->shortcode_content = $content;
 		
-		$client_object = new Client\Retrieve_Client;
+		$logged = MZ\MZMBO()->client->check_client_logged();
+				
+		MZ\MZMBO()->helpers->mz_pr(MZ\MZMBO()::$basic_options);
 		
-		$logged = $client_object->check_client_logged();
 		
 		if ($logged) {
 		 	return "You are logged in to Mindbody. " . $content;
 		} else {
-			return "You are not logged in to Mindbody. but for now: " . $content . " not too much.";
-		}
 	
         // Begin generating output
         ob_start();
 
         $template_loader = new Core\Template_Loader();
 
-
+		
         $this->template_data = array(
             'atts' => $this->atts,
-            'content' => $this->shortcode_content
+            'content' => $this->shortcode_content,
+            'login_to_sign_up'  => "Login with your Mindbody account to access this content.",
+            'signup_nonce'  => "signup_nonce",
+            'siteID'  => "siteID",
+            'email'  => "email",
+            'password'  => "password",
+            'login'  => "login",
+            'registration_button'  => "registration_button",
+            'manage_on_mbo'  => "manage_on_mbo"
         );
 
         $template_loader->set_template_data($this->template_data);
-        $template_loader->get_template_part('schedule_container');
-
+        $template_loader->get_template_part('login_form');
 
         // Add Style with script adder
         self::addScript();
 
         return ob_get_clean();
+		}
     }
 
 	private function login_form() {
@@ -104,7 +115,7 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
         if (!self::$addedAlready) {
             self::$addedAlready = true;
 
-            wp_register_script('mz_mbo_access_script', MZMBO\PLUGIN_NAME_URL . 'dist/scripts/main.js', array('jquery'), 1.0, true);
+            wp_register_script('mz_mbo_access_script', MZ\PLUGIN_NAME_URL . 'dist/scripts/main.js', array('jquery'), 1.0, true);
             wp_enqueue_script('mz_mbo_access_script');
 
             $this->localizeScript();
@@ -117,7 +128,7 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
         
         $protocol = isset($_SERVER["HTTPS"]) ? 'https://' : 'http://';
 
-        $translated_strings = MZMBO\MZMBO()->i18n->get();
+        $translated_strings = MZ\MZMBO()->i18n->get();
 
         $params = array(
             'ajaxurl' => admin_url('admin-ajax.php', $protocol),

@@ -152,7 +152,7 @@ $min_php = '7.1';
 // Check the minimum required PHP version and run the plugin.
 if ( version_compare( PHP_VERSION, $min_php, '>=' ) ) {
 	
-	add_action('plugins_loaded', __NAMESPACE__ . '\mz_mbo_access_plugin_init');
+	add_action('init', __NAMESPACE__ . '\mz_mbo_access_plugin_init');
 
 }
 
@@ -162,6 +162,7 @@ function mz_mbo_access_plugin_init(){
 		// Get MZ_MBO_Access Instance.
 		MZ_MBO_Access();
 	} else {
+		\deactivate_plugins( plugin_basename( __FILE__ ) );
 		die("Missing Plugin Dependency MZ Mindbody Api.");
 	}
 }

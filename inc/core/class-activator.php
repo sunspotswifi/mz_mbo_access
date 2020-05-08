@@ -1,7 +1,7 @@
 <?php
-
 namespace MZ_MBO_Access\Inc\Core;
 
+use MZ_Mindbody;
 /**
  * Fired during plugin activation
  *
@@ -30,7 +30,10 @@ class Activator {
 			deactivate_plugins( plugin_basename( __FILE__ ) );
 			wp_die( 'This plugin requires a minmum PHP Version of ' . $min_php );
 		}
-		
+		if ( !function_exists( MZ\MZMBO ) ) {
+			deactivate_plugins( plugin_basename( __FILE__ ) );
+			die("Missing Plugin Dependency MZ Mindbody Api.");
+		}
 	}
 
 }
