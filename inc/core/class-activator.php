@@ -15,11 +15,11 @@ use MZ_Mindbody;
 class Activator {
 
 	/**
-	 * Short Description.
+	 * Check php version and that MZMBO is active.
 	 *
-	 * Long Description.
+	 * 
 	 *
-	 * @since    2.4.7
+	 * @since    1.0.0
 	 */
 	public static function activate() {
 
@@ -30,10 +30,23 @@ class Activator {
 			deactivate_plugins( plugin_basename( __FILE__ ) );
 			wp_die( 'This plugin requires a minmum PHP Version of ' . $min_php );
 		}
-		if ( !function_exists( MZ\MZMBO ) ) {
+		
+		if ( !self::is_mzmbo_active() ) {
 			deactivate_plugins( plugin_basename( __FILE__ ) );
 			die("Missing Plugin Dependency MZ Mindbody Api.");
 		}
-	}
 
+	}
+	
+	/**
+	 * Checks if MZMBO is active.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool true if MZMBO is active, false otherwise
+	 */
+	public static function is_mzmbo_active() {
+		$active_plugins = (array) get_option( 'active_plugins', array() );
+		return in_array( 'mz-mindbody-api/mz-mindbody.php', $active_plugins ) || array_key_exists( 'mz-mindbody-api/mz-mindbody.php', $active_plugins );
+	}
 }
