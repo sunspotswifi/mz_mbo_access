@@ -1,6 +1,7 @@
 <?php
 namespace MZ_MBO_Access\Inc\Access;
 
+use MZ_MBO_Access as NS;
 use MZ_Mindbody as MZ;
 use MZ_MBO_Access\Inc\Core as Core;
 use MZ_Mindbody\Inc\Client as Client;
@@ -22,15 +23,15 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
     static $addedAlready = false;
     
     /**
-     * Shortcode content.
+     * Restricted content.
      *
      * @since    1.0.0
      * @access   public
      *
      * @used in handleShortcode, localizeScript, display_schedule
-     * @var      string $shortcode_content Content between two shortcode tags.
+     * @var      string $restricted_content Content between two shortcode tags.
      */
-    public $shortcode_content;
+    public $restricted_content;
     
     /**
      * Shortcode attributes.
@@ -58,51 +59,55 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
     {
 
         $this->atts = shortcode_atts(array(
-            'some_attribute' => 'foobar'
+            'siteid' => ''
         ), $atts);
         
         $this->atts = $atts;
         
-        $this->shortcode_content = $content;
-		
-		$logged = MZ\MZMBO()->client->check_client_logged();
-				
-		MZ\MZMBO()->helpers->mz_pr(MZ\MZMBO()::$basic_options);
-		
-		
-		if ($logged) {
-		 	return "You are logged in to Mindbody. " . $content;
-		} else {
-	
+        $this->siteID = (isset($atts['siteid'])) ? $atts['siteid'] : MZ\MZMBO()::$basic_options['mz_mindbody_siteID'];
+        
+        $this->restricted_content = $content;
+        
         // Begin generating output
         ob_start();
-
+        
         $template_loader = new Core\Template_Loader();
-
 		
         $this->template_data = array(
             'atts' => $this->atts,
             'content' => $this->shortcode_content,
             'login_to_sign_up'  => "Login with your Mindbody account to access this content.",
-            'signup_nonce'  => "signup_nonce",
-            'siteID'  => "siteID",
+            'signup_nonce'  => wp_create_nonce('mz_mbo_signup_nonce'),
+            'siteID'  => MZ\MZMBO()::$basic_options['mz_mindbody_siteID'],
             'email'  => "email",
             'password'  => "password",
-            'login'  => "login",
-            'registration_button'  => "registration_button",
-            'manage_on_mbo'  => "manage_on_mbo"
-        );
+            'login'  => "Login",
+            'logout'  => "Logout",
+            'logged'  => false,
+            'manage_on_mbo'  => "Visit Mindbody Site"
+        );		
+				
+		$logged = MZ\MZMBO()->client->check_client_logged();
+			
+		if ($logged) {
+		
+			$this->template_data['logged'] == true;
+		 	
+		} 
 
         $template_loader->set_template_data($this->template_data);
-        $template_loader->get_template_part('login_form');
+        $template_loader->get_template_part('access_container');
 
         // Add Style with script adder
         self::addScript();
 
         return ob_get_clean();
-		}
+        
     }
 
+	/*
+	 * What is this?
+	 */
 	private function login_form() {
 		
         $template_loader = new Core\Template_Loader();
@@ -112,10 +117,14 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
 
     public function addScript()
     {
+    
         if (!self::$addedAlready) {
             self::$addedAlready = true;
+            
+            wp_register_style('mz_mindbody_style', MZ\PLUGIN_NAME_URL . 'dist/styles/main.css');
+            wp_enqueue_style('mz_mindbody_style');
 
-            wp_register_script('mz_mbo_access_script', MZ\PLUGIN_NAME_URL . 'dist/scripts/main.js', array('jquery'), 1.0, true);
+            wp_register_script('mz_mbo_access_script', NS\PLUGIN_NAME_URL . 'dist/scripts/main.js', array('jquery'), 1.0, true);
             wp_enqueue_script('mz_mbo_access_script');
 
             $this->localizeScript();
@@ -132,8 +141,9 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
 
         $params = array(
             'ajaxurl' => admin_url('admin-ajax.php', $protocol),
-            'nonce' => wp_create_nonce('mz_mbo_access_nonce'),
-            'atts' => $this->atts
+            'login_nonce' => wp_create_nonce('mz_mbo_access_nonce'),
+            'atts' => $this->atts,
+            'restricted_content' => $this->restricted_content
         );
         wp_localize_script('mz_mbo_access_script', 'mz_mindbody_access', $params);
     }

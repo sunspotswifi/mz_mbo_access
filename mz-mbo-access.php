@@ -25,6 +25,9 @@ if ( !defined( 'WPINC' ) ) {
     die;
 }
 
+// TODO make more eloquent appoach like EDD JILT work!
+//	 * Based on http://wptavern.com/how-to-prevent-wordpress-plugins-from-activating-on-sites-with-incompatible-hosting-environments
+
 /**
  * Define Constants
  */
@@ -43,7 +46,7 @@ define( NS . 'PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 
 define( NS . 'PLUGIN_TEXT_DOMAIN', 'mz-mbo-access' );
 
-add_action( 'admin_init', 'mbo_access_has_mindbody_api' );
+add_action( 'admin_init', __NAMESPACE__ . '\mbo_access_has_mindbody_api' );
 
 function mbo_access_has_mindbody_api() {
 	if ( is_admin() && current_user_can( 'activate_plugins' ) && !is_plugin_active( 'mz-mindbody-api/mz-mindbody.php' ) ) {
@@ -157,7 +160,7 @@ if ( version_compare( PHP_VERSION, $min_php, '>=' ) ) {
 }
 
 function mz_mbo_access_plugin_init(){
-	if (defined(MZ_Mindbody . '\PLUGIN_NAME_DIR')) {
+	if (defined('MZ_Mindbody\PLUGIN_NAME_DIR')) {
 		//plugin is activated, add the hooks
 		// Get MZ_MBO_Access Instance.
 		MZ_MBO_Access();
