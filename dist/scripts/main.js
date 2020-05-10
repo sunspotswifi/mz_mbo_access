@@ -6,7 +6,7 @@
             // Shortcode atts for current page.
             atts = mz_mindbody_access.atts,
             restricted_content = mz_mindbody_access.restricted_content,
-            siteID = atts.siteid;
+            siteID = mz_mindbody_access.siteID;
             
          var mz_mindbody_access_state = {
 
@@ -139,7 +139,7 @@
                 data: {action: 'mz_client_log_out', nonce: nonce},
                 beforeSend: function() {
                     mz_mindbody_access_state.action = 'processing';
-                    render_mbo_modal_activity();
+                    render_mbo_access_activity();
                 },
                 success: function(json) {
                     if (json.type == "success") {

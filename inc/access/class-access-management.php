@@ -75,7 +75,7 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
 		
         $this->template_data = array(
             'atts' => $this->atts,
-            'content' => $this->shortcode_content,
+            'content' => $this->restricted_content,
             'login_to_sign_up'  => "Login with your Mindbody account to access this content.",
             'signup_nonce'  => wp_create_nonce('mz_mbo_signup_nonce'),
             'siteID'  => MZ\MZMBO()::$basic_options['mz_mindbody_siteID'],
@@ -88,13 +88,13 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
         );		
 				
 		$logged = MZ\MZMBO()->client->check_client_logged();
-			
+				
 		if ($logged) {
 		
-			$this->template_data['logged'] == true;
+			$this->template_data['logged'] = true;
 		 	
 		} 
-
+		
         $template_loader->set_template_data($this->template_data);
         $template_loader->get_template_part('access_container');
 
@@ -143,7 +143,8 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
             'ajaxurl' => admin_url('admin-ajax.php', $protocol),
             'login_nonce' => wp_create_nonce('mz_mbo_access_nonce'),
             'atts' => $this->atts,
-            'restricted_content' => $this->restricted_content
+            'restricted_content' => $this->restricted_content,
+            'siteID' => $this->siteID
         );
         wp_localize_script('mz_mbo_access_script', 'mz_mindbody_access', $params);
     }
