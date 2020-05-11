@@ -59,12 +59,20 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
     {
 
         $this->atts = shortcode_atts(array(
-            'siteid' => ''
+            'siteid' => '',
+            'memberships' => '',
+            'contracts' => '',
+            'purchases' => ''
         ), $atts);
         
         $this->atts = $atts;
         
         $this->siteID = (isset($atts['siteid'])) ? $atts['siteid'] : MZ\MZMBO()::$basic_options['mz_mindbody_siteID'];
+        
+        // Break memberships, contracts, purchases up into array, if it hasn't already been.
+        $this->atts['memberships'] = (!is_array($this->atts['memberships'])) ? explode(',', str_replace(' ', '', $this->atts['memberships'])) : $this->atts['memberships'];
+        $this->atts['contracts'] = (!is_array($this->atts['contracts'])) ? explode(',', str_replace(' ', '', $this->atts['contracts'])) : $this->atts['contracts'];
+        $this->atts['purchases'] = (!is_array($this->atts['purchases'])) ? explode(',', str_replace(' ', '', $this->atts['purchases'])) : $this->atts['purchases'];
         
         $this->restricted_content = $content;
         
@@ -85,7 +93,9 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
             'logout'  => "Logout",
             'logged'  => false,
             'manage_on_mbo'  => "Visit Mindbody Site"
-        );		
+        );	
+        
+        MZ\MZMBO()->helpers->mz_pr(MZ\MZMBO()->session->get('MBO_Client'));
 				
 		$logged = MZ\MZMBO()->client->check_client_logged();
 				
