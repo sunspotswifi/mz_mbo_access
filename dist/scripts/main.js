@@ -59,11 +59,16 @@
 				$('#signupModalFooter').remove();
 			} else if (mz_mindbody_access_state.action == 'error') {
 				mz_mindbody_access_state.content += mz_mindbody_access_state.message;
-			} else {
-				// login, sign_up_form
+			} else if (mz_mindbody_access_state.action == 'denied'){
+				mz_mindbody_access_state.content += mz_mindbody_access_state.message;
+				mz_mindbody_access_state.content += mz_mindbody_access_state.footer;
+			} else if (mz_mindbody_access_state.action == 'granted'){
 				mz_mindbody_access_state.content += mz_mindbody_access_state.message;
 				mz_mindbody_access_state.content += restricted_content;
 				mz_mindbody_access_state.content += mz_mindbody_access_state.footer;
+			} else {
+				// check access
+				check_client_access();
 			}
 			if ($('#mzAccessContainer')) {
 				$('#mzAccessContainer').html(mz_mindbody_access_state.content);
@@ -90,7 +95,7 @@
 				type: form.attr('method'),
 				context: this, // So we have access to form data within ajax results
 				data: {
-						action: 'mz_client_log_in',
+						action: 'ajax_login_check_access_permissions',
 						form: form.serialize(),
 						nonce: result.nonce
 					},
@@ -104,14 +109,17 @@
 					$.each($('form').serializeArray(), function() {
 						result[this.name] = this.value;
 					});
+					console.log(json);
 					if (json.type == "success") {
 						mz_mindbody_access_state.logged_in = true;
 						mz_mindbody_access_state.action = 'login';
-						mz_mindbody_access_state.message = '<div id="mboAccessNotice" class="alert alert-success">'+json.message+'</div>';
+						mz_mindbody_access_state.message = json.logged;
+						mz_mindbody_access_state.message += '</br>';
+						mz_mindbody_access_state.message = json.access;
 						render_mbo_access_activity();
 					} else {
 						mz_mindbody_access_state.action = 'login_failed';
-						mz_mindbody_access_state.message = '<div id="mboAccessNotice" class="alert alert-danger">'+json.message+'</div>';
+						mz_mindbody_access_state.message = json.logged;
 						render_mbo_access_activity();
 					}
 				} // ./ Ajax Success
@@ -123,6 +131,45 @@
 				}); // End Fail
 
 		});
+		
+		/**
+         * Check access permissions
+         *
+         *
+         */
+		function check_client_access() {
+			$.ajax({
+				dataType: 'json',
+				url: mz_mindbody_access.ajaxurl,
+				context: this, // So we have access to form data within ajax results
+				data: {
+						action: 'ajax_login_check_access_permissions',
+						nonce: mz_mindbody_access.login_nonce
+					},
+				beforeSend: function() {
+					mz_mindbody_access_state.action = 'processing';
+					render_mbo_access_activity();
+				},
+				success: function(json) {
+					if (json.type == "success") {
+						mz_mindbody_access_state.logged_in = true;
+						mz_mindbody_access_state.action = 'granted';
+						mz_mindbody_access_state.message = json.message;
+						render_mbo_access_activity();
+					} else {
+						mz_mindbody_access_state.action = 'denied';
+						mz_mindbody_access_state.message = mz_mindbody_access.denied_message;
+						render_mbo_access_activity();
+					}
+				} // ./ Ajax Success
+			}) // End Ajax
+				.fail(function (json) {
+					mz_mindbody_access_state.message = 'ERROR LOGGING IN';
+					render_mbo_access_activity();
+					console.log(json);
+				}); // End Fail
+		}
+		
 		
 		/**
          * Logout of MBO

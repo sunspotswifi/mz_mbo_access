@@ -5,13 +5,10 @@ use MZ_MBO_Access\Inc\Core as Core;
 <div id="mzAccessContainer">
 
 <?php 
-            
 if ( false == $data->logged || false == $data->access ):
 
-	if ( false == $data->access ) {
-		// User logged, but not has access
-		sprintf(__('<p>Access to this content requires one of: </p>',  'mz-mbo-access'),
-            implode(', ', $data->atts['memberships']));
+	if ( true == $data->logged && false == $data->access ) {
+		echo $data->denied_message;
 	}
 	
 	include 'login_form.php'; 
@@ -36,4 +33,7 @@ else:
 			
 <?php endif; ?>
 
+</div>
+<div style="display:none">
+<?php include 'login_form.php'; // for use in logout routine ?>
 </div>

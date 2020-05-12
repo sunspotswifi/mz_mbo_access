@@ -25,19 +25,44 @@ class Access_Portal extends Access_Utilities
      *
      * @return bool
      */
-    public function ajax_check_access_permissions( $membership_types = [] ){
+    public function ajax_login_check_access_permissions( $membership_types = [] ){
 
-        check_ajax_referer($_REQUEST['nonce'], "mz_access_nonce", false);
+        check_ajax_referer($_REQUEST['nonce'], "mz_mbo_access_nonce", false);
 
         // Crate the MBO Object
         $this->get_mbo_results();
 
+        // Init message
+        $result['logged'] = '';
+        
+        $result['access'] = '';
+
         $result['type'] = 'success';
+
+        // Parse the serialized form into an array.
+        $params = array();
+        parse_str($_REQUEST['form'], $params);
+        
+        if (empty($params) || !is_array($params)) {
+        
+        	$result['type'] = 'error';
+        	
+        } else {
+        
+        	$credentials = ['Username' => $params['email'], 'Password' => $params['password']];
+        
+        	$login = $this->log_client_in($credentials);
+        	
+        	if ( $login['type'] == 'error' ) $result['type'] = 'error';
+        	        	
+			$result['logged'] = $login['message'];
+
+        }
 				
 		if ( $this->check_access_permissions() ) {
-			$result['message'] = 'granted';
+			$result['access'] = 'granted';
 		} else {
-			$result['message'] = 'denied';
+			$result['access'] = 'denied';
 		}
 
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
@@ -49,7 +74,54 @@ class Access_Portal extends Access_Utilities
 
         die();
     }
-        
-}
+	
 
+    /**
+     * Client Log In
+     */
+    public function ajax_client_log_in(){
+
+        check_ajax_referer($_REQUEST['nonce'], "mz_signup_nonce", false);
+
+        // Create the MBO Object
+        $this->get_mbo_results();
+
+        // Init message
+        $result['message'] = '';
+
+        $result['type'] = 'success';
+
+        // Parse the serialized form into an array.
+        $params = array();
+        parse_str($_REQUEST['form'], $params);
+        
+        if (empty($params) || !is_array($params)) {
+        
+        	$result['type'] = 'error';
+        	
+        } else {
+        
+        	$credentials = ['Username' => $params['email'], 'Password' => $params['password']];
+        
+        	$login = $this->log_client_in($credentials);
+        	
+        	if ( $login['type'] == 'error' ) $result['type'] = 'error';
+        	        	
+			$result['message'] = $login['message'];
+
+        }
+		
+		
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            $result = json_encode($result);
+            echo $result;
+        } else {
+            header("Location: " . $_SERVER["HTTP_REFERER"]);
+        }
+
+        die();
+
+    }
+
+}
 ?>

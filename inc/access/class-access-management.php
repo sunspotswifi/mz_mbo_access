@@ -80,6 +80,9 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
         
         $this->restricted_content = $content;
         
+        $this->denied_message = sprintf(__('<p>Access to this content requires one of: %s</p>',  'mz-mbo-access'),
+            							implode(', ', $this->atts['memberships']));
+        
         // Begin generating output
         ob_start();
         
@@ -97,12 +100,12 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
             'logout'  => "Logout",
             'logged'  => false,
             'access' => false,
+            'denied_message' => $this->denied_message,
             'manage_on_mbo'  => "Visit Mindbody Site"
         );	
         
 		$access_utilities = new Access_Utilities;
 		$has_access = $access_utilities->check_access_permissions($this->atts['memberships']);
-		
 				
 		if ($has_access) {
 		
@@ -166,7 +169,8 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
             'login_nonce' => wp_create_nonce('mz_mbo_access_nonce'),
             'atts' => $this->atts,
             'restricted_content' => $this->restricted_content,
-            'siteID' => $this->siteID
+            'siteID' => $this->siteID,
+            'denied_message' => $this->denied_message
         );
         wp_localize_script('mz_mbo_access_script', 'mz_mindbody_access', $params);
     }
