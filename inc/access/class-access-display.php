@@ -67,6 +67,17 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
     public $logged_in;
 
     /**
+     * Status of client access
+     *
+     * @since    1.0.0
+     * @access   public
+     *
+     * @used in handleShortcode, localizeScript
+     * @var      @array    $data    array to send template.
+     */
+    public $has_access;
+
+    /**
      * Membership Types
      *
      * @since    1.0.0
@@ -134,8 +145,8 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
 		$has_access = $access_utilities->check_access_permissions($this->atts['memberships']);
 				
 		if ($has_access) {
-		
 			$this->template_data['access'] = true;
+			$this->has_access = true;
 		 }
 		
 		$logged = MZ\MZMBO()->client->check_client_logged();
@@ -200,6 +211,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'siteID' => $this->siteID,
             'logged_in' => $this->logged_in,
             'membership_types' => $this->atts['memberships'],
+            'has_access' => $this->has_access,
             'denied_message' => $this->denied_message
         );
         wp_localize_script('mz_mbo_access_script', 'mz_mindbody_access', $params);

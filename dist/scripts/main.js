@@ -15,6 +15,7 @@
             target: undefined,
             siteID: undefined,
             nonce: undefined,
+            has_access: mz_mindbody_access.has_access,
             content: undefined,
             alert_class: undefined,
             spinner: '<i class="fa fa-spinner fa-3x fa-spin" style="position: fixed; top: 50%; left: 50%;"></i>',
@@ -239,7 +240,7 @@
 		{
 			if (true == mz_mindbody_access_state.logged_in){
 			
-				if (mz_mindbody_access_state.action == 'granted') return;
+				if ( mz_mindbody_access_state.has_access == true ) return;
 				
 				$.ajax({
 					dataType: 'json',
@@ -256,6 +257,7 @@
 								mz_mindbody_access_state.logged_in = true;
 								mz_mindbody_access_state.action = 'granted';
 								mz_mindbody_access_state.message = 'Access Granted.';
+								mz_mindbody_access_state.has_access == true;
 								render_mbo_access_activity();
 							}
 						} 
