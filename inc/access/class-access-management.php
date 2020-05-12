@@ -70,9 +70,13 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
         $this->siteID = (isset($atts['siteid'])) ? $atts['siteid'] : MZ\MZMBO()::$basic_options['mz_mindbody_siteID'];
         
         // Break memberships, contracts, purchases up into array, if it hasn't already been.
-        $this->atts['memberships'] = (!is_array($this->atts['memberships'])) ? explode(',', str_replace(' ', '', $this->atts['memberships'])) : $this->atts['memberships'];
-        $this->atts['contracts'] = (!is_array($this->atts['contracts'])) ? explode(',', str_replace(' ', '', $this->atts['contracts'])) : $this->atts['contracts'];
-        $this->atts['purchases'] = (!is_array($this->atts['purchases'])) ? explode(',', str_replace(' ', '', $this->atts['purchases'])) : $this->atts['purchases'];
+        $this->atts['memberships'] = (!is_array($this->atts['memberships'])) ? explode(',', ($this->atts['memberships'])) : $this->atts['memberships'];
+        $this->atts['contracts'] = (!is_array($this->atts['contracts'])) ? explode(',', $this->atts['contracts']) : $this->atts['contracts'];
+        $this->atts['purchases'] = (!is_array($this->atts['purchases'])) ? explode(',', $this->atts['purchases']) : $this->atts['purchases'];
+        
+        $this->atts['memberships'] = array_map(trim, $this->atts['memberships']);
+        $this->atts['contracts'] = array_map(trim, $this->atts['contracts']);
+        $this->atts['purchases'] = array_map(trim, $this->atts['purchases']);
         
         $this->restricted_content = $content;
         
@@ -92,11 +96,19 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
             'login'  => "Login",
             'logout'  => "Logout",
             'logged'  => false,
+            'access' => false,
             'manage_on_mbo'  => "Visit Mindbody Site"
         );	
         
-        MZ\MZMBO()->helpers->mz_pr(MZ\MZMBO()->session->get('MBO_Client'));
+		$access_utilities = new Access_Utilities;
+		$has_access = $access_utilities->check_access_permissions($this->atts['memberships']);
+		
 				
+		if ($has_access) {
+		
+			$this->template_data['access'] = true;
+		 }
+		
 		$logged = MZ\MZMBO()->client->check_client_logged();
 				
 		if ($logged) {

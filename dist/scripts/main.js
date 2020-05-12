@@ -121,7 +121,7 @@
 					render_mbo_access_activity();
 					console.log(json);
 				}); // End Fail
-		console.log(mz_mindbody_access_state);
+
 		});
 		
 		/**

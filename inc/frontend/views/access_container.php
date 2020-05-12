@@ -5,9 +5,15 @@ use MZ_MBO_Access\Inc\Core as Core;
 <div id="mzAccessContainer">
 
 <?php 
+            
+if ( false == $data->logged || false == $data->access ):
 
-if ( false == $data->logged ):
-
+	if ( false == $data->access ) {
+		// User logged, but not has access
+		sprintf(__('<p>Access to this content requires one of: </p>',  'mz-mbo-access'),
+            implode(', ', $data->atts['memberships']));
+	}
+	
 	include 'login_form.php'; 
 	
 else:
@@ -15,8 +21,6 @@ else:
 	echo $data->content; 
 
 ?>
-	
-	
 
 			<div class="row" style="margin:.5em;">
 

@@ -174,11 +174,11 @@ class MZ_MBO_Access
      */
     private function define_public_hooks()
     {
-        $access_object = new Access\Access_Management;
+        $access_portal = new Access\Access_Portal;
 
-        // Start Ajax Axxess Management
-        //$this->loader->add_action('wp_ajax_nopriv_mz_mbo_clear_transients', $access_object, 'ajax_clear_plugin_transients');
-        //$this->loader->add_action('wp_ajax_mz_mbo_clear_transients', $access_object, 'ajax_clear_plugin_transients');
+        // Start Ajax Access Management
+        $this->loader->add_action('wp_ajax_nopriv_ajax_check_access_permissions', $access_portal, 'ajax_check_access_permissions');
+        $this->loader->add_action('wp_ajax_ajax_check_access_permissions', $access_portal, 'ajax_check_access_permissions');
 
     }
 
