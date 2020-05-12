@@ -11,8 +11,6 @@ use MZ_Mindbody\Inc\Common\Interfaces as Interfaces;
 class Access_Utilities extends Client\Retrieve_Client
 {
 
-    
-    
     /**
      * Check Access Permissions
      *
@@ -26,7 +24,7 @@ class Access_Utilities extends Client\Retrieve_Client
      * @return bool
      */
     public function check_access_permissions( $membership_types = [] ){
-		
+				
 		$membership_types = is_array($membership_types) ? $membership_types : [$membership_types];
 		
 		$memberships = $this->get_active_client_memberships();

@@ -10,7 +10,7 @@
             
          var mz_mindbody_access_state = {
 
-            logged_in: (mz_mindbody_access.loggedMBO == 1) ? true : false,
+            logged_in: (mz_mindbody_access.logged_in == 1) ? true : false,
             action: undefined,
             target: undefined,
             siteID: undefined,
@@ -68,7 +68,7 @@
 				mz_mindbody_access_state.content += mz_mindbody_access_state.footer;
 			} else {
 				// check access
-				check_client_access();
+				mz_mbo_access_check_client_access();
 			}
 			if ($('#mzAccessContainer')) {
 				$('#mzAccessContainer').html(mz_mindbody_access_state.content);
@@ -137,14 +137,15 @@
          *
          *
          */
-		function check_client_access() {
+		function mz_mbo_access_check_client_access() {
 			$.ajax({
 				dataType: 'json',
 				url: mz_mindbody_access.ajaxurl,
 				context: this, // So we have access to form data within ajax results
 				data: {
 						action: 'ajax_login_check_access_permissions',
-						nonce: mz_mindbody_access.login_nonce
+						nonce: mz_mindbody_access.login_nonce,
+						membership_types: mz_mindbody_access.membership_types
 					},
 				beforeSend: function() {
 					mz_mindbody_access_state.action = 'processing';
@@ -164,7 +165,7 @@
 				} // ./ Ajax Success
 			}) // End Ajax
 				.fail(function (json) {
-					mz_mindbody_access_state.message = 'ERROR LOGGING IN';
+					mz_mindbody_access_state.message = 'ERROR CHECKING ACCESS';
 					render_mbo_access_activity();
 					console.log(json);
 				}); // End Fail
@@ -227,6 +228,45 @@
 				} // ./ Ajax Success
 			}); // End Ajax
 		}
-	
+		
+    
+		/**
+		 * Continually Check and update Client Access
+		 */
+		setInterval(mz_mbo_update_client_access, 10000);
+
+		function mz_mbo_update_client_access( )
+		{
+			if (true == mz_mindbody_access_state.logged_in){
+			
+				if (mz_mindbody_access_state.action == 'granted') return;
+				
+				$.ajax({
+					dataType: 'json',
+					url: mz_mindbody_access.ajaxurl,
+					context: this, // So we have access to form data within ajax results
+					data: {
+							action: 'ajax_check_access_permissions',
+							nonce: mz_mindbody_access.login_nonce,
+							membership_types: mz_mindbody_access.membership_types
+						},
+					success: function(json) {
+						if (json.type == "success") {
+							if (json.access == "granted") {
+								mz_mindbody_access_state.logged_in = true;
+								mz_mindbody_access_state.action = 'granted';
+								mz_mindbody_access_state.message = 'Access Granted.';
+								render_mbo_access_activity();
+							}
+						} 
+					} // ./ Ajax Success
+				}) // End Ajax
+					.fail(function (json) {
+						mz_mindbody_access_state.message = 'ERROR LOGGING IN';
+						console.log(json);
+					}); // End Fail
+			}
+			
+		}
 	});
 })(jQuery);

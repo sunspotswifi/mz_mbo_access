@@ -5,7 +5,7 @@ use MZ_Mindbody as MZ;
 <div id="mzAccessContainer">
 
 <?php 
-if ( false == $data->logged ):
+if ( false == $data->logged_in ):
 	
 	include 'login_form.php'; 
 	
@@ -14,7 +14,7 @@ else:
 	<p class="mbo-user">Hi, <?php echo $data->client_name; ?>.</p>
 	<?php
 	
-	if ( true == $data->logged && false == $data->access ) {
+	if ( false == $data->access ) {
 		echo $data->denied_message;
 	} else {
 		echo $data->content; 

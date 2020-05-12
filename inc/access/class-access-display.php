@@ -8,7 +8,7 @@ use MZ_Mindbody\Inc\Client as Client;
 use MZ_Mindbody\Inc\Common as Common;
 use MZ_Mindbody\Inc\Common\Interfaces as Interfaces;
 
-class Access_Management extends Interfaces\ShortCode_Script_Loader
+class Access_Display extends Interfaces\ShortCode_Script_Loader
 {
 
     /**
@@ -28,7 +28,7 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
      * @since    1.0.0
      * @access   public
      *
-     * @used in handleShortcode, localizeScript, display_schedule
+     * @used in handleShortcode, localizeScript
      * @var      string $restricted_content Content between two shortcode tags.
      */
     public $restricted_content;
@@ -39,7 +39,7 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
      * @since    1.0.0
      * @access   public
      *
-     * @used in handleShortcode, localizeScript, display_schedule
+     * @used in handleShortcode, localizeScript
      * @var      array $atts Shortcode attributes function called with.
      */
     public $atts;
@@ -50,10 +50,32 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
      * @since    1.0.0
      * @access   public
      *
-     * @used in handleShortcode, display_schedule
+     * @used in handleShortcode, 
      * @var      @array    $data    array to send template.
      */
     public $template_data;
+
+    /**
+     * Status of client login
+     *
+     * @since    1.0.0
+     * @access   public
+     *
+     * @used in handleShortcode, localizeScript
+     * @var      @array    $data    array to send template.
+     */
+    public $logged_in;
+
+    /**
+     * Membership Types
+     *
+     * @since    1.0.0
+     * @access   public
+     *
+     * @used in localizeScript
+     * @var      @array    $data    array to send template.
+     */
+    public $membership_types;
 
     public function handleShortcode($atts, $content = null)
     {
@@ -81,7 +103,9 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
         
         $this->restricted_content = $content;
         
-        $this->denied_message = isset($this->atts['denied_message']) ? $this->atts['denied_message'] : sprintf(__('<p>Access to this content requires one of: %s</p>',  'mz-mbo-access'),
+        $this->membership_types = $this->atts['memberships'];
+        
+        $this->denied_message = (isset($this->atts['denied_message'])) ? $this->atts['denied_message'] : sprintf(__('<p>Access to this content requires one of: %s</p>',  'mz-mbo-access'),
             							implode(', ', $this->atts['memberships']));
 
         // Begin generating output
@@ -99,7 +123,7 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
             'password'  => "password",
             'login'  => "Login",
             'logout'  => "Logout",
-            'logged'  => false,
+            'logged_in'  => false,
             'access' => false,
             'client_name' => '',
             'denied_message' => $this->denied_message,
@@ -118,7 +142,8 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
 				
 		if ($logged) {
 		
-			$this->template_data['logged'] = true;
+			$this->template_data['logged_in'] = true;
+			$this->logged_in = true;
 			$this->template_data['client_name'] = MZ\MZMBO()->session->get('MBO_CLIENT')['FirstName'];
 		 	
 		} 
@@ -173,6 +198,8 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
             'atts' => $this->atts,
             'restricted_content' => $this->restricted_content,
             'siteID' => $this->siteID,
+            'logged_in' => $this->logged_in,
+            'membership_types' => $this->atts['memberships'],
             'denied_message' => $this->denied_message
         );
         wp_localize_script('mz_mbo_access_script', 'mz_mindbody_access', $params);

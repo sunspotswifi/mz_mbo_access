@@ -179,6 +179,9 @@ class MZ_MBO_Access
         // Start Ajax Access Management
         $this->loader->add_action('wp_ajax_nopriv_ajax_login_check_access_permissions', $access_portal, 'ajax_login_check_access_permissions');
         $this->loader->add_action('wp_ajax_ajax_login_check_access_permissions', $access_portal, 'ajax_login_check_access_permissions');
+        
+        $this->loader->add_action('wp_ajax_nopriv_ajax_check_access_permissions', $access_portal, 'ajax_check_access_permissions');
+        $this->loader->add_action('wp_ajax_ajax_check_access_permissions', $access_portal, 'ajax_check_access_permissions');
 
     }
 
@@ -254,8 +257,8 @@ class MZ_MBO_Access
      */
     private function register_shortcodes()
     {
-        $access_management = new Access\Access_Management();
-        $access_management->register('mbo-client-access');
+        $Access_Display = new Access\Access_Display();
+        $Access_Display->register('mbo-client-access');
     }
 
 }
