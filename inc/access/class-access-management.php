@@ -62,7 +62,8 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
             'siteid' => '',
             'memberships' => '',
             'contracts' => '',
-            'purchases' => ''
+            'purchases' => '',
+            'denied_message' => ''
         ), $atts);
         
         $this->atts = $atts;
@@ -80,9 +81,9 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
         
         $this->restricted_content = $content;
         
-        $this->denied_message = sprintf(__('<p>Access to this content requires one of: %s</p>',  'mz-mbo-access'),
+        $this->denied_message = isset($this->atts['denied_message']) ? $this->atts['denied_message'] : sprintf(__('<p>Access to this content requires one of: %s</p>',  'mz-mbo-access'),
             							implode(', ', $this->atts['memberships']));
-        
+
         // Begin generating output
         ob_start();
         
@@ -100,6 +101,7 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
             'logout'  => "Logout",
             'logged'  => false,
             'access' => false,
+            'client_name' => '',
             'denied_message' => $this->denied_message,
             'manage_on_mbo'  => "Visit Mindbody Site"
         );	
@@ -117,6 +119,7 @@ class Access_Management extends Interfaces\ShortCode_Script_Loader
 		if ($logged) {
 		
 			$this->template_data['logged'] = true;
+			$this->template_data['client_name'] = MZ\MZMBO()->session->get('MBO_CLIENT')['FirstName'];
 		 	
 		} 
 		

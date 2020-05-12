@@ -29,7 +29,9 @@ class Access_Utilities extends Client\Retrieve_Client
 		
 		$membership_types = is_array($membership_types) ? $membership_types : [$membership_types];
 		
-		if ( false == $memberships = $this->get_active_client_memberships() ) return false;
+		$memberships = $this->get_active_client_memberships();
+		
+		if ( false == (bool) $memberships['ClientMemberships'] ) return false;
 				
 		foreach( $memberships['ClientMemberships'] as $membership ) {
 			if ( in_array($membership['Name'], $membership_types) ) return true;

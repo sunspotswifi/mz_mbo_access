@@ -1,22 +1,24 @@
 <?php
 use MZ_MBO_Access\Inc\Core as Core;
-
+use MZ_Mindbody as MZ;
 ?>
 <div id="mzAccessContainer">
 
 <?php 
-if ( false == $data->logged || false == $data->access ):
-
-	if ( true == $data->logged && false == $data->access ) {
-		echo $data->denied_message;
-	}
+if ( false == $data->logged ):
 	
 	include 'login_form.php'; 
 	
 else:
-
-	echo $data->content; 
-
+	?>
+	<p class="mbo-user">Hi, <?php echo $data->client_name; ?>.</p>
+	<?php
+	
+	if ( true == $data->logged && false == $data->access ) {
+		echo $data->denied_message;
+	} else {
+		echo $data->content; 
+	}
 ?>
 
 			<div class="row" style="margin:.5em;">

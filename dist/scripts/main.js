@@ -158,7 +158,7 @@
 						render_mbo_access_activity();
 					} else {
 						mz_mindbody_access_state.action = 'denied';
-						mz_mindbody_access_state.message = mz_mindbody_access.denied_message;
+						mz_mindbody_access_state.message = mz_mindbody_access.denied_message + ' ' + json.message;
 						render_mbo_access_activity();
 					}
 				} // ./ Ajax Success
