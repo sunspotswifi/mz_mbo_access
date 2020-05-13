@@ -1,12 +1,6 @@
 <?php
-namespace MZ_MBO_Access;
-
-use MZ_MBO_Access as NS;
-use MZ_Mindbody;
-use MZ_Mindbody\Inc\Client as Client;
-use MZ_Mindbody\Inc\Core as Core;
 /*
- * Plugin Name: MZ MBO ACCESS
+ * Plugin Name: Mindbody Access Management
  * Description: Mike iLL Child Plugin for MZ Mindbody API, which can limit user access to content based on MBO client account details.
  * @package MZMBOACCESS
  *
@@ -20,6 +14,12 @@ use MZ_Mindbody\Inc\Core as Core;
  * Text Domain: 	mz-mbo-access
  * Domain Path: 	/languages
 */
+namespace MZ_MBO_Access;
+
+use MZ_MBO_Access as NS;
+use MZ_Mindbody;
+use MZ_Mindbody\Inc\Client as Client;
+use MZ_Mindbody\Inc\Core as Core;
 
 if ( !defined( 'WPINC' ) ) {
     die;
