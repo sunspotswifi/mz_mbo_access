@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: Mindbody Access Management
- * Description: Mike iLL Child Plugin for MZ Mindbody API, which can limit user access to content based on MBO client account details.
+ * Description: Child plugin for mZoo Mindbody Interface, which can limit user access to content based on MBO client account details.
  * @package MZMBOACCESS
  *
  * @wordpress-plugin
