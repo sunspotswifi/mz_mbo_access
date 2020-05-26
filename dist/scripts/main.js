@@ -18,7 +18,7 @@
             has_access: mz_mindbody_access.has_access,
             content: undefined,
             alert_class: undefined,
-            spinner: '<i class="fa fa-spinner fa-3x fa-spin" style="position: fixed; top: 50%; left: 50%;"></i>',
+            spinner: '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>',
             content_wrapper: '<div id="mzAccessContainer"></div>',
             notice_box: '<div id="mboAccessNotice"></div>',
             notice: undefined,
