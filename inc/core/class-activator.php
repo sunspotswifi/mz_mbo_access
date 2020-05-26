@@ -1,7 +1,10 @@
 <?php
 namespace MZ_MBO_Access\Inc\Core;
 
-use MZ_Mindbody;
+use MZ_MBO_Access as NS;
+use MZ_Mindbody as MZ;
+use MZ_MBO_Access\Inc\Admin as Admin;
+
 /**
  * Fired during plugin activation
  *
@@ -23,21 +26,15 @@ class Activator {
 	 */
 	public static function activate() {
 
-			$min_php = '7.1.0';
-
-		// Check PHP Version and deactivate & die if it doesn't meet minimum requirements.
-		if ( version_compare( PHP_VERSION, $min_php, '<' ) ) {
-			deactivate_plugins( plugin_basename( __FILE__ ) );
-			wp_die( 'This plugin requires a minmum PHP Version of ' . $min_php );
-		}
 		
 		if ( !self::is_mzmbo_active() ) {
-			deactivate_plugins( plugin_basename( __FILE__ ) );
-			die("Missing Plugin Dependency MZ Mindbody Api.");
+			$admin_object = new Admin\Admin(NS\PLUGIN_NAME, NS\PLUGIN_VERSION, NS\PLUGIN_TEXT_DOMAIN);
+			add_action('admin_notices', array($admin_object, 'admin_notice'));
+			deactivate_plugins( NS\PLUGIN_BASENAME );
 		}
 
 	}
-	
+		
 	/**
 	 * Checks if MZMBO is active.
 	 *

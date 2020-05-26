@@ -159,14 +159,19 @@ if ( version_compare( PHP_VERSION, $min_php, '>=' ) ) {
 
 }
 
+function deactivate() {
+	deactivate_plugins( plugin_basename( __FILE__ ) );
+	$admin_object = new NS\Inc\Admin\Admin(NS\PLUGIN_NAME, NS\PLUGIN_VERSION, NS\PLUGIN_TEXT_DOMAIN);
+	add_action('admin_notices', array($admin_object, 'admin_notice'));
+}
+
 function mz_mbo_access_plugin_init(){
 	if (defined('MZ_Mindbody\PLUGIN_NAME_DIR')) {
 		//plugin is activated, add the hooks
 		// Get MZ_MBO_Access Instance.
 		MZ_MBO_Access();
 	} else {
-		\deactivate_plugins( plugin_basename( __FILE__ ) );
-		die("Missing Plugin Dependency MZ Mindbody Api.");
+		add_action( 'admin_init', __NAMESPACE__ . '\\deactivate' );
 	}
 }
 
