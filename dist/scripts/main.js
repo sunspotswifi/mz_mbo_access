@@ -20,7 +20,7 @@
             alert_class: undefined,
             spinner: '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>',
             content_wrapper: '<div id="mzAccessContainer"></div>',
-            notice_box: '<div id="mboAccessNotice"></div>',
+            notice_box: $('#mboAccessNotice').html(),
             notice: undefined,
             footer: '<div class="modal__footer" id="loginFooter">\n' +
             '    <a href="https://clients.mindbodyonline.com/ws.asp?&amp;studioid='+siteID+'>" class="btn btn-primary" id="MBOSite">Visit Mindbody Site</a>\n' +
@@ -53,18 +53,18 @@
 				mz_mindbody_access_state.content += mz_mindbody_access_state.spinner;
 			} else if (mz_mindbody_access_state.action == 'login_failed') {
 				mz_mindbody_access_state.content += mz_mindbody_access_state.login_form;
-				mz_mindbody_access_state.content += mz_mindbody_access_state.message;
+				mz_mindbody_access_state.content += '<div class="alert alert-warning">' + mz_mindbody_access_state.message + '</div>';
 			} else if (mz_mindbody_access_state.action == 'logout') {
-				mz_mindbody_access_state.content += mz_mindbody_access_state.message;
+				mz_mindbody_access_state.content += '<div class="alert alert-info">' + mz_mindbody_access_state.message + '</div>';
 				mz_mindbody_access_state.content += mz_mindbody_access_state.login_form;
 				$('#signupModalFooter').remove();
 			} else if (mz_mindbody_access_state.action == 'error') {
-				mz_mindbody_access_state.content += mz_mindbody_access_state.message;
+				mz_mindbody_access_state.content += '<div class="alert alert-danger">' + mz_mindbody_access_state.message + '</div>';
 			} else if (mz_mindbody_access_state.action == 'denied'){
-				mz_mindbody_access_state.content += mz_mindbody_access_state.message;
+				mz_mindbody_access_state.content += '<div class="alert alert-warning">' + mz_mindbody_access_state.message + '</div>';
 				mz_mindbody_access_state.content += mz_mindbody_access_state.footer;
 			} else if (mz_mindbody_access_state.action == 'granted'){
-				mz_mindbody_access_state.content += mz_mindbody_access_state.message;
+				mz_mindbody_access_state.content += '<div class="alert alert-success">' + mz_mindbody_access_state.message;
 				mz_mindbody_access_state.content += restricted_content;
 				mz_mindbody_access_state.content += mz_mindbody_access_state.footer;
 			} else {
