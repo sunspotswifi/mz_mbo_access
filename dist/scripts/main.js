@@ -65,7 +65,7 @@
 				mz_mindbody_access_state.content += mz_mindbody_access_state.message;
 				mz_mindbody_access_state.content += mz_mindbody_access_state.footer;
 			} else if (mz_mindbody_access_state.action == 'granted'){
-				mz_mindbody_access_state.content += '<div class="alert alert-success">' + mz_mindbody_access_state.message;
+				mz_mindbody_access_state.content += '<div class="alert alert-success">' + mz_mindbody_access_state.message + '</div>';
 				mz_mindbody_access_state.content += restricted_content;
 				mz_mindbody_access_state.content += mz_mindbody_access_state.footer;
 			} else {
