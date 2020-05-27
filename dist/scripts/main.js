@@ -52,7 +52,7 @@
 			if (mz_mindbody_access_state.action == 'processing'){
 				mz_mindbody_access_state.content += mz_mindbody_access_state.spinner;
 			} else if (mz_mindbody_access_state.action == 'login_failed') {
-=				mz_mindbody_access_state.content += mz_mindbody_access_state.login_form;
+				mz_mindbody_access_state.content += mz_mindbody_access_state.login_form;
 				mz_mindbody_access_state.content += '<div class="alert alert-warning">' + mz_mindbody_access_state.message + '</div>';
 			} else if (mz_mindbody_access_state.action == 'logout') {
 				mz_mindbody_access_state.content += '<div class="alert alert-info">' + mz_mindbody_access_state.message + '</div>';
@@ -61,7 +61,7 @@
 			} else if (mz_mindbody_access_state.action == 'error') {
 				mz_mindbody_access_state.content += '<div class="alert alert-danger">' + mz_mindbody_access_state.message + '</div>';
 			} else if (mz_mindbody_access_state.action == 'denied'){
-=				mz_mindbody_access_state.content += mz_mindbody_access_state.message;
+				mz_mindbody_access_state.content += mz_mindbody_access_state.message;
 				mz_mindbody_access_state.content += mz_mindbody_access_state.footer;
 			} else if (mz_mindbody_access_state.action == 'granted'){
 				mz_mindbody_access_state.content += '<div class="alert alert-success">' + mz_mindbody_access_state.message;
