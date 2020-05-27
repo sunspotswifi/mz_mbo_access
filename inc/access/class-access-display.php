@@ -116,8 +116,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
         
         $this->membership_types = $this->atts['memberships'];
         
-        $this->denied_message = (isset($this->atts['denied_message'])) ? $this->atts['denied_message'] : sprintf(__('<p>Access to this content requires one of: %s</p>',  'mz-mbo-access'),
-            							implode(', ', $this->atts['memberships']));
+        $this->denied_message = (isset($this->atts['denied_message'])) ? $this->atts['denied_message'] : __('Access to this content requires one of',  'mz-mbo-access');
 
         // Begin generating output
         ob_start();
@@ -137,6 +136,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'logged_in'  => false,
             'access' => false,
             'client_name' => '',
+            'membership_types' => $this->atts['memberships'],
             'denied_message' => $this->denied_message,
             'manage_on_mbo'  => "Visit Mindbody Site"
         );	
@@ -212,7 +212,8 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'logged_in' => $this->logged_in,
             'membership_types' => $this->atts['memberships'],
             'has_access' => $this->has_access,
-            'denied_message' => $this->denied_message
+            'denied_message' => $this->denied_message,
+            'membership_types' => json_encode($this->membership_types)
         );
         wp_localize_script('mz_mbo_access_script', 'mz_mindbody_access', $params);
     }

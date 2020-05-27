@@ -150,12 +150,10 @@ function MZ_MBO_Access() {
 		return MZ_MBO_Access::instance();
 }
 
-$min_php = '7.1';
-
 // Check the minimum required PHP version and run the plugin.
-if ( version_compare( PHP_VERSION, $min_php, '>=' ) ) {
+if ( version_compare( PHP_VERSION, 'MZ_Mindbody\MINIMUM_PHP_VERSION', '>=' ) ) {
 	
-	add_action('init', __NAMESPACE__ . '\mz_mbo_access_plugin_init');
+	add_action('init', __NAMESPACE__ . '\\mz_mbo_access_plugin_init');
 
 }
 

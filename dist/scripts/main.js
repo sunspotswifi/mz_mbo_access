@@ -52,6 +52,7 @@
 			if (mz_mindbody_access_state.action == 'processing'){
 				mz_mindbody_access_state.content += mz_mindbody_access_state.spinner;
 			} else if (mz_mindbody_access_state.action == 'login_failed') {
+				console.log('login_failed');
 				mz_mindbody_access_state.content += mz_mindbody_access_state.login_form;
 				mz_mindbody_access_state.content += '<div class="alert alert-warning">' + mz_mindbody_access_state.message + '</div>';
 			} else if (mz_mindbody_access_state.action == 'logout') {
@@ -61,7 +62,8 @@
 			} else if (mz_mindbody_access_state.action == 'error') {
 				mz_mindbody_access_state.content += '<div class="alert alert-danger">' + mz_mindbody_access_state.message + '</div>';
 			} else if (mz_mindbody_access_state.action == 'denied'){
-				mz_mindbody_access_state.content += '<div class="alert alert-warning">' + mz_mindbody_access_state.message + '</div>';
+				console.log('denied');
+				mz_mindbody_access_state.content += mz_mindbody_access_state.message;
 				mz_mindbody_access_state.content += mz_mindbody_access_state.footer;
 			} else if (mz_mindbody_access_state.action == 'granted'){
 				mz_mindbody_access_state.content += '<div class="alert alert-success">' + mz_mindbody_access_state.message;
@@ -110,13 +112,18 @@
 					$.each($('form').serializeArray(), function() {
 						result[this.name] = this.value;
 					});
-					console.log(json);
 					if (json.type == "success") {
 						mz_mindbody_access_state.logged_in = true;
-						mz_mindbody_access_state.action = 'login';
+						mz_mindbody_access_state.action = 'denied';
 						mz_mindbody_access_state.message = json.logged;
 						mz_mindbody_access_state.message += '</br>';
-						mz_mindbody_access_state.message = json.access;
+						mz_mindbody_access_state.message += '<div class="alert alert-warning">'  + mz_mindbody_access.denied_message + ':';
+						mz_mindbody_access_state.message += '<ul>';
+						var membership_types = JSON.parse(mz_mindbody_access.membership_types);
+						for (var i=0; i < membership_types.length; i++) {
+							mz_mindbody_access_state.message += '<li>' + membership_types[i] + '</li>';
+						}
+						mz_mindbody_access_state.message += '</ul></div>';
 						render_mbo_access_activity();
 					} else {
 						mz_mindbody_access_state.action = 'login_failed';
@@ -160,7 +167,7 @@
 						render_mbo_access_activity();
 					} else {
 						mz_mindbody_access_state.action = 'denied';
-						mz_mindbody_access_state.message = mz_mindbody_access.denied_message + ' ' + json.message;
+						mz_mindbody_access_state.message = json.logged + '<div class="alert alert-warning">' + mz_mindbody_access.denied_message + ' ' + mz_mindbody_access.membership_types + '</div>';
 						render_mbo_access_activity();
 					}
 				} // ./ Ajax Success
@@ -212,6 +219,8 @@
     
 		/**
 		 * Continually Check if Client is Logged in and Update Status
+		 *
+		 * This asks server to check if session has been set with client info
 		 */
 		setInterval(mz_mbo_check_client_logged, 5000);
 

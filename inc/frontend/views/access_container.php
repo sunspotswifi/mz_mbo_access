@@ -14,8 +14,17 @@ else:
 	<p class="mbo-user">Hi, <?php echo $data->client_name; ?>.</p>
 	<?php
 	
-	if ( false == $data->access ) {
-		echo $data->denied_message;
+	if ( false == $data->access ) { ?>
+		<div class="alert alert-warning">
+			<?php echo '<strong>' . $data->denied_message .  '</strong>:'; ?>
+			<ul>
+				<?php foreach ($data->membership_types as $membership_type){
+					echo '<li>' . $membership_type . '</li>';
+				}
+				?>
+			</ul>
+		</div>
+	<?php
 	} else {
 		echo $data->content; 
 	}

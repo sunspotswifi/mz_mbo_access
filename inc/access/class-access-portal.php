@@ -50,6 +50,8 @@ class Access_Portal extends Access_Utilities
         	$credentials = ['Username' => $params['email'], 'Password' => $params['password']];
         
         	$login = $this->log_client_in($credentials);
+				
+        MZ\MZMBO()->helpers->log($login);
         	
         	if ( $login['type'] == 'error' ) $result['type'] = 'error';
         	        	
@@ -57,11 +59,14 @@ class Access_Portal extends Access_Utilities
 
         }
 				
+
 		if ( $this->check_access_permissions( $_REQUEST['membership_types'] ) ) {
 			$result['access'] = 'granted';
 		} else {
 			$result['access'] = 'denied';
 		}
+				
+        MZ\MZMBO()->helpers->log($result);
 
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             $result = json_encode($result);
