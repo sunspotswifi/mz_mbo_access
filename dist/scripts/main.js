@@ -52,8 +52,7 @@
 			if (mz_mindbody_access_state.action == 'processing'){
 				mz_mindbody_access_state.content += mz_mindbody_access_state.spinner;
 			} else if (mz_mindbody_access_state.action == 'login_failed') {
-				console.log('login_failed');
-				mz_mindbody_access_state.content += mz_mindbody_access_state.login_form;
+=				mz_mindbody_access_state.content += mz_mindbody_access_state.login_form;
 				mz_mindbody_access_state.content += '<div class="alert alert-warning">' + mz_mindbody_access_state.message + '</div>';
 			} else if (mz_mindbody_access_state.action == 'logout') {
 				mz_mindbody_access_state.content += '<div class="alert alert-info">' + mz_mindbody_access_state.message + '</div>';
@@ -62,8 +61,7 @@
 			} else if (mz_mindbody_access_state.action == 'error') {
 				mz_mindbody_access_state.content += '<div class="alert alert-danger">' + mz_mindbody_access_state.message + '</div>';
 			} else if (mz_mindbody_access_state.action == 'denied'){
-				console.log('denied');
-				mz_mindbody_access_state.content += mz_mindbody_access_state.message;
+=				mz_mindbody_access_state.content += mz_mindbody_access_state.message;
 				mz_mindbody_access_state.content += mz_mindbody_access_state.footer;
 			} else if (mz_mindbody_access_state.action == 'granted'){
 				mz_mindbody_access_state.content += '<div class="alert alert-success">' + mz_mindbody_access_state.message;
@@ -140,45 +138,6 @@
 
 		});
 		
-		/**
-         * Check access permissions
-         *
-         *
-         */
-		function mz_mbo_access_check_client_access() {
-			$.ajax({
-				dataType: 'json',
-				url: mz_mindbody_access.ajaxurl,
-				context: this, // So we have access to form data within ajax results
-				data: {
-						action: 'ajax_login_check_access_permissions',
-						nonce: mz_mindbody_access.login_nonce,
-						membership_types: mz_mindbody_access.membership_types
-					},
-				beforeSend: function() {
-					mz_mindbody_access_state.action = 'processing';
-					render_mbo_access_activity();
-				},
-				success: function(json) {
-					if (json.type == "success") {
-						mz_mindbody_access_state.logged_in = true;
-						mz_mindbody_access_state.action = 'granted';
-						mz_mindbody_access_state.message = json.message;
-						render_mbo_access_activity();
-					} else {
-						mz_mindbody_access_state.action = 'denied';
-						mz_mindbody_access_state.message = json.logged + '<div class="alert alert-warning">' + mz_mindbody_access.denied_message + ' ' + mz_mindbody_access.membership_types + '</div>';
-						render_mbo_access_activity();
-					}
-				} // ./ Ajax Success
-			}) // End Ajax
-				.fail(function (json) {
-					mz_mindbody_access_state.message = 'ERROR CHECKING ACCESS';
-					render_mbo_access_activity();
-					console.log(json);
-				}); // End Fail
-		}
-		
 		
 		/**
          * Logout of MBO
@@ -247,36 +206,34 @@
 
 		function mz_mbo_update_client_access( )
 		{
-			if (true == mz_mindbody_access_state.logged_in){
+			if (!mz_mindbody_access_state.logged_in) return;
 			
-				if ( mz_mindbody_access_state.has_access == true ) return;
-				
-				$.ajax({
-					dataType: 'json',
-					url: mz_mindbody_access.ajaxurl,
-					context: this, // So we have access to form data within ajax results
-					data: {
-							action: 'ajax_check_access_permissions',
-							nonce: mz_mindbody_access.login_nonce,
-							membership_types: mz_mindbody_access.membership_types
-						},
-					success: function(json) {
-						if (json.type == "success") {
-							if (json.access == "granted") {
-								mz_mindbody_access_state.logged_in = true;
-								mz_mindbody_access_state.action = 'granted';
-								mz_mindbody_access_state.message = 'Access Granted.';
-								mz_mindbody_access_state.has_access == true;
-								render_mbo_access_activity();
-							}
-						} 
-					} // ./ Ajax Success
-				}) // End Ajax
-					.fail(function (json) {
-						mz_mindbody_access_state.message = 'ERROR LOGGING IN';
-						console.log(json);
-					}); // End Fail
-			}
+			if ( mz_mindbody_access_state.has_access == true ) return;
+			
+			$.ajax({
+				url: mz_mindbody_access.ajaxurl,
+				context: this, // So we have access to form data within ajax results
+				data: {
+						action: 'ajax_check_access_permissions',
+						nonce: mz_mindbody_access.login_nonce,
+						membership_types: mz_mindbody_access.membership_types
+					},
+				success: function(json) {
+					if (json.type == "success") {
+						if (json.access == "granted") {
+							mz_mindbody_access_state.logged_in = true;
+							mz_mindbody_access_state.action = 'granted';
+							mz_mindbody_access_state.message = 'Access Granted.';
+							mz_mindbody_access_state.has_access = true;
+							render_mbo_access_activity();
+						}
+					} 
+				} // ./ Ajax Success
+			}) // End Ajax
+				.fail(function (json) {
+					mz_mindbody_access_state.message = 'ERROR LOGGING IN';
+					console.log(json);
+				}); // End Fail
 			
 		}
 	});
