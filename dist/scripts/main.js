@@ -6,6 +6,7 @@
             // Shortcode atts for current page.
             atts = mz_mindbody_access.atts,
             restricted_content = mz_mindbody_access.restricted_content,
+            membership_types = JSON.parse(mz_mindbody_access.membership_types),
             siteID = mz_mindbody_access.siteID;
             
          var mz_mindbody_access_state = {
@@ -98,7 +99,8 @@
 				data: {
 						action: 'ajax_login_check_access_permissions',
 						form: form.serialize(),
-						nonce: result.nonce
+						nonce: result.nonce,
+						membership_types: JSON.stringify(membership_types)
 					},
 				beforeSend: function() {
 					mz_mindbody_access_state.action = 'processing';
@@ -110,19 +112,30 @@
 					$.each($('form').serializeArray(), function() {
 						result[this.name] = this.value;
 					});
+					console.log(json);
 					if (json.type == "success") {
 						mz_mindbody_access_state.logged_in = true;
-						mz_mindbody_access_state.action = 'denied';
 						mz_mindbody_access_state.message = json.logged;
-						mz_mindbody_access_state.message += '</br>';
-						mz_mindbody_access_state.message += '<div class="alert alert-warning">'  + mz_mindbody_access.denied_message + ':';
-						mz_mindbody_access_state.message += '<ul>';
-						var membership_types = JSON.parse(mz_mindbody_access.membership_types);
-						for (var i=0; i < membership_types.length; i++) {
-							mz_mindbody_access_state.message += '<li>' + membership_types[i] + '</li>';
+						if (json.access == 'granted') {
+						
+							mz_mindbody_access_state.action = 'granted';
+							
+						} else {
+						
+							mz_mindbody_access_state.action = 'denied';
+							mz_mindbody_access_state.message += '</br>';
+							mz_mindbody_access_state.message += '<div class="alert alert-warning">'  + mz_mindbody_access.denied_message + ':';
+							mz_mindbody_access_state.message += '<ul>';
+							
+							for (var i=0; i < membership_types.length; i++) {
+								mz_mindbody_access_state.message += '<li>' + membership_types[i] + '</li>';
+							}
+							
+							mz_mindbody_access_state.message += '</ul></div>';
 						}
-						mz_mindbody_access_state.message += '</ul></div>';
+						
 						render_mbo_access_activity();
+						
 					} else {
 						mz_mindbody_access_state.action = 'login_failed';
 						mz_mindbody_access_state.message = json.logged;
@@ -205,7 +218,8 @@
 		setInterval(mz_mbo_update_client_access, 10000);
 
 		function mz_mbo_update_client_access( )
-		{
+		{	
+			
 			if (!mz_mindbody_access_state.logged_in) return;
 			
 			if ( mz_mindbody_access_state.has_access == true ) return;
@@ -216,10 +230,12 @@
 				data: {
 						action: 'ajax_check_access_permissions',
 						nonce: mz_mindbody_access.login_nonce,
-						membership_types: mz_mindbody_access.membership_types
+						membership_types: JSON.stringify(membership_types)
 					},
 				success: function(json) {
 					if (json.type == "success") {
+						
+					console.log(json);
 						if (json.access == "granted") {
 							mz_mindbody_access_state.logged_in = true;
 							mz_mindbody_access_state.action = 'granted';

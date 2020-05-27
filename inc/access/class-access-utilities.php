@@ -24,13 +24,14 @@ class Access_Utilities extends Client\Retrieve_Client
      * @return bool
      */
     public function check_access_permissions( $membership_types = [] ){
-				
+						
 		$membership_types = is_array($membership_types) ? $membership_types : [$membership_types];
 		
 		$memberships = $this->get_active_client_memberships();
-		
-		if ( false == (bool) $memberships['ClientMemberships'] ) return false;
 				
+		if ( false == (bool) $memberships['ClientMemberships'] ) return false;
+		
+		
 		foreach( $memberships['ClientMemberships'] as $membership ) {
 			if ( in_array($membership['Name'], $membership_types) ) return true;
 		}

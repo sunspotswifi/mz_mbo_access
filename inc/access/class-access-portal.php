@@ -24,7 +24,7 @@ class Access_Portal extends Access_Utilities
      * @return bool
      */
     public function ajax_login_check_access_permissions( ){
-
+    
         check_ajax_referer($_REQUEST['nonce'], "mz_mbo_access_nonce", false);
 
         // Crate the MBO Object
@@ -50,9 +50,7 @@ class Access_Portal extends Access_Utilities
         	$credentials = ['Username' => $params['email'], 'Password' => $params['password']];
         
         	$login = $this->log_client_in($credentials);
-				
-        MZ\MZMBO()->helpers->log($login);
-        	
+				        	
         	if ( $login['type'] == 'error' ) $result['type'] = 'error';
         	        	
 			$result['logged'] = $login['message'];
@@ -60,7 +58,7 @@ class Access_Portal extends Access_Utilities
         }
 				
 
-		if ( $this->check_access_permissions( $_REQUEST['membership_types'] ) ) {
+		if ( $this->check_access_permissions( json_decode(stripslashes($_REQUEST['membership_types'])) ) ) {
 			$result['access'] = 'granted';
 		} else {
 			$result['access'] = 'denied';
@@ -105,7 +103,7 @@ class Access_Portal extends Access_Utilities
 
         $result['type'] = 'success';
 				
-		if ( $this->check_access_permissions( $_REQUEST['membership_types'] ) ) {
+		if ( $this->check_access_permissions( json_decode(stripslashes($_REQUEST['membership_types'])) ) ) {
 			$result['access'] = 'granted';
 		} else {
 			$result['access'] = 'denied';
