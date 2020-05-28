@@ -29,7 +29,9 @@ class Access_Portal extends Access_Utilities
 
         // Crate the MBO Object
         $this->get_mbo_results();
-
+		
+		$result = array();
+		
         // Init message
         $result['logged'] = '';
         
@@ -64,8 +66,6 @@ class Access_Portal extends Access_Utilities
 			$result['access'] = 'denied';
 		}
 				
-        MZ\MZMBO()->helpers->log($result);
-
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             $result = json_encode($result);
             echo $result;
@@ -95,6 +95,8 @@ class Access_Portal extends Access_Utilities
 
         // Crate the MBO Object
         $this->get_mbo_results();
+        
+        $result = array();
 
         // Init message
         $result['logged'] = '';
@@ -103,7 +105,7 @@ class Access_Portal extends Access_Utilities
 
         $result['type'] = 'success';
 				
-		if ( $this->check_access_permissions( json_decode(stripslashes($_REQUEST['membership_types'])) ) ) {
+		if ( true === $this->check_access_permissions( json_decode(stripslashes($_REQUEST['membership_types'])) ) ) {
 			$result['access'] = 'granted';
 		} else {
 			$result['access'] = 'denied';

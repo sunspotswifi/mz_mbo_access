@@ -7,6 +7,7 @@
             atts = mz_mindbody_access.atts,
             restricted_content = mz_mindbody_access.restricted_content,
             membership_types = JSON.parse(mz_mindbody_access.membership_types),
+            number_of_mbo_log_access_checks = 0;
             siteID = mz_mindbody_access.siteID;
             
          var mz_mindbody_access_state = {
@@ -151,6 +152,45 @@
 
 		});
 		
+		/**
+         * Check access permissions
+         *
+         *
+         */
+		function mz_mbo_access_check_client_access() {
+			$.ajax({
+				dataType: 'json',
+				url: mz_mindbody_access.ajaxurl,
+				context: this, // So we have access to form data within ajax results
+				data: {
+						action: 'ajax_login_check_access_permissions',
+						nonce: mz_mindbody_access.login_nonce,
+						membership_types: mz_mindbody_access.membership_types
+					},
+				beforeSend: function() {
+					mz_mindbody_access_state.action = 'processing';
+					render_mbo_access_activity();
+				},
+				success: function(json) {
+					if (json.type == "success") {
+						mz_mindbody_access_state.logged_in = true;
+						mz_mindbody_access_state.action = 'granted';
+						mz_mindbody_access_state.message = json.message;
+						render_mbo_access_activity();
+					} else {
+						mz_mindbody_access_state.action = 'denied';
+						mz_mindbody_access_state.message = json.logged + '<div class="alert alert-warning">' + mz_mindbody_access.denied_message + ' ' + mz_mindbody_access.membership_types + '</div>';
+						render_mbo_access_activity();
+					}
+				} // ./ Ajax Success
+			}) // End Ajax
+				.fail(function (json) {
+					mz_mindbody_access_state.message = 'ERROR CHECKING ACCESS';
+					render_mbo_access_activity();
+					console.log(json);
+				}); // End Fail
+		}
+		
 		
 		/**
          * Logout of MBO
@@ -197,7 +237,11 @@
 		setInterval(mz_mbo_check_client_logged, 5000);
 
 		function mz_mbo_check_client_logged( )
-		{
+		{	
+			// Only do this up to 1000 times or so
+			number_of_mbo_log_access_checks++;
+			if (number_of_mbo_log_access_checks >= 2000) return;
+			
 			//this will repeat every 5 seconds
 			$.ajax({
 				dataType: 'json',
@@ -213,18 +257,20 @@
 		
     
 		/**
-		 * Continually Check and update Client Access
+		 * Check and update Client Access every minute
 		 */
-		setInterval(mz_mbo_update_client_access, 10000);
+		setInterval(mz_mbo_update_client_access, 30000);
 
 		function mz_mbo_update_client_access( )
 		{	
+			// Only do this up to 1000 times or so
+			number_of_mbo_log_access_checks++;
+			if (number_of_mbo_log_access_checks >= 2000) return;
 			
 			if (!mz_mindbody_access_state.logged_in) return;
 			
-			if ( mz_mindbody_access_state.has_access == true ) return;
-			
 			$.ajax({
+                dataType: 'json',
 				url: mz_mindbody_access.ajaxurl,
 				context: this, // So we have access to form data within ajax results
 				data: {
@@ -234,13 +280,16 @@
 					},
 				success: function(json) {
 					if (json.type == "success") {
-						
-					console.log(json);
-						if (json.access == "granted") {
-							mz_mindbody_access_state.logged_in = true;
+						if (mz_mindbody_access_state.has_access == false && json.access == "granted") {
+							mz_mindbody_access_state.has_access = true;
 							mz_mindbody_access_state.action = 'granted';
 							mz_mindbody_access_state.message = 'Access Granted.';
-							mz_mindbody_access_state.has_access = true;
+							render_mbo_access_activity();
+						}
+						if (mz_mindbody_access_state.has_access == true && json.access == "denied") {
+							mz_mindbody_access_state.has_access = false;
+							mz_mindbody_access_state.action = 'denied';
+							mz_mindbody_access_state.message = '<div class="alert alert-warning">' + 'Looks like your access has expired.' + '</div>';
 							render_mbo_access_activity();
 						}
 					} 
