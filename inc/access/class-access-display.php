@@ -137,12 +137,15 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'access' => false,
             'client_name' => '',
             'membership_types' => $this->atts['memberships'],
+            'purchase_types' => $this->atts['purchases'],
+            'contract_types' => $this->atts['contracts'],
             'denied_message' => $this->denied_message,
             'manage_on_mbo'  => "Visit Mindbody Site"
         );	
         
 		$access_utilities = new Access_Utilities;
-		$has_access = $access_utilities->check_access_permissions($this->atts['memberships']);
+		
+		$has_access = $access_utilities->check_access_permissions($this->atts['memberships'], $this->atts['purchases'], $this->atts['contracts']);
 				
 		if ($has_access) {
 			$this->template_data['access'] = true;
@@ -213,7 +216,9 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'membership_types' => $this->atts['memberships'],
             'has_access' => $this->has_access,
             'denied_message' => $this->denied_message,
-            'membership_types' => json_encode($this->membership_types)
+            'membership_types' => json_encode($this->membership_types),
+            'contract_types' => json_encode($this->contract_types),
+            'purchase_types' => json_encode($this->purchase_types)
         );
         wp_localize_script('mz_mbo_access_script', 'mz_mindbody_access', $params);
     }

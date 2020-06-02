@@ -113,7 +113,7 @@
 					$.each($('form').serializeArray(), function() {
 						result[this.name] = this.value;
 					});
-					console.log(json);
+
 					if (json.type == "success") {
 						mz_mindbody_access_state.logged_in = true;
 						mz_mindbody_access_state.message = json.logged;
@@ -130,6 +130,14 @@
 							
 							for (var i=0; i < membership_types.length; i++) {
 								mz_mindbody_access_state.message += '<li>' + membership_types[i] + '</li>';
+							}
+							
+							for (var i=0; i < purchase_types.length; i++) {
+								mz_mindbody_access_state.message += '<li>' + purchase_types[i] + '</li>';
+							}
+							
+							for (var i=0; i < contract_types.length; i++) {
+								mz_mindbody_access_state.message += '<li>' + contract_types[i] + '</li>';
 							}
 							
 							mz_mindbody_access_state.message += '</ul></div>';

@@ -21,6 +21,12 @@ else:
 				<?php foreach ($data->membership_types as $membership_type){
 					echo '<li>' . $membership_type . '</li>';
 				}
+				foreach ($data->purchase_types as $purchase_type){
+					echo '<li>' . $purchase_type . '</li>';
+				}
+				foreach ($data->contract_types as $contract_type){
+					echo '<li>' . $contract_type . '</li>';
+				}
 				?>
 			</ul>
 		</div>

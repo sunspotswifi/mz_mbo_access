@@ -105,7 +105,13 @@ class Access_Portal extends Access_Utilities
 
         $result['type'] = 'success';
 				
-		if ( true === $this->check_access_permissions( json_decode(stripslashes($_REQUEST['membership_types'])) ) ) {
+		$membership_types = json_decode(stripslashes($_REQUEST['membership_types']));
+				
+		$purchase_types = json_decode(stripslashes($_REQUEST['purchase_types']));
+				
+		$contract_types = json_decode(stripslashes($_REQUEST['contract_types']));
+		
+		if ( true === $this->check_access_permissions( $membership_types, $purchase_types, $contract_types ) ) {
 			$result['access'] = 'granted';
 		} else {
 			$result['access'] = 'denied';
