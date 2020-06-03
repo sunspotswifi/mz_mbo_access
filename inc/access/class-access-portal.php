@@ -57,13 +57,20 @@ class Access_Portal extends Access_Utilities
         	        	
 			$result['logged'] = $login['message'];
 
-        }
+        }		
 				
-
-		if ( $this->check_access_permissions( json_decode(stripslashes($_REQUEST['membership_types'])) ) ) {
-			$result['access'] = 'granted';
+		$membership_types = json_decode(stripslashes($_REQUEST['membership_types']));
+				
+		$purchase_types = json_decode(stripslashes($_REQUEST['purchase_types']));
+				
+		$contract_types = json_decode(stripslashes($_REQUEST['contract_types']));
+		
+		$access_level = $this->check_access_permissions( $membership_types, $purchase_types, $contract_types );
+		
+		if (  0 !== $access_level ) {
+			$result['client_access_level'] = $access_level;
 		} else {
-			$result['access'] = 'denied';
+			$result['client_access_level'] = 0;
 		}
 				
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
@@ -111,10 +118,12 @@ class Access_Portal extends Access_Utilities
 				
 		$contract_types = json_decode(stripslashes($_REQUEST['contract_types']));
 		
-		if ( true === $this->check_access_permissions( $membership_types, $purchase_types, $contract_types ) ) {
-			$result['access'] = 'granted';
+		$access_level = $this->check_access_permissions( $membership_types, $purchase_types, $contract_types );
+		
+		if (  0 !== $access_level ) {
+			$result['client_access_level'] = $access_level;
 		} else {
-			$result['access'] = 'denied';
+			$result['client_access_level'] = 0;
 		}
 
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {

@@ -96,7 +96,12 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'memberships' => '',
             'contracts' => '',
             'purchases' => '',
-            'denied_message' => ''
+            'denied_message' => __('Access to this content requires one of',  'mz-mbo-access'),
+            'call_to_action' => __('Login with your Mindbody account to access this content.', 'mz-mindbpdy-api'),
+            'access_expired' => __('Looks like your access has expired.', 'mz-mindbpdy-api'),
+            'member_redirect' => '',
+            'class_redirect' => '',
+            'access_level' => 1
         ), $atts);
         
         $this->atts = $atts;
@@ -116,8 +121,6 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
         
         $this->membership_types = $this->atts['memberships'];
         
-        $this->denied_message = (isset($this->atts['denied_message'])) ? $this->atts['denied_message'] : __('Access to this content requires one of',  'mz-mbo-access');
-
         // Begin generating output
         ob_start();
         
@@ -126,7 +129,6 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
         $this->template_data = array(
             'atts' => $this->atts,
             'content' => $this->restricted_content,
-            'login_to_sign_up'  => "Login with your Mindbody account to access this content.",
             'signup_nonce'  => wp_create_nonce('mz_mbo_signup_nonce'),
             'siteID'  => MZ\MZMBO()::$basic_options['mz_mindbody_siteID'],
             'email'  => "email",
@@ -139,7 +141,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'membership_types' => $this->atts['memberships'],
             'purchase_types' => $this->atts['purchases'],
             'contract_types' => $this->atts['contracts'],
-            'denied_message' => $this->denied_message,
+            'denied_message' => $this->atts['denied_message'],
             'manage_on_mbo'  => "Visit Mindbody Site"
         );	
         
@@ -163,7 +165,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
 		} 
 		
         $template_loader->set_template_data($this->template_data);
-        $template_loader->get_template_part('access_container');
+        $template_loader->get_template_part('login_container');
 
         // Add Style with script adder
         self::addScript();
@@ -216,9 +218,11 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'membership_types' => $this->atts['memberships'],
             'has_access' => $this->has_access,
             'denied_message' => $this->denied_message,
-            'membership_types' => json_encode($this->membership_types),
-            'contract_types' => json_encode($this->contract_types),
-            'purchase_types' => json_encode($this->purchase_types)
+            'membership_types' => json_encode($this->atts['membership_types']),
+            'contract_types' => json_encode($this->atts['contract_types']),
+            'purchase_types' => json_encode($this->atts['purchase_types']),
+            'member_redirect' => json_encode($this->atts['member_redirect']),
+            'class_redirect' => json_encode($this->atts['class_redirect'])
         );
         wp_localize_script('mz_mbo_access_script', 'mz_mindbody_access', $params);
     }

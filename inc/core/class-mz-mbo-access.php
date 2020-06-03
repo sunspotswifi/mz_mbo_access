@@ -3,7 +3,9 @@ namespace MZ_MBO_Access\Inc\Core;
 
 use MZ_MBO_Access as NS;
 use MZ_MBO_Access\Inc\Access as Access;
+use MZ_MBO_Access\Inc\Login as Login;
 
+use MZ_MBO_Access\Inc\Backend as Backend;
 use MZ_Mindbody\Inc\Common as Common;
 use MZ_Mindbody\Inc\Client as Client;
 use MZ_Mindbody\Inc\Session as Session;
@@ -106,7 +108,7 @@ class MZ_MBO_Access
         // $this->define_admin_hooks();
         $this->define_public_hooks();
         $this->register_shortcodes();
-        // $this->add_settings_page();
+        $this->add_settings_page();
 
     }
 
@@ -242,10 +244,8 @@ class MZ_MBO_Access
      */
     public function add_settings_page()
     {
-    	return;
-    	// Maybe later will be desirable.
-        // $settings_page = new Backend\Settings_Page();
-        // $settings_page->addSections();
+        $settings_page = new Backend\Settings_Page();
+        $settings_page->addSections();
     }
 
     /**
@@ -259,6 +259,8 @@ class MZ_MBO_Access
     {
         $Access_Display = new Access\Access_Display();
         $Access_Display->register('mbo-client-access');
+        $Login_Display = new Login\Login_Display();
+        $Login_Display->register('mbo-client-login');
     }
 
 }

@@ -24,17 +24,13 @@ class Access_Utilities extends Client\Retrieve_Client
      * @return bool
      */
     public function check_access_permissions( $membership_types = [], $purchase_types = [], $contract_types = [] ){
-		
-		$has_access = false;
-		
-		$has_access = ( $has_access === false ) ? $this->compare_client_membership_status( $membership_types ) : true;
-		
-		$has_access = ( $has_access === false ) ? $this->compare_client_purchase_status( $purchase_types ) : true;
-		
-		//$has_access = ( $has_access === false ) ? $this->compare_client_contract_status( $contract_types ) : true;
-		
-        return $has_access;
-        
+						
+		if ( 2 === $this->compare_client_membership_status( $membership_types ) ) {
+			return 2;
+		} else {
+			return $this->compare_client_purchase_status( $purchase_types );
+		}
+				        
     }
     
     /**
@@ -55,13 +51,13 @@ class Access_Utilities extends Client\Retrieve_Client
 		
 		$memberships = $this->get_active_client_memberships();
 				
-		if ( false == (bool) $memberships['ClientMemberships'] ) return false;
+		if ( false == (bool) $memberships['ClientMemberships'] ) return 0;
 		
 		foreach( $memberships['ClientMemberships'] as $membership ) {
-			if ( in_array($membership['Name'], $membership_types) ) return true;
+			if ( in_array($membership['Name'], $membership_types) ) return 2;
 		}
 		
-        return false;
+        return 0;
         
     }
     
@@ -79,24 +75,18 @@ class Access_Utilities extends Client\Retrieve_Client
      * @return bool
      */
     public function compare_client_purchase_status( $purchase_types = [] ){
-    
-    	MZ\MZMBO()->helpers->print($purchase_types);
 						
 		$purchase_types = is_array($purchase_types) ? $purchase_types : [$purchase_types];
 		
 		$purchases = $this->get_client_purchases();
+		    					
+		if ( false == (bool) $purchases[0]['Sale'] ) return 0;
 		
-    	MZ\MZMBO()->helpers->print($purchases);
-    	
-    	return false;
-				
-		if ( false == (bool) $memberships['ClientMemberships'] ) return false;
-		
-		foreach( $memberships['ClientMemberships'] as $membership ) {
-			if ( in_array($membership['Name'], $membership_types) ) return true;
+		foreach( $purchases as $purchase ) {
+			if ( in_array($purchase['Description'], $purchase_types) ) return 1;
 		}
 		
-        return false;
+        return 0;
         
     }
     

@@ -5,7 +5,7 @@ use MZ_MBO_Access\Inc\Core as Core;
 	
 		<form role="form" class="form-group" style="margin:1em 0;" data-async id="mzLogIn" data-target="#mzSignUpModal" method="POST">
 
-			<h3><?php echo $data->login_to_sign_up; ?></h3>
+			<h3><?php echo $data->atts['call_to_action']; ?></h3>
 
 			<input type="hidden" name="nonce" value="<?php echo $data->signup_nonce; ?>"/>
 

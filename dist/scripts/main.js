@@ -6,8 +6,10 @@
             // Shortcode atts for current page.
             atts = mz_mindbody_access.atts,
             restricted_content = mz_mindbody_access.restricted_content,
-            membership_types = JSON.parse(mz_mindbody_access.membership_types),
-            number_of_mbo_log_access_checks = 0;
+            membership_types = atts.memberships,
+            purchase_types = atts.purchases,
+            contract_types = atts.contracts,
+            number_of_mbo_log_access_checks = 0,
             siteID = mz_mindbody_access.siteID;
             
          var mz_mindbody_access_state = {
@@ -84,7 +86,7 @@
 		 */
 		$(document).on('submit', 'form[id="mzLogIn"]', function (ev) {
 			ev.preventDefault();
-
+			
 			var form = $(this);
 			var formData = form.serializeArray();
 			var result = { };
@@ -101,7 +103,9 @@
 						action: 'ajax_login_check_access_permissions',
 						form: form.serialize(),
 						nonce: result.nonce,
-						membership_types: JSON.stringify(membership_types)
+						membership_types: membership_types,
+						purchase_types: purchase_types,
+						contract_types: contract_types
 					},
 				beforeSend: function() {
 					mz_mindbody_access_state.action = 'processing';
@@ -117,8 +121,12 @@
 					if (json.type == "success") {
 						mz_mindbody_access_state.logged_in = true;
 						mz_mindbody_access_state.message = json.logged;
-						if (json.access == 'granted') {
-						
+						if (json.client_access_level >= atts.access_level) {
+							if ((json.client_access_level == 1) && (atts.class_redirect)) {
+								window.location.href = atts.class_redirect;
+							} else if ((json.client_access_level == 2) && (atts.member_redirect)) {
+								window.location.href = atts.member_redirect;
+							}
 							mz_mindbody_access_state.action = 'granted';
 							
 						} else {
@@ -128,16 +136,22 @@
 							mz_mindbody_access_state.message += '<div class="alert alert-warning">'  + mz_mindbody_access.denied_message + ':';
 							mz_mindbody_access_state.message += '<ul>';
 							
-							for (var i=0; i < membership_types.length; i++) {
-								mz_mindbody_access_state.message += '<li>' + membership_types[i] + '</li>';
+							if (membership_types) {
+								for (var i=0; i < membership_types.length; i++) {
+									mz_mindbody_access_state.message += '<li>' + membership_types[i] + '</li>';
+								}
 							}
 							
-							for (var i=0; i < purchase_types.length; i++) {
-								mz_mindbody_access_state.message += '<li>' + purchase_types[i] + '</li>';
+							if (purchase_types) {
+								for (var i=0; i < purchase_types.length; i++) {
+									mz_mindbody_access_state.message += '<li>' + purchase_types[i] + '</li>';
+								}
 							}
 							
-							for (var i=0; i < contract_types.length; i++) {
-								mz_mindbody_access_state.message += '<li>' + contract_types[i] + '</li>';
+							if (contract_types) {
+								for (var i=0; i < contract_types.length; i++) {
+									mz_mindbody_access_state.message += '<li>' + contract_types[i] + '</li>';
+								}
 							}
 							
 							mz_mindbody_access_state.message += '</ul></div>';
@@ -173,14 +187,16 @@
 				data: {
 						action: 'ajax_login_check_access_permissions',
 						nonce: mz_mindbody_access.login_nonce,
-						membership_types: mz_mindbody_access.membership_types
+						membership_types: JSON.stringify(membership_types),
+						purchase_types: JSON.stringify(purchase_types),
+						contract_types: JSON.stringify(contract_types)
 					},
 				beforeSend: function() {
 					mz_mindbody_access_state.action = 'processing';
 					render_mbo_access_activity();
 				},
 				success: function(json) {
-					if (json.type == "success") {
+					if ((json.type == "success") && (json.client_access_level >= atts.access_level)) {
 						mz_mindbody_access_state.logged_in = true;
 						mz_mindbody_access_state.action = 'granted';
 						mz_mindbody_access_state.message = json.message;
@@ -267,7 +283,7 @@
 		/**
 		 * Check and update Client Access every minute
 		 */
-		setInterval(mz_mbo_update_client_access, 30000);
+		setInterval(mz_mbo_update_client_access, 5000);
 
 		function mz_mbo_update_client_access( )
 		{	
@@ -284,20 +300,22 @@
 				data: {
 						action: 'ajax_check_access_permissions',
 						nonce: mz_mindbody_access.login_nonce,
-						membership_types: JSON.stringify(membership_types)
+						membership_types: JSON.stringify(membership_types),
+						purchase_types: JSON.stringify(purchase_types),
+						contract_types: JSON.stringify(contract_types)
 					},
 				success: function(json) {
 					if (json.type == "success") {
-						if (mz_mindbody_access_state.has_access == false && json.access == "granted") {
+						if (mz_mindbody_access_state.has_access == false && json.client_access_level >= atts.access_level) {
 							mz_mindbody_access_state.has_access = true;
 							mz_mindbody_access_state.action = 'granted';
 							mz_mindbody_access_state.message = 'Access Granted.';
 							render_mbo_access_activity();
 						}
-						if (mz_mindbody_access_state.has_access == true && json.access == "denied") {
+						if (mz_mindbody_access_state.has_access == true && json.client_access_level == 0) {
 							mz_mindbody_access_state.has_access = false;
 							mz_mindbody_access_state.action = 'denied';
-							mz_mindbody_access_state.message = '<div class="alert alert-warning">' + 'Looks like your access has expired.' + '</div>';
+							mz_mindbody_access_state.message = '<div class="alert alert-warning">' + atts.access_expired + '</div>';
 							render_mbo_access_activity();
 						}
 					} 
