@@ -67,6 +67,7 @@ class Settings_Page {
         $return .= "<li><strong>purchases</strong>: " . __("(string) Comma-separated string of MBO purchase types required for access.", 'mz-mindbody-api')."</li>";
         $return .= "<li><strong>call_to_action</strong>: " . __("(string) Message inviting user to submit form.", 'mz-mindbody-api')."</li>";
         $return .= "<li><strong>denied_message</strong>: " . __("(string) Message preceding list of items required for access.", 'mz-mindbody-api')."</li>";
+        $return .= "<li><strong>access_expired</strong>: " . __("(string) Message alerting client that access has expired.", 'mz-mindbody-api')."</li>";
         $return .= "<li><strong>access_level</strong>: " . sprintf(__('(int) Defaults to %1$d, level for Class Purchase, the higher level, %2$d is for Memberships.', 'mz-mindbody-api'), 1, 2)."</li>";
         $return .= "</ul>";
         $return .= sprintf('[%1$s %2$s]%3$s[%4$s]', 'mbo-client-access', 'memberships="Corporate Membership, Monthly Membership - Gym Access"', 'Restricted Content', '/mbo-client-access');

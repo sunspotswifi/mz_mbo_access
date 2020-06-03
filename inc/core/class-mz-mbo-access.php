@@ -3,7 +3,6 @@ namespace MZ_MBO_Access\Inc\Core;
 
 use MZ_MBO_Access as NS;
 use MZ_MBO_Access\Inc\Access as Access;
-use MZ_MBO_Access\Inc\Login as Login;
 
 use MZ_MBO_Access\Inc\Backend as Backend;
 use MZ_Mindbody\Inc\Common as Common;
@@ -259,8 +258,6 @@ class MZ_MBO_Access
     {
         $Access_Display = new Access\Access_Display();
         $Access_Display->register('mbo-client-access');
-        $Login_Display = new Login\Login_Display();
-        $Login_Display->register('mbo-client-login');
     }
 
 }

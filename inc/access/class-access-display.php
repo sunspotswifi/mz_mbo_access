@@ -125,7 +125,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
         ob_start();
         
         $template_loader = new Core\Template_Loader();
-		
+        
         $this->template_data = array(
             'atts' => $this->atts,
             'content' => $this->restricted_content,
@@ -153,7 +153,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
 			$this->template_data['access'] = true;
 			$this->has_access = true;
 		 }
-		
+        
 		$logged = MZ\MZMBO()->client->check_client_logged();
 				
 		if ($logged) {
@@ -165,7 +165,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
 		} 
 		
         $template_loader->set_template_data($this->template_data);
-        $template_loader->get_template_part('login_container');
+        $template_loader->get_template_part('access_container');
 
         // Add Style with script adder
         self::addScript();

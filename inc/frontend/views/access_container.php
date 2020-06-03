@@ -13,28 +13,32 @@ else:
 	?>
 	<p class="mbo-user">Hi, <?php echo $data->client_name; ?>.</p>
 	<?php
-	
-	if ( false == $data->access ) { ?>
-		<div class="alert alert-warning">
-			<?php echo '<strong>' . $data->denied_message .  '</strong>:'; ?>
-			<ul>
-				<?php foreach ($data->membership_types as $membership_type){
-					echo '<li>' . $membership_type . '</li>';
-				}
-				foreach ($data->purchase_types as $purchase_type){
-					echo '<li>' . $purchase_type . '</li>';
-				}
-				foreach ($data->contract_types as $contract_type){
-					echo '<li>' . $contract_type . '</li>';
-				}
-				?>
-			</ul>
-		</div>
-	<?php
-	} else {
+	if ((!empty($data->atts['member_redirect']) || !empty($data->atts['member_redirect']) )) {
+		// this is being used as a redirect login form so just echo content if it exists
 		echo $data->content; 
-	}
-?>
+	} else {
+	
+		if ( false == $data->access ) { ?>
+			<div class="alert alert-warning">
+				<?php echo '<strong>' . $data->denied_message .  '</strong>:'; ?>
+				<ul>
+					<?php foreach ($data->membership_types as $membership_type){
+						echo '<li>' . $membership_type . '</li>';
+					}
+					foreach ($data->purchase_types as $purchase_type){
+						echo '<li>' . $purchase_type . '</li>';
+					}
+					foreach ($data->contract_types as $contract_type){
+						echo '<li>' . $contract_type . '</li>';
+					}
+					?>
+				</ul>
+			</div>
+		<?php
+		} else {
+			echo $data->content; 
+		}
+	?>
 
 			<div class="row" style="margin:.5em;">
 
@@ -47,7 +51,7 @@ else:
 				</div>
 			
 			</div>
-			
+	<?php } // End not a redirect login form ?>
 <?php endif; ?>
 
 </div>
