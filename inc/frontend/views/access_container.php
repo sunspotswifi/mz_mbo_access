@@ -16,11 +16,17 @@ else:
 	if ((!empty($data->atts['member_redirect']) || !empty($data->atts['member_redirect']) )) {
 		// this is being used as a redirect login form so just echo content if it exists
 		echo $data->content; 
+		
+		?>
+		<div class="row" style="margin:.5em;">
+			<a href="#" class="btn btn-primary" id="MBOLogout" target="_blank"><?php echo $data->logout; ?></a>
+		</div>
+		<?php
 	} else {
 	
-		if ( false == $data->access ) { ?>
+		if ( false == $data->has_access ) { ?>
 			<div class="alert alert-warning">
-				<?php echo '<strong>' . $data->denied_message .  '</strong>:'; ?>
+				<?php echo '<strong>' . $data->atts['denied_message'] .  '</strong>:'; ?>
 				<ul>
 					<?php foreach ($data->membership_types as $membership_type){
 						echo '<li>' . $membership_type . '</li>';

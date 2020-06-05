@@ -35,7 +35,7 @@ class Access_Portal extends Access_Utilities
         // Init message
         $result['logged'] = '';
         
-        $result['access'] = '';
+        $result['client_access_level'] = 0;
 
         $result['type'] = 'success';
 
@@ -69,9 +69,7 @@ class Access_Portal extends Access_Utilities
 		
 		if (  0 !== $access_level ) {
 			$result['client_access_level'] = $access_level;
-		} else {
-			$result['client_access_level'] = 0;
-		}
+		} 
 				
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             $result = json_encode($result);
@@ -108,7 +106,7 @@ class Access_Portal extends Access_Utilities
         // Init message
         $result['logged'] = '';
         
-        $result['access'] = '';
+        $result['client_access_level'] = 0;
 
         $result['type'] = 'success';
 				
@@ -122,8 +120,6 @@ class Access_Portal extends Access_Utilities
 		
 		if (  0 !== $access_level ) {
 			$result['client_access_level'] = $access_level;
-		} else {
-			$result['client_access_level'] = 0;
 		}
 
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {

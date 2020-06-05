@@ -61,8 +61,9 @@ class Settings_Page {
         $return = '';
         $return .= '<p>'.sprintf('[%1$s] %2$s [%3$s]', 'mbo-client-access', __("Restricted content here between both tags", 'mz-mindbody-api'), '/mbo-client-access').'</p>';
         $return .= "<ul>";
-        $return .= "<li><strong>class_redirect</strong>: " . __("(url string) URL to redirect users to with Class Purchases matching purchases attribute.", 'mz-mindbody-api')."</li>";
+        $return .= "<li><strong>classes_redirect</strong>: " . __("(url string) URL to redirect users to with Class Purchases matching purchases attribute.", 'mz-mindbody-api')."</li>";
         $return .= "<li><strong>membership_redirect</strong>: " . __("((url string) URL to redirect users to with Membership matching membership attribute. ", 'mz-mindbody-api')."</li>";
+        $return .= "<li><strong>denied_redirect</strong>: " . __("((url string) URL to redirect users to who are logged in but don't have access.", 'mz-mindbody-api')."</li>";
         $return .= "<li><strong>memberships</strong>: " . __("(string) Comma-separated string of MBO membership types required for access.", 'mz-mindbody-api')."</li>";
         $return .= "<li><strong>purchases</strong>: " . __("(string) Comma-separated string of MBO purchase types required for access.", 'mz-mindbody-api')."</li>";
         $return .= "<li><strong>call_to_action</strong>: " . __("(string) Message inviting user to submit form.", 'mz-mindbody-api')."</li>";
@@ -72,7 +73,7 @@ class Settings_Page {
         $return .= "</ul>";
         $return .= sprintf('[%1$s %2$s]%3$s[%4$s]', 'mbo-client-access', 'memberships="Corporate Membership, Monthly Membership - Gym Access"', 'Restricted Content', '/mbo-client-access');
         $return .= '<h3>'. __('Note', 'mz-mindbody-api') . '</h3>';
-        $return .= sprintf(__('If %1$s or %2$s are included, the login form will redirect to one of those urls instead of revealing content.', 'mz-mindbody-api'), '<code>class_redirect</code>', '<code>membership_redirect</code>');
+        $return .= sprintf(__('If %1$s or %2$s are included, the login form will redirect to one of those urls instead of revealing content. Content, if any, between shortcode tags will display when page is reloaded by logged in client.', 'mz-mindbody-api'), '<code>classes_redirect</code>', '<code>membership_redirect</code>');
         return $return;
     }
 

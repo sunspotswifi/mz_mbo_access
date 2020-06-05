@@ -45,7 +45,6 @@
             }
         };
         
-    
 		/*
 		 * Render inner content of content wrapper based on state
 		 */
@@ -53,31 +52,53 @@
 			// Clear content and content wrapper
 			mz_mindbody_access_state.content = '';
 			$('#mzAccessContainer').html = '';
+			
 			if (mz_mindbody_access_state.action == 'processing'){
+			
 				mz_mindbody_access_state.content += mz_mindbody_access_state.spinner;
+				
 			} else if (mz_mindbody_access_state.action == 'login_failed') {
+			
 				mz_mindbody_access_state.content += mz_mindbody_access_state.login_form;
 				mz_mindbody_access_state.content += '<div class="alert alert-warning">' + mz_mindbody_access_state.message + '</div>';
+				
+			} else if (mz_mindbody_access_state.action == 'redirect') {
+			
+				mz_mindbody_access_state.content += '<div class="alert alert-success">' + mz_mindbody_access_state.message + '</div>';
+				
 			} else if (mz_mindbody_access_state.action == 'logout') {
+			
 				mz_mindbody_access_state.content += '<div class="alert alert-info">' + mz_mindbody_access_state.message + '</div>';
 				mz_mindbody_access_state.content += mz_mindbody_access_state.login_form;
 				$('#signupModalFooter').remove();
+				
 			} else if (mz_mindbody_access_state.action == 'error') {
+			
 				mz_mindbody_access_state.content += '<div class="alert alert-danger">' + mz_mindbody_access_state.message + '</div>';
+				
 			} else if (mz_mindbody_access_state.action == 'denied'){
+			
 				mz_mindbody_access_state.content += mz_mindbody_access_state.message;
 				mz_mindbody_access_state.content += mz_mindbody_access_state.footer;
+				
 			} else if (mz_mindbody_access_state.action == 'granted'){
+			
 				mz_mindbody_access_state.content += '<div class="alert alert-success">' + mz_mindbody_access_state.message + '</div>';
 				mz_mindbody_access_state.content += restricted_content;
 				mz_mindbody_access_state.content += mz_mindbody_access_state.footer;
+				
 			} else {
+			
 				// check access
 				mz_mbo_access_check_client_access();
 			}
+			
+			// Render the content to DOM
 			if ($('#mzAccessContainer')) {
 				$('#mzAccessContainer').html(mz_mindbody_access_state.content);
 			}
+			
+			// Then reset message
 			mz_mindbody_access_state.message = undefined;
 		}
 		   
@@ -122,18 +143,34 @@
 						mz_mindbody_access_state.logged_in = true;
 						mz_mindbody_access_state.message = json.logged;
 						if (json.client_access_level >= atts.access_level) {
-							if ((json.client_access_level == 1) && (atts.class_redirect)) {
-								window.location.href = atts.class_redirect;
-							} else if ((json.client_access_level == 2) && (atts.member_redirect)) {
-								window.location.href = atts.member_redirect;
+							// Client has access, if there are redirects, this is just a login usage
+							if ((json.client_access_level == 1) && (!!atts.classes_redirect)) {
+								mz_mindbody_access_state.action = 'redirect';
+								mz_mindbody_access_state.message += 'Redirecting you to the classes page.';
+								render_mbo_access_activity();
+								setTimeout(function(){window.location.href = atts.classes_redirect}, 3000);
+							} else if ((json.client_access_level == 2) && (!!atts.member_redirect)) {
+								mz_mindbody_access_state.action = 'redirect';
+								mz_mindbody_access_state.message += 'Redirecting you to the members page.';
+								render_mbo_access_activity();
+								setTimeout(function(){window.location.href = atts.member_redirect}, 3000);
+							} else if ((json.client_access_level == 0) && (!!atts.denied_redirect)) {
+								mz_mindbody_access_state.action = 'redirect';
+								mz_mindbody_access_state.message += 'Redirecting you to our pricing page.';
+								render_mbo_access_activity();
+								setTimeout(function(){window.location.href = atts.denied_redirect}, 3000);
+							} else {
+								// Otherwise we are revealing content
+								mz_mindbody_access_state.action = 'granted';
+								render_mbo_access_activity();
 							}
-							mz_mindbody_access_state.action = 'granted';
+							
 							
 						} else {
 						
 							mz_mindbody_access_state.action = 'denied';
 							mz_mindbody_access_state.message += '</br>';
-							mz_mindbody_access_state.message += '<div class="alert alert-warning">'  + mz_mindbody_access.denied_message + ':';
+							mz_mindbody_access_state.message += '<div class="alert alert-warning">'  + mz_mindbody_access.atts.denied_message + ':';
 							mz_mindbody_access_state.message += '<ul>';
 							
 							if (membership_types) {
@@ -155,9 +192,8 @@
 							}
 							
 							mz_mindbody_access_state.message += '</ul></div>';
+							render_mbo_access_activity();
 						}
-						
-						render_mbo_access_activity();
 						
 					} else {
 						mz_mindbody_access_state.action = 'login_failed';
@@ -203,7 +239,7 @@
 						render_mbo_access_activity();
 					} else {
 						mz_mindbody_access_state.action = 'denied';
-						mz_mindbody_access_state.message = json.logged + '<div class="alert alert-warning">' + mz_mindbody_access.denied_message + ' ' + mz_mindbody_access.membership_types + '</div>';
+						mz_mindbody_access_state.message = json.logged + '<div class="alert alert-warning">' + mz_mindbody_access.atts.denied_message + ' ' + mz_mindbody_access.membership_types + '</div>';
 						render_mbo_access_activity();
 					}
 				} // ./ Ajax Success
@@ -228,13 +264,15 @@
             $.ajax({
                 dataType: 'json',
                 url: mz_mindbody_access.ajaxurl,
-                data: {action: 'mz_client_log_out', nonce: nonce},
+                data: {action: 'mz_client_log_out', nonce: mz_mindbody_access.logout_nonce},
                 beforeSend: function() {
                     mz_mindbody_access_state.action = 'processing';
                     render_mbo_access_activity();
                 },
                 success: function(json) {
+                	console.log("logged out");
                     if (json.type == "success") {
+                	console.log(json);
                         mz_mindbody_access_state.logged_in = false;
                         mz_mindbody_access_state.action = 'logout';
                         mz_mindbody_access_state.message = json.message;
@@ -258,7 +296,7 @@
 		 *
 		 * This asks server to check if session has been set with client info
 		 */
-		setInterval(mz_mbo_check_client_logged, 5000);
+		setInterval(mz_mbo_check_client_logged, 10000);
 
 		function mz_mbo_check_client_logged( )
 		{	
@@ -283,7 +321,7 @@
 		/**
 		 * Check and update Client Access every minute
 		 */
-		setInterval(mz_mbo_update_client_access, 5000);
+		setInterval(mz_mbo_update_client_access, 30000);
 
 		function mz_mbo_update_client_access( )
 		{	

@@ -73,9 +73,20 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
      * @access   public
      *
      * @used in handleShortcode, localizeScript
-     * @var      @array    $data    array to send template.
+     * @var      @bool    $has_access if current client has access current page.
      */
     public $has_access;
+
+    /**
+     * Level of client access
+     *
+     * @since    1.0.0
+     * @access   public
+     *
+     * @used in handleShortcode, localizeScript
+     * @var      @int    $client_access_level current client access level.
+     */
+    public $client_access_level;
 
     /**
      * Membership Types
@@ -100,11 +111,12 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'call_to_action' => __('Login with your Mindbody account to access this content.', 'mz-mindbpdy-api'),
             'access_expired' => __('Looks like your access has expired.', 'mz-mindbpdy-api'),
             'member_redirect' => '',
-            'class_redirect' => '',
-            'access_level' => 1
+            'denied_redirect' => '',
+            'classes_redirect' => '',
+            'access_level' => 0
         ), $atts);
-        
-        $this->atts = $atts;
+
+        MZ\MZMBO()->session->get('MBO_Client');
         
         $this->siteID = (isset($atts['siteid'])) ? $atts['siteid'] : MZ\MZMBO()::$basic_options['mz_mindbody_siteID'];
         
@@ -147,17 +159,19 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
         
 		$access_utilities = new Access_Utilities;
 		
-		$has_access = $access_utilities->check_access_permissions($this->atts['memberships'], $this->atts['purchases'], $this->atts['contracts']);
-				
-		if ($has_access) {
-			$this->template_data['access'] = true;
+		$session_utils = new MZ\Inc\Libraries\WP_Session\WP_Session_Utils;
+		
+		$client_access_level = $access_utilities->check_access_permissions($this->atts['memberships'], $this->atts['purchases'], $this->atts['contracts']);
+
+		if ( (bool) $client_access_level) {
+			$this->template_data['has_access'] = true;
 			$this->has_access = true;
 		 }
         
 		$logged = MZ\MZMBO()->client->check_client_logged();
-				
-		if ($logged) {
 		
+		if ($logged) {
+			
 			$this->template_data['logged_in'] = true;
 			$this->logged_in = true;
 			$this->template_data['client_name'] = MZ\MZMBO()->session->get('MBO_CLIENT')['FirstName'];
@@ -211,6 +225,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
         $params = array(
             'ajaxurl' => admin_url('admin-ajax.php', $protocol),
             'login_nonce' => wp_create_nonce('mz_mbo_access_nonce'),
+            'logout_nonce' => wp_create_nonce('mz_client_log_out'),
             'atts' => $this->atts,
             'restricted_content' => $this->restricted_content,
             'siteID' => $this->siteID,
@@ -222,7 +237,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'contract_types' => json_encode($this->atts['contract_types']),
             'purchase_types' => json_encode($this->atts['purchase_types']),
             'member_redirect' => json_encode($this->atts['member_redirect']),
-            'class_redirect' => json_encode($this->atts['class_redirect'])
+            'classes_redirect' => json_encode($this->atts['classes_redirect'])
         );
         wp_localize_script('mz_mbo_access_script', 'mz_mindbody_access', $params);
     }
