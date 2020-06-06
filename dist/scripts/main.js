@@ -65,6 +65,7 @@
 			} else if (mz_mindbody_access_state.action == 'redirect') {
 			
 				mz_mindbody_access_state.content += '<div class="alert alert-success">' + mz_mindbody_access_state.message + '</div>';
+				mz_mindbody_access_state.content += mz_mindbody_access_state.spinner;
 				
 			} else if (mz_mindbody_access_state.action == 'logout') {
 			
@@ -300,11 +301,12 @@
 
 		function mz_mbo_check_client_logged( )
 		{	
-			// Only do this up to 250 times or so
+			// Only do this up to 1000 times or so so it's not pinging server all day
+			// The count is vague because it's also updated by check_client_access
 			number_of_mbo_log_access_checks++;
-			if (number_of_mbo_log_access_checks >= 500) return;
+			if (number_of_mbo_log_access_checks >= 1000) return;
 			
-			//this will repeat every 5 seconds
+			//this will repeat every 15 seconds
 			$.ajax({
 				dataType: 'json',
 				url: mz_mindbody_access.ajaxurl,
@@ -319,9 +321,9 @@
 		
     
 		/**
-		 * Check and update Client Access every minute
+		 * Check and update Client Access once per hour = 3600000
 		 */
-		setInterval(mz_mbo_update_client_access, 33000);
+		setInterval(mz_mbo_update_client_access, 3600000);
 
 		function mz_mbo_update_client_access( )
 		{	

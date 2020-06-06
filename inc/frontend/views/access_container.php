@@ -19,7 +19,7 @@ else:
 		
 		?>
 		<div class="row" style="margin:.5em;">
-			<a href="#" class="btn btn-primary" id="MBOLogout" target="_blank"><?php echo $data->logout; ?></a>
+			<span class="btn btn-primary" id="MBOLogout" target="_blank"><?php echo $data->logout; ?></span>
 		</div>
 		<?php
 	} else {
@@ -52,7 +52,7 @@ else:
 
 					<a href="https://clients.mindbodyonline.com/ws.asp?&amp;sLoc=1&studioid=<?php echo $data->siteID; ?>" class="btn btn-primary" id="MBOSite" target="_blank"><?php echo $data->manage_on_mbo; ?></a>
 
-					<a href="#" class="btn btn-primary" id="MBOLogout" target="_blank"><?php echo $data->logout; ?></a>
+					<span class="btn btn-primary" id="MBOLogout" target="_blank"><?php echo $data->logout; ?></span>
 
 				</div>
 			
