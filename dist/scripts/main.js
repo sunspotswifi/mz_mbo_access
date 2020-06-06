@@ -296,13 +296,13 @@
 		 *
 		 * This asks server to check if session has been set with client info
 		 */
-		setInterval(mz_mbo_check_client_logged, 10000);
+		setInterval(mz_mbo_check_client_logged, 15000);
 
 		function mz_mbo_check_client_logged( )
 		{	
-			// Only do this up to 1000 times or so
+			// Only do this up to 250 times or so
 			number_of_mbo_log_access_checks++;
-			if (number_of_mbo_log_access_checks >= 2000) return;
+			if (number_of_mbo_log_access_checks >= 500) return;
 			
 			//this will repeat every 5 seconds
 			$.ajax({
@@ -321,13 +321,13 @@
 		/**
 		 * Check and update Client Access every minute
 		 */
-		setInterval(mz_mbo_update_client_access, 30000);
+		setInterval(mz_mbo_update_client_access, 33000);
 
 		function mz_mbo_update_client_access( )
 		{	
-			// Only do this up to 1000 times or so
+			// Only do this up to 250 times or so
 			number_of_mbo_log_access_checks++;
-			if (number_of_mbo_log_access_checks >= 2000) return;
+			if (number_of_mbo_log_access_checks >= 500) return;
 			
 			if (!mz_mindbody_access_state.logged_in) return;
 			
