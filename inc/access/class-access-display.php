@@ -5,6 +5,7 @@ use MZ_MBO_Access as NS;
 use MZ_Mindbody as MZ;
 use MZ_MBO_Access\Inc\Core as Core;
 use MZ_Mindbody\Inc\Client as Client;
+use MZ_Mindbody\Inc\Site as Site;
 use MZ_Mindbody\Inc\Common as Common;
 use MZ_Mindbody\Inc\Common\Interfaces as Interfaces;
 
@@ -104,35 +105,45 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
 
         $this->atts = shortcode_atts(array(
             'siteid' => '',
-            'memberships' => '',
-            'contracts' => '',
-            'purchases' => '',
+            'membership_types' => '',
+            'contract_types' => '',
+            'purchase_types' => '',
             'denied_message' => __('Access to this content requires one of',  'mz-mbo-access'),
             'call_to_action' => __('Login with your Mindbody account to access this content.', 'mz-mindbpdy-api'),
             'access_expired' => __('Looks like your access has expired.', 'mz-mindbpdy-api'),
-            'member_redirect' => '',
+            'contract_redirect' => '',
             'denied_redirect' => '',
-            'classes_redirect' => '',
+            'member_redirect' => '',
             'access_level' => 0
         ), $atts);
 
         MZ\MZMBO()->session->get('MBO_Client');
         
+        $site = new Site\Retrieve_Site;
+        
+        //$memberships = $site->get_site_memberships();
+        //MZ\MZMBO()->helpers->print("Memberships:");
+        //MZ\MZMBO()->helpers->print($memberships);
+        //$programs = $site->get_site_programs();
+        //MZ\MZMBO()->helpers->print("Programs:");
+        //MZ\MZMBO()->helpers->print($programs);
+        //$resources = $site->get_site_resources();
+        //MZ\MZMBO()->helpers->print("Resources:");
+        //MZ\MZMBO()->helpers->print($resources);
+        
         $this->siteID = (isset($atts['siteid'])) ? $atts['siteid'] : MZ\MZMBO()::$basic_options['mz_mindbody_siteID'];
         
         // Break memberships, contracts, purchases up into array, if it hasn't already been.
-        $this->atts['memberships'] = (!is_array($this->atts['memberships'])) ? explode(',', ($this->atts['memberships'])) : $this->atts['memberships'];
-        $this->atts['contracts'] = (!is_array($this->atts['contracts'])) ? explode(',', $this->atts['contracts']) : $this->atts['contracts'];
-        $this->atts['purchases'] = (!is_array($this->atts['purchases'])) ? explode(',', $this->atts['purchases']) : $this->atts['purchases'];
+        $this->atts['membership_types'] = (!is_array($this->atts['membership_types'])) ? explode(',', ($this->atts['membership_types'])) : $this->atts['membership_types'];
+        $this->atts['contract_types'] = (!is_array($this->atts['contract_types'])) ? explode(',', $this->atts['contract_types']) : $this->atts['contract_types'];
+        $this->atts['purchase_types'] = (!is_array($this->atts['purchase_types'])) ? explode(',', $this->atts['purchase_types']) : $this->atts['purchase_types'];
         
-        $this->atts['memberships'] = array_map(trim, $this->atts['memberships']);
-        $this->atts['contracts'] = array_map(trim, $this->atts['contracts']);
-        $this->atts['purchases'] = array_map(trim, $this->atts['purchases']);
+        $this->atts['membership_types'] = array_map(trim, $this->atts['membership_types']);
+        $this->atts['contract_types'] = array_map(trim, $this->atts['contract_types']);
+        $this->atts['purchase_types'] = array_map(trim, $this->atts['purchase_types']);
         
         $this->restricted_content = $content;
-        
-        $this->membership_types = $this->atts['memberships'];
-        
+                
         // Begin generating output
         ob_start();
         
@@ -150,19 +161,18 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'logged_in'  => false,
             'access' => false,
             'client_name' => '',
-            'membership_types' => $this->atts['memberships'],
-            'purchase_types' => $this->atts['purchases'],
-            'contract_types' => $this->atts['contracts'],
             'denied_message' => $this->atts['denied_message'],
             'manage_on_mbo'  => "Visit Mindbody Site"
         );	
-        
+
 		$access_utilities = new Access_Utilities;
 		
 		$session_utils = new MZ\Inc\Libraries\WP_Session\WP_Session_Utils;
 		
-		$client_access_level = $access_utilities->check_access_permissions($this->atts['memberships'], $this->atts['purchases'], $this->atts['contracts']);
-
+		if (!empty($this->atts['contract_redirect']) && !empty($this->atts['member_redirect']) && !empty($this->atts['denied_redirect']) ) {
+			// If this is a content page check access permissions now
+			$client_access_level = $access_utilities->check_access_permissions($this->atts['membership_types'], $this->atts['purchase_types'], $this->atts['contract_types']);
+		}
 		if ( (bool) $client_access_level) {
 			$this->template_data['has_access'] = true;
 			$this->has_access = true;

@@ -6,9 +6,9 @@
             // Shortcode atts for current page.
             atts = mz_mindbody_access.atts,
             restricted_content = mz_mindbody_access.restricted_content,
-            membership_types = atts.memberships,
-            purchase_types = atts.purchases,
-            contract_types = atts.contracts,
+            membership_types = atts.membership_types,
+            purchase_types = atts.purchase_types,
+            contract_types = atts.contract_types,
             number_of_mbo_log_access_checks = 0,
             siteID = mz_mindbody_access.siteID;
             
