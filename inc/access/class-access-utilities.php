@@ -14,62 +14,16 @@ class Access_Utilities extends Client\Retrieve_Client
     /**
      * Check Access Permissions
      *
-     * Since 2.5.7
+     * Since 1.0.0
      *
-     * return true if client account matches received requirements
-     * 
-     * @param TODO $membership_types string or array of membership types 
-     * 
-     *
-     * @return bool
+     * @return int indicating client access level, 0, 1 or 2.
      */
-    public function check_access_permissions( $membership_types = [], $purchase_types = [], $contract_types = [] ){
-		
-		//$this->compare_client_service_status( $membership_types );
-		//$this->compare_client_membership_status( $membership_types );
-		if ( 2 === $this->compare_client_contract_status( $contract_types ) ) {
-			return 2;
-		} else {
-			return $this->compare_client_membership_status( $membership_types );
-		}
+    public function check_access_permissions( ){
+		$result = $this->compare_client_service_status();
+		return $result;
 				        
     }
-    
-    /**
-     * Compare Client Membership Status
-     *
-     * Since 2.5.8
-     *
-     * return true if active membership matches one in received array (or string)
-     * 
-     * @param $membership_types string or array of membership types 
-     * 
-     *
-     * @return bool
-     */
-    public function compare_client_membership_status( $membership_types = [] ){
-						
-		$membership_types = is_array($membership_types) ? $membership_types : [$membership_types];
-		
-		$memberships = $this->get_active_client_memberships();
-		
-		if ( false == (bool) $memberships['ClientMemberships'] ) return 0;
-		
-		MZ\MZMBO()->helpers->log("memberships");
-		MZ\MZMBO()->helpers->log(count($memberships['ClientMemberships']));
-		MZ\MZMBO()->helpers->log("membership types");
-		MZ\MZMBO()->helpers->log($membership_types);
-		foreach( $memberships['ClientMemberships'] as $membership ) {
-		MZ\MZMBO()->helpers->log("membership");
-		MZ\MZMBO()->helpers->log($membership['Name']);
-		MZ\MZMBO()->helpers->log(in_array($membership['Name'], $membership_types));
-			if ( in_array($membership['Name'], $membership_types) ) return 1;
-		}
-		
-        return 0;
         
-    }
-    
     /**
      * Compare Client Service Status
      *
@@ -82,14 +36,28 @@ class Access_Utilities extends Client\Retrieve_Client
      *
      * @return bool
      */
-    public function compare_client_service_status( $membership_types = [] ){
+    public function compare_client_service_status( ){
 						
-		$membership_types = is_array($membership_types) ? $membership_types : [$membership_types];
-		
+		// TODO can we avoid doing this here AND in access display?
+        $mz_mbo_access_options = get_option('mz_mbo_access');
+        $level_1_services = explode(',', $mz_mbo_access_options['level_1_services']);
+		$level_2_services = explode(',', $mz_mbo_access_options['level_2_services']);        
+        $level_1_services = array_map(trim, $level_1_services);
+        $level_2_services = array_map(trim, $level_2_services);	
+        	
 		$services = $this->get_client_services();
 		
-		MZ\MZMBO()->helpers->log("services");
-		MZ\MZMBO()->helpers->log($services);
+		if ( false == (bool) $services['ClientServices'] ) return 0;
+		
+		
+		// Comapre level two services first
+		foreach( $services['ClientServices'] as $service ) {
+			if ( in_array($service['Name'], $level_2_services) ) return 2;
+		}
+		// If not level two do we have level one access?
+		foreach( $services['ClientServices'] as $service ) {
+			if ( in_array($service['Name'], $level_1_services) ) return 1;
+		}
 		
         return 0;
         
@@ -115,14 +83,7 @@ class Access_Utilities extends Client\Retrieve_Client
 		
 		if ( false == (bool) $contracts[0]['ContractName'] ) return 0;
 		
-		MZ\MZMBO()->helpers->log("contracts");
-		MZ\MZMBO()->helpers->log(count($contracts['ClientMemberships']));
-		MZ\MZMBO()->helpers->log("contract_types types");
-		MZ\MZMBO()->helpers->log($contract_types);
 		foreach( $contracts as $contract ) {
-		MZ\MZMBO()->helpers->log("contract");
-		MZ\MZMBO()->helpers->log($contract['ContractName']);
-		MZ\MZMBO()->helpers->log(in_array($contract['ContractName'], $contract_types));
 			if ( in_array($contract['ContractName'], $contract_types) ) return 2;
 		}
 		

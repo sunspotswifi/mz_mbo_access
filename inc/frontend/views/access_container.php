@@ -13,7 +13,7 @@ else:
 	?>
 	<p class="mbo-user">Hi, <?php echo $data->client_name; ?>.</p>
 	<?php
-	if ((!empty($data->atts['member_redirect']) || !empty($data->atts['member_redirect']) )) {
+	if ((!empty($data->atts['level_1_redirect']) || !empty($data->atts['level_2_redirect']) )) {
 		// this is being used as a redirect login form so just echo content if it exists
 		echo $data->content; 
 		
@@ -28,14 +28,10 @@ else:
 			<div class="alert alert-warning">
 				<?php echo '<strong>' . $data->atts['denied_message'] .  '</strong>:'; ?>
 				<ul>
-					<?php foreach ($data->membership_types as $membership_type){
-						echo '<li>' . $membership_type . '</li>';
-					}
-					foreach ($data->purchase_types as $purchase_type){
-						echo '<li>' . $purchase_type . '</li>';
-					}
-					foreach ($data->contract_types as $contract_type){
-						echo '<li>' . $contract_type . '</li>';
+					<?php foreach ($data->access_levels as $level){
+						foreach ($data->required_services[$level] as $service) {
+							echo '<li>' . $service . '</li>';
+						}
 					}
 					?>
 				</ul>

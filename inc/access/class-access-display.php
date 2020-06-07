@@ -90,60 +90,60 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
     public $client_access_level;
 
     /**
-     * Membership Types
+     * Level One Services
      *
      * @since    1.0.0
      * @access   public
      *
      * @used in localizeScript
-     * @var      @array    $data    array to send template.
+     * @var      @array    $level_1_services of services from options page.
      */
-    public $membership_types;
+    public $level_1_services;
+
+    /**
+     * Level Two Services
+     *
+     * @since    1.0.0
+     * @access   public
+     *
+     * @used in localizeScript
+     * @var      @array    $level_2_services of services from options page.
+     */
+    public $level_2_services;
 
     public function handleShortcode($atts, $content = null)
     {
 
         $this->atts = shortcode_atts(array(
             'siteid' => '',
-            'membership_types' => '',
-            'contract_types' => '',
-            'purchase_types' => '',
             'denied_message' => __('Access to this content requires one of',  'mz-mbo-access'),
             'call_to_action' => __('Login with your Mindbody account to access this content.', 'mz-mindbpdy-api'),
             'access_expired' => __('Looks like your access has expired.', 'mz-mindbpdy-api'),
-            'contract_redirect' => '',
+            'level_1_redirect' => '',
+            'level_2_redirect' => '',
             'denied_redirect' => '',
-            'member_redirect' => '',
-            'access_level' => 0
+            'access_levels' => 1
         ), $atts);
 
         MZ\MZMBO()->session->get('MBO_Client');
         
         $site = new Site\Retrieve_Site;
         
-        //$memberships = $site->get_site_memberships();
-        //MZ\MZMBO()->helpers->print("Memberships:");
-        //MZ\MZMBO()->helpers->print($memberships);
-        //$programs = $site->get_site_programs();
-        //MZ\MZMBO()->helpers->print("Programs:");
-        //MZ\MZMBO()->helpers->print($programs);
-        //$resources = $site->get_site_resources();
-        //MZ\MZMBO()->helpers->print("Resources:");
-        //MZ\MZMBO()->helpers->print($resources);
-        
+        $mz_mbo_access_options = get_option('mz_mbo_access');
+                
         $this->siteID = (isset($atts['siteid'])) ? $atts['siteid'] : MZ\MZMBO()::$basic_options['mz_mindbody_siteID'];
+                
+        // TODO can we avoid doing this here AND in access utilities?
+        $mz_mbo_access_options = get_option('mz_mbo_access');
+        $this->level_1_services = explode(',', $mz_mbo_access_options['level_1_services']);
+		$this->level_2_services = explode(',', $mz_mbo_access_options['level_2_services']);        
+        $this->level_1_services = array_map(trim, $this->level_1_services);
+        $this->level_2_services = array_map(trim, $this->level_2_services);
         
-        // Break memberships, contracts, purchases up into array, if it hasn't already been.
-        $this->atts['membership_types'] = (!is_array($this->atts['membership_types'])) ? explode(',', ($this->atts['membership_types'])) : $this->atts['membership_types'];
-        $this->atts['contract_types'] = (!is_array($this->atts['contract_types'])) ? explode(',', $this->atts['contract_types']) : $this->atts['contract_types'];
-        $this->atts['purchase_types'] = (!is_array($this->atts['purchase_types'])) ? explode(',', $this->atts['purchase_types']) : $this->atts['purchase_types'];
-        
-        $this->atts['membership_types'] = array_map(trim, $this->atts['membership_types']);
-        $this->atts['contract_types'] = array_map(trim, $this->atts['contract_types']);
-        $this->atts['purchase_types'] = array_map(trim, $this->atts['purchase_types']);
+        $this->atts['access_levels'] = explode(',', $this->atts['access_levels']);
         
         $this->restricted_content = $content;
-                
+        
         // Begin generating output
         ob_start();
         
@@ -159,6 +159,8 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'login'  => "Login",
             'logout'  => "Logout",
             'logged_in'  => false,
+            "required_services" => [1 => $this->level_1_services, 2 => $this->level_2_services],
+            "access_levels" => $this->atts['access_levels'],
             'access' => false,
             'client_name' => '',
             'denied_message' => $this->atts['denied_message'],
@@ -169,7 +171,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
 		
 		$session_utils = new MZ\Inc\Libraries\WP_Session\WP_Session_Utils;
 		
-		if (!empty($this->atts['contract_redirect']) && !empty($this->atts['member_redirect']) && !empty($this->atts['denied_redirect']) ) {
+		if (!empty($this->atts['contract_redirect']) && !empty($this->atts['level_2_redirect']) && !empty($this->atts['denied_redirect']) ) {
 			// If this is a content page check access permissions now
 			$client_access_level = $access_utilities->check_access_permissions($this->atts['membership_types'], $this->atts['purchase_types'], $this->atts['contract_types']);
 		}
@@ -177,7 +179,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
 			$this->template_data['has_access'] = true;
 			$this->has_access = true;
 		 }
-        
+		         
 		$logged = MZ\MZMBO()->client->check_client_logged();
 		
 		if ($logged) {
@@ -240,14 +242,9 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'restricted_content' => $this->restricted_content,
             'siteID' => $this->siteID,
             'logged_in' => $this->logged_in,
-            'membership_types' => $this->atts['memberships'],
             'has_access' => $this->has_access,
             'denied_message' => $this->denied_message,
-            'membership_types' => json_encode($this->atts['membership_types']),
-            'contract_types' => json_encode($this->atts['contract_types']),
-            'purchase_types' => json_encode($this->atts['purchase_types']),
-            'member_redirect' => json_encode($this->atts['member_redirect']),
-            'classes_redirect' => json_encode($this->atts['classes_redirect'])
+            "required_services" => [1 => $this->level_1_services, 2 => $this->level_2_services]
         );
         wp_localize_script('mz_mbo_access_script', 'mz_mindbody_access', $params);
     }

@@ -1,6 +1,6 @@
 (function ($) {
     $(document).ready(function ($) {
-    
+
     // Initialize some variables
         var nonce = mz_mindbody_access.login_nonce,
             // Shortcode atts for current page.
@@ -124,10 +124,7 @@
 				data: {
 						action: 'ajax_login_check_access_permissions',
 						form: form.serialize(),
-						nonce: result.nonce,
-						membership_types: membership_types,
-						purchase_types: purchase_types,
-						contract_types: contract_types
+						nonce: result.nonce
 					},
 				beforeSend: function() {
 					mz_mindbody_access_state.action = 'processing';
@@ -143,18 +140,18 @@
 					if (json.type == "success") {
 						mz_mindbody_access_state.logged_in = true;
 						mz_mindbody_access_state.message = json.logged;
-						if (json.client_access_level >= atts.access_level) {
+						if (atts.access_levels.indexOf(String(json.client_access_level)) != -1) {
 							// Client has access, if there are redirects, this is just a login usage
-							if ((json.client_access_level == 1) && (!!atts.classes_redirect)) {
+							if ((json.client_access_level == 1) && (!!atts.level_1_redirect)) {
 								mz_mindbody_access_state.action = 'redirect';
 								mz_mindbody_access_state.message += 'Redirecting you to the classes page.';
 								render_mbo_access_activity();
-								setTimeout(function(){window.location.href = atts.classes_redirect}, 3000);
-							} else if ((json.client_access_level == 2) && (!!atts.member_redirect)) {
+								setTimeout(function(){window.location.href = atts.level_1_redirect}, 3000);
+							} else if ((json.client_access_level == 2) && (!!atts.level_2_redirect)) {
 								mz_mindbody_access_state.action = 'redirect';
 								mz_mindbody_access_state.message += 'Redirecting you to the members page.';
 								render_mbo_access_activity();
-								setTimeout(function(){window.location.href = atts.member_redirect}, 3000);
+								setTimeout(function(){window.location.href = atts.level_2_redirect}, 3000);
 							} else if ((json.client_access_level == 0) && (!!atts.denied_redirect)) {
 								mz_mindbody_access_state.action = 'redirect';
 								mz_mindbody_access_state.message += 'Redirecting you to our pricing page.';
@@ -174,21 +171,12 @@
 							mz_mindbody_access_state.message += '<div class="alert alert-warning">'  + mz_mindbody_access.atts.denied_message + ':';
 							mz_mindbody_access_state.message += '<ul>';
 							
-							if (membership_types) {
-								for (var i=0; i < membership_types.length; i++) {
-									mz_mindbody_access_state.message += '<li>' + membership_types[i] + '</li>';
-								}
-							}
-							
-							if (purchase_types) {
-								for (var i=0; i < purchase_types.length; i++) {
-									mz_mindbody_access_state.message += '<li>' + purchase_types[i] + '</li>';
-								}
-							}
-							
-							if (contract_types) {
-								for (var i=0; i < contract_types.length; i++) {
-									mz_mindbody_access_state.message += '<li>' + contract_types[i] + '</li>';
+							if (mz_mindbody_access.required_services && mz_mindbody_access.atts.access_levels) {
+								for (var i=0; i < mz_mindbody_access.atts.access_levels.length; i++) {
+									var level = mz_mindbody_access.atts.access_levels[i];
+									for (var j=0; j < mz_mindbody_access.required_services[level].length; j++) {
+										mz_mindbody_access_state.message += '<li>' + mz_mindbody_access.required_services[level][j] + '</li>';
+									}
 								}
 							}
 							
@@ -223,17 +211,14 @@
 				context: this, // So we have access to form data within ajax results
 				data: {
 						action: 'ajax_login_check_access_permissions',
-						nonce: mz_mindbody_access.login_nonce,
-						membership_types: JSON.stringify(membership_types),
-						purchase_types: JSON.stringify(purchase_types),
-						contract_types: JSON.stringify(contract_types)
+						nonce: mz_mindbody_access.login_nonce
 					},
 				beforeSend: function() {
 					mz_mindbody_access_state.action = 'processing';
 					render_mbo_access_activity();
 				},
 				success: function(json) {
-					if ((json.type == "success") && (json.client_access_level >= atts.access_level)) {
+					if ((json.type == "success") && (atts.access_levels.indexOf(String(json.client_access_level)) != -1)) {
 						mz_mindbody_access_state.logged_in = true;
 						mz_mindbody_access_state.action = 'granted';
 						mz_mindbody_access_state.message = json.message;
@@ -339,14 +324,11 @@
 				context: this, // So we have access to form data within ajax results
 				data: {
 						action: 'ajax_check_access_permissions',
-						nonce: mz_mindbody_access.login_nonce,
-						membership_types: JSON.stringify(membership_types),
-						purchase_types: JSON.stringify(purchase_types),
-						contract_types: JSON.stringify(contract_types)
+						nonce: mz_mindbody_access.login_nonce
 					},
 				success: function(json) {
 					if (json.type == "success") {
-						if (mz_mindbody_access_state.has_access == false && json.client_access_level >= atts.access_level) {
+						if (mz_mindbody_access_state.has_access == false && atts.access_levels.indexOf(String(json.client_access_level)) != -1) {
 							mz_mindbody_access_state.has_access = true;
 							mz_mindbody_access_state.action = 'granted';
 							mz_mindbody_access_state.message = 'Access Granted.';
