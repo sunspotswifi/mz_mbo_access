@@ -140,7 +140,8 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
         $this->level_1_services = array_map(trim, $this->level_1_services);
         $this->level_2_services = array_map(trim, $this->level_2_services);
         
-        $this->atts['access_levels'] = explode(',', $this->atts['access_levels']);
+        $this->atts['access_levels'] = explode(',', $this->atts['access_levels']);      
+        $this->atts['access_levels'] = array_map(trim, $this->atts['access_levels']);
         
         $this->restricted_content = $content;
         
