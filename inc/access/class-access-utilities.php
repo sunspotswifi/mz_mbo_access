@@ -19,7 +19,7 @@ class Access_Utilities extends Client\Retrieve_Client
      * @return int indicating client access level, 0, 1 or 2.
      */
     public function check_access_permissions( ){
-		$result = $this->compare_client_service_status();
+		$result = $this->set_client_access_level();
 		return $result;
 				        
     }
@@ -36,8 +36,8 @@ class Access_Utilities extends Client\Retrieve_Client
      *
      * @return bool
      */
-    public function compare_client_service_status( ){
-						
+    public function set_client_access_level( ){
+    						
 		// TODO can we avoid doing this here AND in access display?
         $mz_mbo_access_options = get_option('mz_mbo_access');
         $level_1_services = explode(',', $mz_mbo_access_options['level_1_services']);
@@ -47,26 +47,55 @@ class Access_Utilities extends Client\Retrieve_Client
         	
 		$services = $this->get_client_services();
 		
-		if ( false == (bool) $services['ClientServices'] ) return 0;
+		MZ\MZMBO($services)->helpers->log($services);
 		
+		if ( false == (bool) $services['ClientServices'] ) {
+			// Update client session with empty keys just in case
+			return $this->update_client_session(0, []);
+		}
 		
 		// Comapre level two services first
 		foreach( $services['ClientServices'] as $service ) {
-			if ( in_array($service['Name'], $level_2_services) ) return 2;
+			if ( in_array($service['Name'], $level_2_services) ) {
+				// No need to check further
+				return $this->update_client_session(2, $services['ClientServices']);
+			}
 		}
 		// If not level two do we have level one access?
 		foreach( $services['ClientServices'] as $service ) {
-			if ( in_array($service['Name'], $level_1_services) ) return 1;
+			if ( in_array($service['Name'], $level_1_services) ) {
+				// No need to check further
+				return $this->update_client_session(1, $services['ClientServices']);
+			}
 		}
-		
-        return 0;
+				
+        return $this->access_level;
         
     }
     
     /**
+     * Add Access Level and Services to Client Session
+     *
+     * Since 1.0.0
+     *
+     * @param services array of services returned from MBO
+     * @param access_level int access level based on admin configuration
+     */
+     private function update_client_session($access_level, $services){
+     		// Don't love that we call the database twice here,
+     		// but not sure if there's a better way.
+     		$logged_client = MZ\MZMBO()->session->get( 'MBO_Client' );
+			$client_details = array(
+				'access_level' => $access_level,
+				'services' => $services,
+				'mbo_result' => $logged_client['mbo_result']
+			);
+			MZ\MZMBO()->session->set( 'MBO_Client', $client_details );
+    }
+    /**
      * Compare Client Contract Status
      *
-     * Since 2.5.8
+     * Since 1.0.0
      *
      * return true if active membership matches one in received array (or string)
      * 

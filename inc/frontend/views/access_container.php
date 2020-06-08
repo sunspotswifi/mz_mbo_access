@@ -24,7 +24,7 @@ else:
 		<?php
 	} else {
 	
-		if ( false == $data->has_access ) { ?>
+		if ( $data->access ) { ?>
 			<div class="alert alert-warning">
 				<?php echo '<strong>' . $data->atts['denied_message'] .  '</strong>:'; ?>
 				<ul>

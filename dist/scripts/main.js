@@ -170,7 +170,8 @@
 							mz_mindbody_access_state.message += '</br>';
 							mz_mindbody_access_state.message += '<div class="alert alert-warning">'  + mz_mindbody_access.atts.denied_message + ':';
 							mz_mindbody_access_state.message += '<ul>';
-							
+							console.log(mz_mindbody_access.atts.access_levels);
+							console.log(mz_mindbody_access.required_services);
 							if (mz_mindbody_access.required_services && mz_mindbody_access.atts.access_levels) {
 								for (var i=0; i < mz_mindbody_access.atts.access_levels.length; i++) {
 									var level = mz_mindbody_access.atts.access_levels[i];

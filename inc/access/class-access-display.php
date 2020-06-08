@@ -124,10 +124,6 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'denied_redirect' => '',
             'access_levels' => 1
         ), $atts);
-
-        MZ\MZMBO()->session->get('MBO_Client');
-        
-        $site = new Site\Retrieve_Site;
         
         $mz_mbo_access_options = get_option('mz_mbo_access');
                 
@@ -137,11 +133,11 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
         $mz_mbo_access_options = get_option('mz_mbo_access');
         $this->level_1_services = explode(',', $mz_mbo_access_options['level_1_services']);
 		$this->level_2_services = explode(',', $mz_mbo_access_options['level_2_services']);        
-        $this->level_1_services = array_map(trim, $this->level_1_services);
-        $this->level_2_services = array_map(trim, $this->level_2_services);
+        $this->level_1_services = array_map('trim', $this->level_1_services);
+        $this->level_2_services = array_map('trim', $this->level_2_services);
         
         $this->atts['access_levels'] = explode(',', $this->atts['access_levels']);      
-        $this->atts['access_levels'] = array_map(trim, $this->atts['access_levels']);
+        $this->atts['access_levels'] = array_map('trim', $this->atts['access_levels']);
         
         $this->restricted_content = $content;
         
@@ -172,22 +168,31 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
 		
 		$session_utils = new MZ\Inc\Libraries\WP_Session\WP_Session_Utils;
 		
-		if (!empty($this->atts['contract_redirect']) && !empty($this->atts['level_2_redirect']) && !empty($this->atts['denied_redirect']) ) {
-			// If this is a content page check access permissions now
-			$client_access_level = $access_utilities->check_access_permissions($this->atts['membership_types'], $this->atts['purchase_types'], $this->atts['contract_types']);
-		}
-		if ( (bool) $client_access_level) {
-			$this->template_data['has_access'] = true;
-			$this->has_access = true;
-		 }
-		         
-		$logged = MZ\MZMBO()->client->check_client_logged();
+		$logged_client = MZ\MZMBO()->session->get('MBO_Client');
 		
-		if ($logged) {
+		if (!empty($this->atts['level_1_redirect']) || !empty($this->atts['level_2_redirect']) || !empty($this->atts['denied_redirect']) ) {
+			// If this is a content page check access permissions now
+			// First we will see if client access is already determined in client_session
+			
+        	if ( !empty($logged_client['access_level']) && in_array($logged_client['access_level'], $this->atts['access_levels']) ) {
+				$this->template_data['has_access'] = true;
+				$this->has_access = true;
+        	} else {
+        		// Need to ping the api
+        		$client_access_level = $access_utilities->check_access_permissions();
+        		if ( in_array($client_access_level, $this->atts['access_levels']) ) {
+					$this->template_data['has_access'] = true;
+					$this->has_access = true;
+				 }
+        	}
+			
+		}
+		         		
+		if (!empty($logged_client)) {
 			
 			$this->template_data['logged_in'] = true;
 			$this->logged_in = true;
-			$this->template_data['client_name'] = MZ\MZMBO()->session->get('MBO_CLIENT')['FirstName'];
+			$this->template_data['client_name'] = MZ\MZMBO()->session->get('MBO_CLIENT')['mbo_result']['FirstName'];
 		 	
 		} 
 		
