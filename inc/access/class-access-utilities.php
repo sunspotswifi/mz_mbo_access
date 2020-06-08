@@ -46,9 +46,7 @@ class Access_Utilities extends Client\Retrieve_Client
         $level_2_services = array_map(trim, $level_2_services);	
         	
 		$services = $this->get_client_services();
-		
-		MZ\MZMBO($services)->helpers->log($services);
-		
+				
 		if ( false == (bool) $services['ClientServices'] ) {
 			// Update client session with empty keys just in case
 			return $this->update_client_session(0, []);
@@ -57,6 +55,7 @@ class Access_Utilities extends Client\Retrieve_Client
 		// Comapre level two services first
 		foreach( $services['ClientServices'] as $service ) {
 			if ( in_array($service['Name'], $level_2_services) ) {
+				if (!$this->is_service_valid($service)) continue;
 				// No need to check further
 				return $this->update_client_session(2, $services['ClientServices']);
 			}
@@ -64,6 +63,7 @@ class Access_Utilities extends Client\Retrieve_Client
 		// If not level two do we have level one access?
 		foreach( $services['ClientServices'] as $service ) {
 			if ( in_array($service['Name'], $level_1_services) ) {
+				if (!$this->is_service_valid($service)) continue;
 				// No need to check further
 				return $this->update_client_session(1, $services['ClientServices']);
 			}
@@ -74,12 +74,31 @@ class Access_Utilities extends Client\Retrieve_Client
     }
     
     /**
+     * Is Service Valid
+     *
+     * @since 1.0.0
+     * @param array service as returned from mbo
+     * @return bool true if there are remaining and date not expired
+     */
+    private function is_service_valid($service){
+    
+    	if ($service['Remaining'] < 1) return false;
+
+		$service_expiration = new \DateTime($service['ExpirationDate'], MZ\MZMBO()::$timezone);
+		$now = new \DateTimeImmutable( 'now', MZ\MZMBO()::$timezone);
+		if ($service_expiration->date < $now->date) return false;
+		
+		return true;
+    }
+    /**
      * Add Access Level and Services to Client Session
      *
      * Since 1.0.0
      *
      * @param services array of services returned from MBO
      * @param access_level int access level based on admin configuration
+     *
+     * @return int access level of client
      */
      private function update_client_session($access_level, $services){
      		// Don't love that we call the database twice here,
@@ -91,6 +110,8 @@ class Access_Utilities extends Client\Retrieve_Client
 				'mbo_result' => $logged_client['mbo_result']
 			);
 			MZ\MZMBO()->session->set( 'MBO_Client', $client_details );
+			
+			return $access_level;
     }
     /**
      * Compare Client Contract Status
