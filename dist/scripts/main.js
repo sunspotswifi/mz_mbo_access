@@ -140,30 +140,28 @@
 					if (json.type == "success") {
 						mz_mindbody_access_state.logged_in = true;
 						mz_mindbody_access_state.message = json.logged;
-
-						if (atts.access_levels.indexOf(String(json.client_access_level)) != -1) {
-							// Client has access, if there are redirects, this is just a login usage
-							if ((json.client_access_level == 1) && (!!atts.level_1_redirect)) {
-								mz_mindbody_access_state.action = 'redirect';
-								mz_mindbody_access_state.message += 'Redirecting you to the classes page.';
-								render_mbo_access_activity();
-								setTimeout(function(){window.location.href = atts.level_1_redirect}, 3000);
-							} else if ((json.client_access_level == 2) && (!!atts.level_2_redirect)) {
-								mz_mindbody_access_state.action = 'redirect';
-								mz_mindbody_access_state.message += 'Redirecting you to the members page.';
-								render_mbo_access_activity();
-								setTimeout(function(){window.location.href = atts.level_2_redirect}, 3000);
-							} else if ((json.client_access_level == 0) && (!!atts.denied_redirect)) {
-								mz_mindbody_access_state.action = 'redirect';
-								mz_mindbody_access_state.message += 'Redirecting you to our pricing page.';
-								render_mbo_access_activity();
-								setTimeout(function(){window.location.href = atts.denied_redirect}, 3000);
-							} else {
-								// Otherwise we are revealing content
-								mz_mindbody_access_state.action = 'granted';
-								render_mbo_access_activity();
-							}
-							
+						
+						// If there are redirects, this is just a login usage
+						if ((json.client_access_level === 1) && (!!atts.level_1_redirect)) {
+							mz_mindbody_access_state.action = 'redirect';
+							mz_mindbody_access_state.message += 'Redirecting you to the classes page.';
+							render_mbo_access_activity();
+							setTimeout(function(){window.location.href = atts.level_1_redirect}, 3000);
+						} else if ((json.client_access_level === 2) && (!!atts.level_2_redirect)) {
+							mz_mindbody_access_state.action = 'redirect';
+							mz_mindbody_access_state.message += 'Redirecting you to the members page.';
+							render_mbo_access_activity();
+							setTimeout(function(){window.location.href = atts.level_2_redirect}, 3000);
+						} else if ((json.client_access_level === 0) && (!!atts.denied_redirect)) {
+							mz_mindbody_access_state.action = 'redirect';
+							mz_mindbody_access_state.message += 'Redirecting you to our pricing page.';
+							render_mbo_access_activity();
+							setTimeout(function(){window.location.href = atts.denied_redirect}, 3000);
+						}  else if (atts.access_levels.indexOf(String(json.client_access_level)) != -1) {
+							// This page contains restricted content
+							// Check to see if client access level matches one set in shortcode
+							mz_mindbody_access_state.action = 'granted';
+							render_mbo_access_activity();							
 							
 						} else {
 						
