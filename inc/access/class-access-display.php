@@ -151,17 +151,18 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'content' => $this->restricted_content,
             'signup_nonce'  => wp_create_nonce('mz_mbo_signup_nonce'),
             'siteID'  => MZ\MZMBO()::$basic_options['mz_mindbody_siteID'],
-            'email'  => "email",
-            'password'  => "password",
-            'login'  => "Login",
-            'logout'  => "Logout",
+            'email'  => __("email", 'mz-mbo-access'),
+            'password'  => __("password", 'mz-mbo-access'),
+            'login'  => __("Login", 'mz-mbo-access'),
+            'logout'  => __("Logout", 'mz-mbo-access'),
             'logged_in'  => false,
             "required_services" => [1 => $this->level_1_services, 2 => $this->level_2_services],
             "access_levels" => $this->atts['access_levels'],
             'access' => false,
             'client_name' => '',
             'denied_message' => $this->atts['denied_message'],
-            'manage_on_mbo'  => "Visit Mindbody Site"
+            'manage_on_mbo'  => "Visit Mindbody Site",
+            'password_reset_request' => __("Forgot My Password", 'mz-mbo-access')
         );	
 
 		$access_utilities = new Access_Utilities;
@@ -187,8 +188,8 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
         	}
 			
 		}
-		         		
-		if (!empty($logged_client)) {
+				         		
+		if (!empty($logged_client['mbo_result'])) {
 			
 			$this->template_data['logged_in'] = true;
 			$this->logged_in = true;
@@ -225,7 +226,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             wp_register_style('mz_mindbody_style', MZ\PLUGIN_NAME_URL . 'dist/styles/main.css');
             wp_enqueue_style('mz_mindbody_style');
 
-            wp_register_script('mz_mbo_access_script', NS\PLUGIN_NAME_URL . 'dist/scripts/main.js', array('jquery'), 1.0, true);
+            wp_register_script('mz_mbo_access_script', NS\PLUGIN_NAME_URL . 'dist/scripts/main.js', array('jquery'), NS\PLUGIN_VERSION, true);
             wp_enqueue_script('mz_mbo_access_script');
 
             $this->localizeScript();
