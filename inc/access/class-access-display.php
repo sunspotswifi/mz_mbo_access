@@ -122,7 +122,9 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'level_1_redirect' => '',
             'level_2_redirect' => '',
             'denied_redirect' => '',
-            'access_levels' => 1
+            'access_levels' => 1,
+            'manage_on_mbo'  => "Visit Mindbody Site",
+            'password_reset_request' => __("Forgot My Password", 'mz-mbo-access')
         ), $atts);
         
         $mz_mbo_access_options = get_option('mz_mbo_access');
@@ -161,8 +163,8 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'access' => false,
             'client_name' => '',
             'denied_message' => $this->atts['denied_message'],
-            'manage_on_mbo'  => "Visit Mindbody Site",
-            'password_reset_request' => __("Forgot My Password", 'mz-mbo-access')
+            'manage_on_mbo'  => $this->atts['manage_on_mbo'],
+            'password_reset_request' => $this->atts['password_reset_request']
         );	
 
 		$access_utilities = new Access_Utilities;

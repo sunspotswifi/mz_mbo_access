@@ -19,7 +19,7 @@ else:
 		
 		?>
 		<div class="row" style="margin:.5em;">
-			<span class="btn btn-primary" id="MBOLogout" target="_blank"><?php echo $data->logout; ?></span>
+			<span class="btn btn-primary btn-xs" id="MBOLogout" target="_blank"><?php echo $data->logout; ?></span>
 		</div>
 		<?php
 	} else {
@@ -45,10 +45,15 @@ else:
 			<div class="row" style="margin:.5em;">
 
 				<div class="col-12">
+				
+					<?php if (!empty($data->manage_on_mbo)): ?>
+					<?php var_dump($data->manage_on_mbo); ?>
 
-					<a href="https://clients.mindbodyonline.com/ws.asp?&amp;sLoc=1&studioid=<?php echo $data->siteID; ?>" class="btn btn-primary" id="MBOSite" target="_blank"><?php echo $data->manage_on_mbo; ?></a>
-
-					<span class="btn btn-primary" id="MBOLogout" target="_blank"><?php echo $data->logout; ?></span>
+					<a style="text-decoration:none;" href="https://clients.mindbodyonline.com/ws.asp?&amp;sLoc=1&studioid=<?php echo $data->siteID; ?>" class="btn btn-primary btn-xs" id="MBOSite" target="_blank"><?php echo $data->manage_on_mbo; ?></a>
+					
+					<?php endif; ?>
+					
+					<span class="btn btn-primary btn-xs" id="MBOLogout" target="_blank"><?php echo $data->logout; ?></span>
 
 				</div>
 			

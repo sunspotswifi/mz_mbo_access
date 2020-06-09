@@ -39,10 +39,20 @@ use MZ_MBO_Access\Inc\Core as Core;
 
 				<div class="col-12">
 
-					<button type="submit" class="btn btn-primary"><?php echo $data->login; ?></button>
+					<button type="submit" class="btn btn-primary btn-xs"><?php echo $data->login; ?></button>
+				
+					<?php if (!empty($data->password_reset_request)): ?>
+					
+					<a style="text-decoration:none;" href="https://clients.mindbodyonline.com/PasswordReset?studioid=<?php echo $data->siteID; ?>" class="btn btn-primary btn-xs" target="_blank"><?php echo $data->password_reset_request; ?></a>
 
-					<a href="https://clients.mindbodyonline.com/ws.asp?&amp;sLoc=1&studioid=<?php echo $data->siteID; ?>" class="btn btn-primary" id="MBOSite" target="_blank"><?php echo $data->manage_on_mbo; ?></a>
-
+					<?php endif; ?>
+					
+					<?php if (!empty($data->manage_on_mbo)): ?>
+					
+					<a style="text-decoration:none;" href="https://clients.mindbodyonline.com/ws.asp?&amp;sLoc=1&studioid=<?php echo $data->siteID; ?>" class="btn btn-primary btn-xs" id="MBOSite" target="_blank"><?php echo $data->manage_on_mbo; ?></a>
+					
+					<?php endif; ?>
+					
 				</div>
 			
 			</div>

@@ -90,6 +90,8 @@ class Settings_Page {
         $return .= "<li><strong>level_2_redirect</strong>: " . __("(url string) URL to redirect users with level two access.", 'mz-mindbody-api')."</li>";
         $return .= "<li><strong>denied_redirect</strong>: " . __("((url string) URL to redirect users to who are logged in but don't have access.", 'mz-mindbody-api')."</li>";
         $return .= "<li><strong>call_to_action</strong>: " . __("(string) Message inviting user to submit form.", 'mz-mindbody-api')."</li>";
+        $return .= "<li><strong>password_reset_request</strong>: " . __("(string) Password Reset button text. Blank string to remove button.", 'mz-mindbody-api')."</li>";
+        $return .= "<li><strong>manage_on_mbo</strong>: " . __("(string) Link to MBO Site button text. Blank string to remove button.", 'mz-mindbody-api')."</li>";
         $return .= "<li><strong>denied_message</strong>: " . __("(string) Message preceding list of items required for access.", 'mz-mindbody-api')."</li>";
         $return .= "<li><strong>access_expired</strong>: " . __("(string) Message alerting client that access has expired.", 'mz-mindbody-api')."</li>";
         $return .= "<li><strong>access_levels</strong>: " . sprintf(__('(int/list) (Default %1$d) Levels of access required to access content %1$d, %2$d or %3$s', 'mz-mindbody-api'), 1, 2, "\"1, 2\"")."</li>";
