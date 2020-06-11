@@ -1,13 +1,13 @@
 <?php
-namespace MZ_MBO_Access\Inc\Core;
+namespace MZ_MBO_Access\Core;
 
 use MZ_MBO_Access as NS;
-use MZ_MBO_Access\Inc\Access as Access;
+use MZ_MBO_Access\Access as Access;
 
-use MZ_MBO_Access\Inc\Backend as Backend;
+use MZ_MBO_Access\Backend as Backend;
 use MZ_Mindbody\Inc\Common as Common;
 use MZ_Mindbody\Inc\Client as Client;
-use MZ_Mindbody\Inc\Session as Session;
+use MZ_MBO_Access\Session as Session;
 use MZ_Mindbody\Inc\Libraries\Rarst\WordPress\DateTime as DateTime;
 
 /**
@@ -19,7 +19,7 @@ use MZ_Mindbody\Inc\Libraries\Rarst\WordPress\DateTime as DateTime;
  *
  * @author     Mike iLL/mZoo.org
  */
-class MZ_MBO_Access
+class Plugin_Core
 {
     /**
      * @var MZ_Mindbody_API The one true MZ_Mindbody_API
@@ -91,6 +91,12 @@ class MZ_MBO_Access
      */
     public static $start_of_week;
 
+	/**
+	 * @var MZ_Access_Session
+	 * @accesZ private
+	 */
+	private $session;
+	
     /**
      * Initialize and define the core functionality of the plugin.
      */
@@ -108,8 +114,34 @@ class MZ_MBO_Access
         $this->define_public_hooks();
         $this->register_shortcodes();
         $this->add_settings_page();
-
+        
+        $this->session = Session\MZ_Access_Session::instance();
     }
+    
+    /**
+	 * Cloning is forbidden.
+	 * @since 1.0.0
+	 */
+	public function __clone() {
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'mz-mbo-access' ), '2.1' );
+	}
+
+	/**
+	 * Unserializing instances of this class is forbidden.
+	 * @since 1.0.0
+	 */
+	public function __wakeup() {
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'mz-mbo-access' ), '2.1' );
+	}
+	
+	
+	/**
+     * Return our session instance
+     */
+	public function getSession() {
+		return $this->session;
+	}
+
 
     /**
      * Loads the following required dependencies for this plugin.

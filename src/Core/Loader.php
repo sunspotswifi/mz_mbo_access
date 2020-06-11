@@ -1,5 +1,5 @@
 <?php
-namespace MZ_MBO_Access\Inc\Core;
+namespace MZ_MBO_Access\Core;
 
 /**
  * Register all actions and filters for the plugin

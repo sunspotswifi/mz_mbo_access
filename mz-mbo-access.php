@@ -68,7 +68,7 @@ function mbo_access_child_plugin_notice(){
  * Autoload Classes
  */
 
-require_once( NS\PLUGIN_NAME_DIR . 'inc/libraries/autoloader.php' );
+require_once NS\PLUGIN_NAME_DIR . 'vendor/autoload.php';
 
 /**
  * Register Activation and Deactivation Hooks
@@ -111,8 +111,8 @@ class MZ_MBO_Access {
      */
 	public static function instance() {
 
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof MZ_MBO_Access ) ) {
-			self::$instance = new Inc\Core\MZ_MBO_Access;
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Plugin_Core ) ) {
+			self::$instance = new NS\Core\Plugin_Core;
 			self::$instance->run();
 		}
 
@@ -146,8 +146,10 @@ class MZ_MBO_Access {
  * @since 1.4
  * @return object|MZ_MBO_Access The one true MZ_MBO_Access Instance.
  **/
-function MZ_MBO_Access() {
-		return MZ_MBO_Access::instance();
+ if ( ! function_exists( 'MBO_Access' ) ) {
+	function MBO_Access() {
+			return NS\MZ_MBO_Access::instance();
+	}
 }
 
 // Check the minimum required PHP version and run the plugin.
@@ -159,7 +161,7 @@ if ( version_compare( PHP_VERSION, 'MZ_Mindbody\MINIMUM_PHP_VERSION', '>=' ) ) {
 
 function deactivate() {
 	deactivate_plugins( plugin_basename( __FILE__ ) );
-	$admin_object = new NS\Inc\Admin\Admin(NS\PLUGIN_NAME, NS\PLUGIN_VERSION, NS\PLUGIN_TEXT_DOMAIN);
+	$admin_object = new NS\Admin\Admin(NS\PLUGIN_NAME, NS\PLUGIN_VERSION, NS\PLUGIN_TEXT_DOMAIN);
 	add_action('admin_notices', array($admin_object, 'admin_notice'));
 }
 
@@ -167,7 +169,7 @@ function mz_mbo_access_plugin_init(){
 	if (defined('MZ_Mindbody\PLUGIN_NAME_DIR')) {
 		//plugin is activated, add the hooks
 		// Get MZ_MBO_Access Instance.
-		MZ_MBO_Access();
+		MBO_Access();
 	} else {
 		add_action( 'admin_init', __NAMESPACE__ . '\\deactivate' );
 	}

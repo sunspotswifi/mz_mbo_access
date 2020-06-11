@@ -1,9 +1,9 @@
 <?php
-namespace MZ_MBO_Access\Inc\Access;
+namespace MZ_MBO_Access\Access;
 
 use MZ_MBO_Access as NS;
 use MZ_Mindbody as MZ;
-use MZ_MBO_Access\Inc\Core as Core;
+use MZ_MBO_Access\Core as Core;
 use MZ_Mindbody\Inc\Client as Client;
 use MZ_Mindbody\Inc\Site as Site;
 use MZ_Mindbody\Inc\Common as Common;
@@ -124,9 +124,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'denied_redirect' => '',
             'access_levels' => 1
         ), $atts);
-        
-        $mz_mbo_access_options = get_option('mz_mbo_access');
-                
+                        
         $this->siteID = (isset($atts['siteid'])) ? $atts['siteid'] : MZ\MZMBO()::$basic_options['mz_mindbody_siteID'];
                 
         // TODO can we avoid doing this here AND in access utilities?
@@ -166,9 +164,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
         );	
 
 		$access_utilities = new Access_Utilities;
-		
-		$session_utils = new MZ\Inc\Libraries\WP_Session\WP_Session_Utils;
-		
+				
 		$logged_client = MZ\MZMBO()->session->get('MBO_Client');
 		
 		if (!empty($this->atts['level_1_redirect']) || !empty($this->atts['level_2_redirect']) || !empty($this->atts['denied_redirect']) ) {

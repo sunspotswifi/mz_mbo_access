@@ -1,9 +1,9 @@
 <?php
-namespace MZ_MBO_Access\Inc\Core;
+namespace MZ_MBO_Access\Core;
 
 use MZ_MBO_Access as NS;
 use MZ_Mindbody as MZ;
-use MZ_MBO_Access\Inc\Admin as Admin;
+use MZ_MBO_Access\Admin as Admin;
 
 /**
  * Fired during plugin activation
