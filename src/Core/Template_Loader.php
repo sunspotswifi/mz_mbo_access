@@ -1,5 +1,5 @@
 <?php
-namespace MZ_MBO_Access\Inc\Core;
+namespace MZ_MBO_Access\Core;
 
 use MZ_Mindbody\Inc\Libraries as Libraries;
 use MZ_MBO_Access as NS;
@@ -47,7 +47,7 @@ class Template_Loader extends Libraries\Gamajo_Template_Loader {
      *
      * @var string
      */
-    protected $plugin_template_directory = 'inc/frontend/views';
+    protected $plugin_template_directory = 'src/frontend/views';
 
 }
 

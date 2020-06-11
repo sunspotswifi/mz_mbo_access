@@ -1,9 +1,9 @@
 <?php
-namespace MZ_MBO_Access\Inc\Access;
+namespace MZ_MBO_Access\Access;
 
 use MZ_MBO_Access as NS;
 use MZ_Mindbody as MZ;
-use MZ_MBO_Access\Inc\Core as Core;
+use MZ_MBO_Access\Core as Core;
 use MZ_Mindbody\Inc\Client as Client;
 use MZ_Mindbody\Inc\Common as Common;
 use MZ_Mindbody\Inc\Common\Interfaces as Interfaces;

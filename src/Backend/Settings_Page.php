@@ -1,12 +1,12 @@
 <?php
-namespace MZ_MBO_Access\Inc\Backend;
+namespace MZ_MBO_Access\Backend;
 
 use MZ_Mindbody as MZ;
 use MZ_MBO_Access as NS;
-use MZ_MBO_Access\Inc\Core as Core;
-use MZ_MBO_Access\Inc\Common as Common;
+use MZ_MBO_Access\Core as Core;
+use MZ_MBO_Access\Common as Common;
 use MZ_Mindbody\Inc\Libraries as Libraries;
-use MZ_MBO_Access\Inc\Schedule as Schedule;
+use MZ_MBO_Access\Schedule as Schedule;
 
 /**
  * This file contains the class which holds all the actions and methods to create the admin dashboard sections

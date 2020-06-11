@@ -1,5 +1,5 @@
 <?php
-use MZ_MBO_Access\Inc\Core as Core;
+use MZ_MBO_Access\Core as Core;
 ?>
 	<div id="mzLogInContainer">
 	

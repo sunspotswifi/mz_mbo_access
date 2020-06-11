@@ -1,10 +1,10 @@
 <?php
-namespace MZ_MBO_Access\Inc\Access;
+namespace MZ_MBO_Access\Access;
 
 use MZ_MBO_Access as NS;
 use MZ_Mindbody as MZ;
-use MZ_MBO_Access\Inc\Core as Core;
-use MZ_Mindbody\Inc\Client as Client;
+use MZ_MBO_Access\Core as Core;
+use MZ_MBO_Access\Client as Client;
 use MZ_Mindbody\Inc\Common as Common;
 use MZ_Mindbody\Inc\Common\Interfaces as Interfaces;
 
@@ -42,8 +42,8 @@ class Access_Utilities extends Client\Retrieve_Client
         $mz_mbo_access_options = get_option('mz_mbo_access');
         $level_1_services = explode(',', $mz_mbo_access_options['level_1_services']);
 		$level_2_services = explode(',', $mz_mbo_access_options['level_2_services']);        
-        $level_1_services = array_map(trim, $level_1_services);
-        $level_2_services = array_map(trim, $level_2_services);	
+        $level_1_services = array_map('trim', $level_1_services);
+        $level_2_services = array_map('trim', $level_2_services);	
         	
 		$services = $this->get_client_services();
 				
@@ -103,13 +103,13 @@ class Access_Utilities extends Client\Retrieve_Client
      private function update_client_session($access_level, $services){
      		// Don't love that we call the database twice here,
      		// but not sure if there's a better way.
-     		$logged_client = MZ\MZMBO()->session->get( 'MBO_Client' );
+     		$logged_client = $this->session->get( 'MBO_Client' );
 			$client_details = array(
 				'access_level' => $access_level,
 				'services' => $services,
-				'mbo_result' => $logged_client['mbo_result']
+				'mbo_result' => $logged_client->mbo_result
 			);
-			MZ\MZMBO()->session->set( 'MBO_Client', $client_details );
+			$this->session->set( 'MBO_Client', $client_details );
 			
 			return $access_level;
     }

@@ -1,5 +1,5 @@
 <?php
-namespace MZ_MBO_Access\Inc\Core;
+namespace MZ_MBO_Access\Core;
 
 /**
  * Define the internationalization functionality.

@@ -1,0 +1,48 @@
+{
+	"name": "mikeill/mz-mbo-access",
+	"description": "Grant Client Access Based on Mindbody Online API Credentials",
+	"keywords": [
+    "MBO",
+    "mindbody",
+    "wordpress",
+    "plugin",
+    "session"
+  ],
+	"homepage": "https://github.com/MikeiLL/mz-mindbody-api",
+	"license"          : "GPL-2.0-or-later",
+	"minimum-stability": "dev",
+	"authors": [
+    {
+      "name": "Mike iLL Kilmer",
+      "email": "mike@mzoo.org",
+      "homepage": "http://mzoo.org",
+      "role": "Developer"
+    }
+   ],
+	"type": "wordpress-plugin",
+	"require-dev"      : {
+		"phpunit/phpunit": "^7.5",
+		"php-coveralls/php-coveralls": "^2.1",
+		"squizlabs/php_codesniffer": "^3.4"
+	},
+	"require": {
+		"php": ">=7.1",
+		"composer/installers": "~1.0",
+		"ericmann/sessionz": "^0.3"
+	},
+	"autoload": {
+		"psr-4": {
+		  "MZ_MBO_Access\\": "src"
+		},
+		"classmap": [
+			"libraries/wp-sessions/SessionHandler.php",
+			"libraries/wp-sessions/CacheHandler.php",
+			"libraries/wp-sessions/DatabaseHandler.php",
+			"libraries/wp-sessions/Option.php",
+			"libraries/wp-sessions/OptionsHandler.php"
+		],
+		"files": [
+			"libraries/wp-sessions/deprecated.php"
+		]
+	}
+}

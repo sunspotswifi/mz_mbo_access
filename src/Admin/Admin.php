@@ -1,6 +1,6 @@
 <?php
 
-namespace MZ_MBO_Access\Inc\Admin;
+namespace MZ_MBO_Access\Admin;
 
 use MZ_MBO_Access as NS;
 
