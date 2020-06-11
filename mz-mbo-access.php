@@ -68,28 +68,35 @@ function mbo_access_child_plugin_notice(){
  * Autoload Classes
  */
 
-require_once NS\PLUGIN_NAME_DIR . 'vendor/autoload.php';
+$wp_mbo_access_autoload = NS\PLUGIN_NAME_DIR . '/vendor/autoload.php';
+if (file_exists($wp_mbo_access_autoload)) {
+	require_once $wp_mbo_access_autoload;
+}
+
+if (!class_exists('\MZ_MBO_Access\Core\Plugin_Core')) {
+	exit('MZ MBO Access requires Composer autoloading, which is not configured');
+}
 
 /**
  * Register Activation and Deactivation Hooks
  * This action is documented in inc/core/class-activator.php
  */
 
-register_activation_hook( __FILE__, array( NS . 'Inc\Core\Activator', 'activate' ) );
+register_activation_hook( __FILE__, array( NS . '\Core\Activator', 'activate' ) );
 
 /**
  * The code that runs during plugin deactivation.
  * This action is documented inc/core/class-deactivator.php
  */
 
-register_deactivation_hook( __FILE__, array( NS . 'Inc\Core\Deactivator', 'deactivate' ) );
+register_deactivation_hook( __FILE__, array( NS . '\Core\Deactivator', 'deactivate' ) );
 
 
 class MZ_MBO_Access {
 	/**
 	 * The instance of the plugin.
 	 *
-	 * @since    2.4.7
+	 * @since    1.0.1
 	 * @var      Init $init Instance of the plugin.
 	 */
 	private static $instance;
@@ -103,7 +110,7 @@ class MZ_MBO_Access {
      * Totally borrowed from Easy_Digital_Downloads, and certainly used with some ignorance
      * as EDD doesn't actually include a construct in it's class.
      *
-     * @since 2.4.7
+     * @since 1.0.1
      * @static
      * @staticvar array $instance
      * @see MZMBO()
@@ -134,7 +141,7 @@ class MZ_MBO_Access {
  * Use this function like you would a global variable, except without needing
  * to declare the global.
  *
- * Example: <?php $mZmbo = MZ_MBO_Access\MZ_MBO_Access(); ?>
+ * Example: <?php $mZmboAccess = MBO_Access(); ?>
  *
  * Since everything within the plugin is registered via hooks,
  * then kicking off the plugin from this point in the file does
@@ -167,7 +174,7 @@ function deactivate() {
 
 function mz_mbo_access_plugin_init(){
 	if (defined('MZ_Mindbody\PLUGIN_NAME_DIR')) {
-		//plugin is activated, add the hooks
+		// MZ Mindbody API plugin is activated, add the hooks
 		// Get MZ_MBO_Access Instance.
 		MBO_Access();
 	} else {
