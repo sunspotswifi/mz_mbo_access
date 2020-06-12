@@ -42,7 +42,7 @@ class Client_Portal extends Retrieve_Client {
     /**
      * Format for date display, specific to MBO API Plugin.
      *
-     * @since    2.4.7
+     * @since    1.0.1
      * @access   public
      * @var      string $date_format WP date format option.
      */
@@ -51,7 +51,7 @@ class Client_Portal extends Retrieve_Client {
     /**
      * Format for time display, specific to MBO API Plugin.
      *
-     * @since    2.4.7
+     * @since    1.0.1
      * @access   public
      * @var      string $time_format
      */
@@ -65,6 +65,7 @@ class Client_Portal extends Retrieve_Client {
     public function __construct(){
         $this->date_format = Core\MZ_Mindbody_Api::$date_format;
         $this->time_format = Core\MZ_Mindbody_Api::$time_format;
+        parent::__construct();
     }
 
     /**
@@ -118,6 +119,7 @@ class Client_Portal extends Retrieve_Client {
      * Client Log Out
      */
     public function ajax_client_log_out(){
+		MZ\MZMBO()->helpers->log("ajax_client_log_out");
 
         check_ajax_referer($_REQUEST['nonce'], "mz_client_log_out", false);
 
@@ -142,6 +144,7 @@ class Client_Portal extends Retrieve_Client {
         } else {
             header("Location: " . $_SERVER["HTTP_REFERER"]);
         }
+		MZ\MZMBO()->helpers->log("ajax_client_log_out die");
 
         die();
     }
