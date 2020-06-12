@@ -4,6 +4,7 @@ namespace MZ_MBO_Access\Access;
 use MZ_MBO_Access as NS;
 use MZ_Mindbody as MZ;
 use MZ_MBO_Access\Core as Core;
+use MZ_MBO_Access\Session as Session;
 use MZ_Mindbody\Inc\Client as Client;
 use MZ_Mindbody\Inc\Site as Site;
 use MZ_Mindbody\Inc\Common as Common;
@@ -140,10 +141,10 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
         $this->atts['access_levels'] = array_map('trim', $this->atts['access_levels']);
         
         $this->restricted_content = $content;
-        
+         
         // Begin generating output
         ob_start();
-        
+
         $template_loader = new Core\Template_Loader();
         
         $this->template_data = array(
@@ -158,7 +159,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             'logged_in'  => false,
             "required_services" => [1 => $this->level_1_services, 2 => $this->level_2_services],
             "access_levels" => $this->atts['access_levels'],
-            'access' => false,
+            'has_access' => false,
             'client_name' => '',
             'denied_message' => $this->atts['denied_message'],
             'manage_on_mbo'  => $this->atts['manage_on_mbo'],
@@ -167,13 +168,13 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
 
 		$access_utilities = new Access_Utilities;
 				
-		$logged_client = MZ\MZMBO()->session->get('MBO_Client');
-		
+		$logged_client = NS\MBO_Access()->getSession()->get('MBO_Client');
+				
 		if (!empty($this->atts['level_1_redirect']) || !empty($this->atts['level_2_redirect']) || !empty($this->atts['denied_redirect']) ) {
 			// If this is a content page check access permissions now
 			// First we will see if client access is already determined in client_session
 			
-        	if ( !empty($logged_client['access_level']) && in_array($logged_client['access_level'], $this->atts['access_levels']) ) {
+        	if ( !empty($logged_client->access_level) && in_array($logged_client->access_level, $this->atts['access_levels']) ) {
 				$this->template_data['has_access'] = true;
 				$this->has_access = true;
         	} else {
@@ -187,11 +188,11 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
 			
 		}
 				         		
-		if (!empty($logged_client['mbo_result'])) {
+		if (!empty($logged_client->mbo_result)) {
 			
 			$this->template_data['logged_in'] = true;
 			$this->logged_in = true;
-			$this->template_data['client_name'] = MZ\MZMBO()->session->get('MBO_CLIENT')['mbo_result']['FirstName'];
+			$this->template_data['client_name'] = $logged_client->mbo_result->FirstName;
 		 	
 		} 
 		
@@ -257,7 +258,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
     /**
      * Ajax function to return mbo schedule
      *
-     * @since 2.4.7
+     * @since 1.0.1
      *
      * This duplicates a lot of the handle_shortcode function, but
      * is called via AJAX and used when navigating the schedule.
