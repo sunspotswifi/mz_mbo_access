@@ -48,6 +48,10 @@ define( NS . 'PLUGIN_TEXT_DOMAIN', 'mz-mbo-access' );
 
 add_action( 'admin_init', __NAMESPACE__ . '\mbo_access_has_mindbody_api' );
 
+
+/**
+ * Insure that parent plugin, is active or deactivate plugin.
+ */
 function mbo_access_has_mindbody_api() {
 	if ( is_admin() && current_user_can( 'activate_plugins' ) && !is_plugin_active( 'mz-mindbody-api/mz-mindbody.php' ) ) {
 		add_action( 'admin_notices', 'mbo_access_child_plugin_notice' );
@@ -60,6 +64,11 @@ function mbo_access_has_mindbody_api() {
 	}
 }
 
+
+
+/**
+ * Child Plugin Notice
+ */
 function mbo_access_child_plugin_notice(){
 		?><div class="error"><p>Sorry, but MZ MBO Access plugin requires the parent plugin, MZ Mindbody API, to be installed and active.</p></div><?php
 }
@@ -67,7 +76,6 @@ function mbo_access_child_plugin_notice(){
 /**
  * Autoload Classes
  */
-
 $wp_mbo_access_autoload = NS\PLUGIN_NAME_DIR . '/vendor/autoload.php';
 if (file_exists($wp_mbo_access_autoload)) {
 	require_once $wp_mbo_access_autoload;
