@@ -140,7 +140,6 @@
 					if (json.type == "success") {
 						mz_mindbody_access_state.logged_in = true;
 						mz_mindbody_access_state.message = json.logged;
-						
 						// If there are redirects, this is just a login usage
 						if ((json.client_access_level === 1) && (!!atts.level_1_redirect)) {
 							mz_mindbody_access_state.action = 'redirect';
@@ -255,9 +254,7 @@
                     render_mbo_access_activity();
                 },
                 success: function(json) {
-                	console.log("logged out");
                     if (json.type == "success") {
-                	console.log(json);
                         mz_mindbody_access_state.logged_in = false;
                         mz_mindbody_access_state.action = 'logout';
                         mz_mindbody_access_state.message = json.message;
