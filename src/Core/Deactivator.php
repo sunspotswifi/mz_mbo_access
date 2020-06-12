@@ -19,7 +19,7 @@ class Deactivator {
 	 *
 	 * Long Description.
 	 *
-	 * @since    2.4.7
+	 * @since    1.0.1
 	 */
 	public static function deactivate() {
         

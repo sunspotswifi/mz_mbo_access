@@ -3,12 +3,9 @@ namespace MZ_MBO_Access\Core;
 
 use MZ_MBO_Access as NS;
 use MZ_MBO_Access\Access as Access;
-
+use MZ_MBO_Access\Client as Client;
 use MZ_MBO_Access\Backend as Backend;
-use MZ_Mindbody\Inc\Common as Common;
-use MZ_Mindbody\Inc\Client as Client;
 use MZ_MBO_Access\Session as Session;
-use MZ_Mindbody\Inc\Libraries\Rarst\WordPress\DateTime as DateTime;
 
 /**
  * The core plugin class.
@@ -23,7 +20,7 @@ class Plugin_Core
 {
     /**
      * @var MZ_Mindbody_API The one true MZ_Mindbody_API
-     * @since 2.4.7
+     * @since 1.0.1
      */
     private static $instance;
 
@@ -38,7 +35,7 @@ class Plugin_Core
     /**
      * The unique identifier of this plugin.
      *
-     * @since    2.4.7
+     * @since    1.0.1
      * @access   protected
      * @var      string $plugin_base_name The string used to uniquely identify this plugin.
      */
@@ -47,7 +44,7 @@ class Plugin_Core
     /**
      * The current version of the plugin.
      *
-     * @since    2.4.7
+     * @since    1.0.1
      * @access   protected
      * @var      string $version The current version of the plugin.
      */
@@ -56,7 +53,7 @@ class Plugin_Core
     /**
      * Format for date display, specific to MBO API Plugin.
      *
-     * @since    2.4.7
+     * @since    1.0.1
      * @access   public
      * @var      string $date_format WP date format option.
      */
@@ -65,7 +62,7 @@ class Plugin_Core
     /**
      * Format for time display, specific to MBO API Plugin.
      *
-     * @since    2.4.7
+     * @since    1.0.1
      * @access   public
      * @var      string $time_format
      */
@@ -76,7 +73,7 @@ class Plugin_Core
      *
      * For example 'US/Eastern'
      *
-     * @since    2.4.7
+     * @since    1.0.1
      * @access   protected
      * @var      string $timezone PHP Date formatting string.
      */
@@ -85,7 +82,7 @@ class Plugin_Core
     /**
      * Wordpress option for start of week.
      *
-     * @since    2.4.7
+     * @since    1.0.1
      * @access   protected
      * @var      integer $start_of_week.
      */
@@ -208,6 +205,7 @@ class Plugin_Core
     private function define_public_hooks()
     {
         $access_portal = new Access\Access_Portal;
+        $client_portal = new Client\Client_Portal;
 
         // Start Ajax Access Management
         $this->loader->add_action('wp_ajax_nopriv_ajax_login_check_access_permissions', $access_portal, 'ajax_login_check_access_permissions');
@@ -215,6 +213,34 @@ class Plugin_Core
         
         $this->loader->add_action('wp_ajax_nopriv_ajax_check_access_permissions', $access_portal, 'ajax_check_access_permissions');
         $this->loader->add_action('wp_ajax_ajax_check_access_permissions', $access_portal, 'ajax_check_access_permissions');
+        
+        // Start Ajax Client Check Logged
+        $this->loader->add_action('wp_ajax_nopriv_mz_register_for_class', $client_portal, 'ajax_register_for_class');
+        $this->loader->add_action('wp_ajax_mz_register_for_class', $client_portal, 'ajax_register_for_class');
+
+        // Start Ajax Client Create Account
+        $this->loader->add_action('wp_ajax_nopriv_mz_create_mbo_account', $client_portal, 'ajax_create_mbo_account');
+        $this->loader->add_action('wp_ajax_mz_create_mbo_account', $client_portal, 'ajax_create_mbo_account');
+
+        // Start Ajax Client Create Account
+        $this->loader->add_action('wp_ajax_nopriv_mz_generate_signup_form', $client_portal, 'ajax_generate_mbo_signup_form');
+        $this->loader->add_action('wp_ajax_mz_generate_signup_form', $client_portal, 'ajax_generate_mbo_signup_form');
+
+        // Start Ajax Client Log In
+        $this->loader->add_action('wp_ajax_nopriv_mz_client_log_in', $client_portal, 'ajax_client_log_in');
+        $this->loader->add_action('wp_ajax_mz_client_log_in', $client_portal, 'ajax_client_log_in');
+
+        // Start Ajax Client Log Out
+        $this->loader->add_action('wp_ajax_nopriv_mz_client_log_out', $client_portal, 'ajax_client_log_out');
+        $this->loader->add_action('wp_ajax_mz_client_log_out', $client_portal, 'ajax_client_log_out');
+
+        // Start Ajax Display Client Schedule
+        $this->loader->add_action('wp_ajax_nopriv_mz_display_client_schedule', $client_portal, 'ajax_display_client_schedule');
+        $this->loader->add_action('wp_ajax_mz_display_client_schedule', $client_portal, 'ajax_display_client_schedule');
+
+        // Start Ajax Check Client Logged Status
+        $this->loader->add_action('wp_ajax_nopriv_mz_check_client_logged', $client_portal, 'ajax_check_client_logged');
+        $this->loader->add_action('wp_ajax_mz_check_client_logged', $client_portal, 'ajax_check_client_logged');
 
     }
 

@@ -17,7 +17,7 @@ class Internationalization_I18n {
 	/**
 	 * The text domain of the plugin.
 	 *
-	 * @since    2.4.7
+	 * @since    1.0.1
 	 * @access   protected
 	 * @var      string    $text_domain    The text domain of the plugin.
 	 */
@@ -26,7 +26,7 @@ class Internationalization_I18n {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    2.4.7
+	 * @since    1.0.1
 	 * @param      string $plugin_text_domain       The text domain of this plugin.
 	 */
 	public function __construct( $plugin_text_domain ) {
@@ -38,7 +38,7 @@ class Internationalization_I18n {
 	/**
 	 * Load the plugin text domain for translation.
 	 *
-	 * @since    2.4.7
+	 * @since    1.0.1
 	 */
 	public function load_plugin_textdomain() {
 

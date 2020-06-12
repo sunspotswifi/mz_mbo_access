@@ -9,7 +9,7 @@ class Template_Loader extends Libraries\Gamajo_Template_Loader {
     /**
      * Prefix for filter names.
      *
-     * @since 2.4.7
+     * @since 1.0.1
      *
      * @var string
      */
@@ -20,7 +20,7 @@ class Template_Loader extends Libraries\Gamajo_Template_Loader {
      *
      * For example: 'your-plugin-templates'.
      *
-     * @since 2.4.7
+     * @since 1.0.1
      *
      * @var string
      */
@@ -30,7 +30,7 @@ class Template_Loader extends Libraries\Gamajo_Template_Loader {
      * Reference to the root directory path of this plugin.
      *
      *
-     * @since 2.4.7
+     * @since 1.0.1
      *
      * @var string
      */

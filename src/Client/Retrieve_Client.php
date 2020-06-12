@@ -88,13 +88,13 @@ class Retrieve_Client extends Interfaces\Retrieve {
     public function __construct(){
         $this->date_format = Core\MZ_Mindbody_Api::$date_format;
         $this->time_format = Core\MZ_Mindbody_Api::$time_format;
-        $this->session = new Session\MZ_Access_Session;
+        $this->session = Session\MZ_Access_Session::instance();
     }
     
     /**
      * Client Login – using API VERSION 5!
      *
-     * Since 2.5.7
+     * Since 1.0.1
      *
      * @param array $credentials with username and password
      *
@@ -128,7 +128,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
     /**
      * Validate Client - API VERSION 5!
      *
-     * Since 2.5.7
+     * Since 1.0.1
      *
      * @param $validateLoginResult array with result from MBO API
      */
@@ -164,7 +164,6 @@ class Retrieve_Client extends Interfaces\Retrieve {
 			);
 			$this->session->set( 'MBO_Client', $client_details );
 			$client = $this->session->get( 'MBO_Client');
-			MZ\MZMBO()->helpers->log($client);
 
 			return true;
 
@@ -176,7 +175,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
      * Client Log Out
      */
     public function client_log_out(){
-
+    
         $this->session->set( 'MBO_Client', []);
 
         return true;
@@ -451,15 +450,17 @@ class Retrieve_Client extends Interfaces\Retrieve {
      * @return bool
      */
     public function check_client_logged(){
-
-        return ( 1 == (bool) $this->session->get('MBO_Client') ) ? 1 : 0;
+    
+		$client_info = $this->session->get('MBO_Client');
+		
+        return ( 1 == (bool) $client_info->mbo_result ) ? 1 : 0;
         
     }
 
     /**
      * Get API version, create API Interface Object
      *
-     * @since 2.4.7
+     * @since 1.0.1
      *
      * @param $api_version int in case we need to call on API v5 as in for client login
      *

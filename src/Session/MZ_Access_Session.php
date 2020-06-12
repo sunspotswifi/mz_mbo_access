@@ -12,9 +12,9 @@ use EAMann\WPSession\CacheHandler;
 use EAMann\WPSession\DatabaseHandler;
 
 /**
- * GeotSession wrapper Class
+ * MZ_Access_Session wrapper Class
  *
- * @since 1.5
+ * @since 1.0.1
  */
 class MZ_Access_Session {
 
@@ -26,39 +26,43 @@ class MZ_Access_Session {
 	 *
 	 * @var array
 	 * @access private
-	 * @since 1.5
+	 * @since 1.0.1
 	 */
 	private $session;
 
-	/**
-	 * Session index prefix
-	 *
-	 * @var string
-	 * @access private
-	 * @since 2.3
-	 */
-	private $prefix = '';
-
+    /**
+     * Session index prefix
+     *
+     * @since  1.0.1
+     * @access private
+     *
+     * @var    string
+     */
+    private $prefix = 'mz_mbo_access_';
+    
 	/**
 	 * Get things started
 	 *
 	 * Defines our WP_Session constants, includes the necessary libraries and
 	 * retrieves the WP Session instance
 	 *
-	 * @since 1.5
+	 * @since 1.0.1
 	 */
 	public function __construct() {
+		
 		if ( ! $this->should_start_session() ) {
 			return;
 		}
 		if ( session_status() !== PHP_SESSION_DISABLED && ( ! defined( 'WP_CLI' ) || false === WP_CLI ) ) {
-			add_action( 'plugins_loaded', [ $this, 'wp_session_manager_initialize' ], 1, 0 );
+			add_action( 'wp_loaded', [ $this, 'wp_session_manager_initialize' ], 1, 0 );
 
 			// If we're not in a cron, start the session
 			if ( ! defined( 'DOING_CRON' ) || false === DOING_CRON ) {
-				add_action( 'plugins_loaded', [ $this, 'wp_session_manager_start_session' ], 10, 0 );
+				add_action( 'wp_loaded', [ $this, 'wp_session_manager_start_session' ], 10, 0 );
 			}
 		}
+
+		
 	}
 
 
@@ -66,9 +70,9 @@ class MZ_Access_Session {
 	 * Initialize the plugin, bootstrap autoloading, and register default hooks
 	 */
 	public function wp_session_manager_initialize() {
-		
-		if ( ! isset( $_SESSION ) ) {
 
+		if ( ! isset( $_SESSION ) ) {
+		
 			// Queue up the session stack
 			$wp_session_handler = Manager::initialize();
 
@@ -109,15 +113,16 @@ class MZ_Access_Session {
 
 			$_SESSION['wp_session_manager'] = 'active';
 		}
+		
 
 		if ( ! isset( $_SESSION['wp_session_manager'] ) || $_SESSION['wp_session_manager'] !== 'active' ) {
 			add_action( 'admin_notices', [ $this, 'wp_session_manager_multiple_sessions_notice' ] );
-
 			return;
 		}
 
 		// Create the required table.
 		DatabaseHandler::createTable();
+
 		register_deactivation_hook( __FILE__, function () {
 			wp_clear_scheduled_hook( 'wp_session_database_gc' );
 		} );
@@ -127,9 +132,10 @@ class MZ_Access_Session {
 	 * Determines if we should start sessions
 	 *
 	 * @return bool
-	 * @since  2.5.11
+	 * @since  1.0.1
 	 */
 	public function should_start_session() {
+
 		$start_session = true;
 		if ( ! empty( $_SERVER['REQUEST_URI'] ) ) {
 			$blacklist = $this->get_blacklist();
@@ -142,9 +148,6 @@ class MZ_Access_Session {
 				$start_session = false;
 			}
 		}
-		if ( ( isset( $_GET['page'] ) && 'geot-debug-data' == $_GET['page'] ) || ( is_admin() && ! defined( 'DOING_AJAX' ) ) ) {
-			$start_session = false;
-		}
 		
 		return apply_filters( 'mbo_access/sessions/start_session', $start_session );
 	}
@@ -155,7 +158,7 @@ class MZ_Access_Session {
 	 * These are the URIs where we never start sessions
 	 *
 	 * @return array
-	 * @since  2.5.11
+	 * @since  1.0.1
 	 */
 	public function get_blacklist() {
 		$blacklist = apply_filters( 'geot/sessions/session_start_uri_blacklist', [
@@ -178,12 +181,12 @@ class MZ_Access_Session {
 	}
 
 	/**
-	 * Main GeotSession Instance
+	 * Main MZ_Access_Session Instance
 	 *
 	 * Ensures only one instance is loaded or can be loaded.
 	 *
-	 * @return GeotSession - Main instance
-	 * @since 1.0.0
+	 * @return MZ_Access_Session - Main instance
+	 * @since 1.0.1
 	 * @static
 	 *
 	 */
@@ -207,19 +210,19 @@ class MZ_Access_Session {
 	/**
 	 * Print an admin notice if too many plugins are manipulating sessions.
 	 *
-	 * @global array $wp_session_messages
+	 * @global array $this->wp_session_messages
 	 */
 	public function wp_session_manager_multiple_sessions_notice() {
-		global $wp_session_messages;
 		echo '<div class="notice notice-error">';
-		echo '<p>' . esc_html( $wp_session_messages['multiple_sessions'] ) . '</p>';
+		echo '<p>' . __('Another plugin is attempting to start a session with WordPress. WP Session Manager will not work!',
+				'wp-session-manager') . '</p>';
 		echo '</div>';
 	}
 
 
 	/**
 	 * Cloning is forbidden.
-	 * @since 1.0.0
+	 * @since 1.0.1
 	 */
 	public function __clone() {
 		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wsi' ), '2.1' );
@@ -227,7 +230,7 @@ class MZ_Access_Session {
 
 	/**
 	 * Unserializing instances of this class is forbidden.
-	 * @since 1.0.0
+	 * @since 1.0.1
 	 */
 	public function __wakeup() {
 		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wsi' ), '2.1' );
@@ -257,7 +260,7 @@ class MZ_Access_Session {
 	 * @param int|string|array $value Session variable
 	 *
 	 * @return mixed Session variable
-	 * @since 1.5
+	 * @since 1.0.1
 	 *
 	 */
 	public function set( $key, $value ) {
