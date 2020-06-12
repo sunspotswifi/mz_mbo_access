@@ -1,4 +1,4 @@
-=== MZ Mindbody API ===
+=== MZ MBO Access ===
 Contributors: mikeill
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=A95ZEELLHGECE
 Tags: mindbody, schedule, calendar, yoga, MBO, mindbodyonline, gym, access
@@ -8,7 +8,8 @@ Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Restrict content of your page using shortcode via access levels based on Mindbody Services
+Restrict content of your page using shortcode via access levels based on Mindbody Services.
+Includes option for a form which redirects clients to one of three pages: Level 1, Level 2, No Access.
 
 == Description ==
 
@@ -28,11 +29,17 @@ Steps to install and configure MZ MBO Access:
 
 == Frequently Asked Questions ==
 
-= How does shortcode work? =
+= Coming soon, no doubt. =
 
-[mbo-client-access access_levels="1, 2"]
-RESTRICTED CONTENT HERE
-[/mbo-client-access]
+== Screenshots ==
+
+1. Admin Tab in MZ Mindbody Access Settings page
+2. Mindbody Login Form
+3. Welcome, Client. Access denied.
+4. Welcome, Client, redirect access denied.
+5. Welcome, Client, redirect access level (1 or 2).
+6. Logged Out.
+7. Access Granted.
 
 == Changelog ==
 
