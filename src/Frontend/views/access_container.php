@@ -24,7 +24,7 @@ else:
 		<?php
 	} else {
 	
-		if ( $data->access ) { ?>
+		if ( !$data->has_access ) { ?>
 			<div class="alert alert-warning">
 				<?php echo '<strong>' . $data->atts['denied_message'] .  '</strong>:'; ?>
 				<ul>
@@ -47,7 +47,6 @@ else:
 				<div class="col-12">
 				
 					<?php if (!empty($data->manage_on_mbo)): ?>
-					<?php var_dump($data->manage_on_mbo); ?>
 
 					<a style="text-decoration:none;" href="https://clients.mindbodyonline.com/ws.asp?&amp;sLoc=1&studioid=<?php echo $data->siteID; ?>" class="btn btn-primary btn-xs" id="MBOSite" target="_blank"><?php echo $data->manage_on_mbo; ?></a>
 					
