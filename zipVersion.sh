@@ -8,8 +8,10 @@ echo "Changing directory and moving to new temp dir."
 mv mz-mbo-access mz-mbo-access-temp
 echo "Make temporary version of the plugin and copying desired files."
 mkdir mz-mbo-access
-cp -r mz-mbo-access-temp/inc mz-mbo-access
-cp -r mz-mbo-access-temp/dist mz-mbo-access         
+cp -r mz-mbo-access-temp/src mz-mbo-access
+cp -r mz-mbo-access-temp/dist mz-mbo-access   
+cp -r mz-mbo-access-temp/vendor mz-mbo-access   
+cp -r mz-mbo-access-temp/libraries mz-mbo-access         
 cp -r mz-mbo-access-temp/languages mz-mbo-access
 cp mz-mbo-access-temp/*.php mz-mbo-access
 cp mz-mbo-access-temp/README.txt mz-mbo-access
