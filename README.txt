@@ -12,6 +12,7 @@ Restrict wordpress content based on client Mindbody account details.
 Create two access levels based on MBO membership details.
 Achieved via shortcode(s) on the page, with MBO login form.
 Option for a form which redirects clients to one of three pages: Level 1, Level 2, No Access.
+Until later in 2020, requires access to MBOs v5 (not v6) API.
 
 == Description ==
 
@@ -22,6 +23,7 @@ RESTRICTED CONTENT HERE
 [/mbo-client-access]
 
 You can also redirect users based on their access level.
+Until later in 2020, requires access to MBOs v5 (not v6) API.
 
 == Installation ==
 
@@ -52,6 +54,7 @@ Steps to install and configure MZ MBO Access:
 Add cache-busting to script.
 Add support for overriding buttons.
 Add password reset request button.
+Include server check for SOAP installed.
 
 = v1.0 =
 Initial release.

@@ -44,6 +44,49 @@ class Settings_Page {
                 'title' => __( 'MZ MBO Access Settings', 'mz-mindbody-api' ),
             )
         );
+                
+        // Section: Depreciated.
+        self::$wposa_obj->add_section(
+            array(
+                'id'    => 'mz_mbo_v_five',
+                'title' => __( 'API Version 5', 'mz-mindbody-api' ),
+            )
+        );
+
+        // Field: Title.
+        self::$wposa_obj->add_field(
+            'mz_mbo_v_five',
+            array(
+                'id'   => 'credentials_test',
+                'type' => 'title',
+                'name' => '<h1>API V5 Credentials Test</h1>',
+                'default' => ''
+            )
+        );
+
+
+        // Field: Title.
+        self::$wposa_obj->add_field(
+            'mz_mbo_v_five',
+            array(
+                'id'   => 'api_5_description',
+                'type' => 'html',
+                'name' => 'Note',
+                'desc' => 'New MBO Dev accounts will not have access to the MBO V5 API.'
+            )
+        );
+
+
+        // Field: Textarea.
+        self::$wposa_obj->add_field(
+            'mz_mbo_v_five',
+            array(
+                'id'   => 'credentials_test',
+                'type' => 'html',
+                'name' => __( 'Debug Output', 'mz-mindbody-api' ),
+                'desc' => $this->mz_mindbody_v5_debug_text()
+            )
+        );
         
         // Field: Regenerate Class Owners
         self::$wposa_obj->add_field(
@@ -80,6 +123,17 @@ class Settings_Page {
             )
         );
         
+        // Field: Server Check HTML.
+        self::$wposa_obj->add_field(
+            'mz_mbo_access',
+            array(
+                'id'      => 'server_check',
+                'type'    => 'html',
+                'name'    => __( 'Server Check', 'mz-mindbody-api' ),
+                'desc'    => $this->server_check()
+            )
+        );
+        
     }
     
     private function access_codes(){
@@ -100,6 +154,61 @@ class Settings_Page {
         $return .= '<h3>'. __('Note', 'mz-mindbody-api') . '</h3>';
         $return .= sprintf(__('If %1$s %2$s or %3$s are included, the login form will redirect to one of those urls instead of revealing content. Content, if any, between shortcode tags will display when page is reloaded by logged in client.', 'mz-mindbody-api'), '<code>contract_redirect</code>', '<code>level_2_redirect</code>', '<code>denied_redirect</code>');
         return $return;
+    }
+    
+	private function server_check() {
+
+        $return = '';
+        $mz_requirements = 0;
+
+        if (!file_exists('PEAR/Registry.php')) {
+            return '<p>SOAP warning (above).</p><div class="notice notice-warning is-dismissible" style="padding:1.5em;">Cannot confirm pear is installed. Check with server admin about pear/SOAP if you have issues.<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button></div>';
+        }
+
+        include 'PEAR/Registry.php';
+
+        $reg = new \PEAR_Registry;
+
+        if (extension_loaded('soap'))
+        {
+            $return .= __('SOAP installed! ', 'mz-mindbody-api');
+        }
+        else
+        {
+            $return .= __('SOAP is not installed. ', 'mz-mindbody-api');
+            $mz_requirements = 1;
+        }
+        $return .=  '&nbsp;';
+
+        if (class_exists('System')===true)
+        {
+            $return .= __('PEAR installed! ', 'mz-mindbody-api');
+        }
+        else
+        {
+            $return .= __('PEAR is not installed. ', 'mz-mindbody-api');
+            $mz_requirements = 1;
+        }
+
+        if ($mz_requirements == 1)
+        {
+
+            $return .=  '<div class="settings-error"><p>';
+            $return .= __('MZ Mindbody API requires SOAP and PEAR. Please contact your hosting provider or enable via your CPANEL of php.ini file.', 'mz-mindbody-api');
+            $return .=  '</p></div>';
+        }
+        else
+        {
+
+            $return .=  '<div class="" ><p>';
+            $return .= __('Congratulations. Your server appears to be configured to integrate with mindbodyonline.', 'mz-mindbody-api');
+            $return .=  '</p></div>';
+        }
+        return $return;
+    }
+    
+    private function mz_mindbody_v5_debug_text() {
+        return '<a href="#" class="button" id="mzTestCredentialsV5">' . __('Test Credentials', 'mz-mindbody-api') . '</a><div id="displayTestV5"></div>';
     }
 
 }
