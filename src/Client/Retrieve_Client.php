@@ -102,7 +102,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
      */
     public function log_client_in( $credentials = ['username' => '', 'password' => ''] ){
     
-        $validateLogin = $this->validate_client($this->sanitize_login_fields($credentials));
+        $validateLogin = $this->validate_client($this->validate_login_fields($this->sanitize_login_fields($credentials)));
 		
 		if ( !empty($validateLogin['ValidateLoginResult']['GUID']) ) {
 			if ( $this->create_client_session( $validateLogin ) ) {
@@ -234,7 +234,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
     
     
     /**
-     * Sanitize User Credentials via WP helpers.
+     * Verify User Credentials.
      *
      * since: 1.0.1
      *
@@ -242,13 +242,35 @@ class Retrieve_Client extends Interfaces\Retrieve {
      */
     public function validate_login_fields( $credentials = array() ) {
 		if (!filter_var($credentials['username'], FILTER_VALIDATE_EMAIL)) {
-			return __("Badly formed email", NS\PLUGIN_TEXT_DOMAIN);
+			return __("Badly formed email.", NS\PLUGIN_TEXT_DOMAIN);
 		}
-    	$credentials['username'] = sanitize_email($credentials['username']);
-    	$credentials['password'] = sanitize_text_field($credentials['username']);
+		
+		if ( !$this->verify_mbo_pass()){
+			return __("All Mindbody passwords must contain 8 to 15 characters and must include both letters and numbers.", NS\PLUGIN_TEXT_DOMAIN);
+		}
+		
+    	$credentials['username'] = $credentials['username'];
+    	$credentials['password'] = $credentials['username'];
     	
     	return $credentials;
     }
+    
+     /**
+     * Check if MBO pass meets their criteria.
+     *
+     * since: 1.0.1
+     *
+     * return bool
+     */
+    public function verify_mbo_pass( $mbo_password = "" ) {
+		
+		// "All Mindbody passwords must contain 8 to 15 characters and must include both letters and numbers"
+    	$re = '/^[A-Z0-9a-z].{7,14}$/m';
+
+		return preg_match($re, $mbo_password);
+    }
+    
+    
     
     /**
      * Get client details.

@@ -155,6 +155,40 @@ class Tests_Retrieve_Client extends MZMBOAccess_WPUnitTestCase {
                 
 	}
 	
+	public function test_validate_client_pass() {
+				
+        parent::setUp();
+        		                
+        $client_object = new MZ_MBO_Access\Client\Retrieve_Client;
+        
+        $good_password_strings = [
+        	"Ad12DeDe",
+        	"Ad12#$6^6",
+        	"Zs3Dddddd198",
+        	"Q6Kdddojos",
+        	"15Gkk0II",
+        	"lkjasdf8lj",
+        	"kNKnkflkj3@kk"
+        ];
+        
+        $bad_password_strings = [
+        	"Short1",
+        	"aVeryLongPasswordHereSee1",
+        	"'This!onenonums",
+        	"'this!onenocaps",
+        	"109893"
+        ];
+        
+        foreach ($good_password_strings as $pass){
+        	$this->assertTrue(true == $client_object->verify_mbo_pass($pass));
+        }
+        
+        foreach ($bad_password_strings as $pass){
+        	$this->assertTrue(false == $client_object->verify_mbo_pass($pass));
+        }
+        
+	}
+	
 	public function test_get_client_details() {
 		
 		if ( empty(MBO_Access_Test_Options::$_CLIENTPASSWORD) ) return; // can't login yet.
