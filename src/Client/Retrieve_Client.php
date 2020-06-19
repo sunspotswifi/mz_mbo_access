@@ -102,13 +102,21 @@ class Retrieve_Client extends Interfaces\Retrieve {
      */
     public function log_client_in( $credentials = ['username' => '', 'password' => ''] ){
     
-        $validateLogin = $this->validate_client($this->validate_login_fields($this->sanitize_login_fields($credentials)));
+    	$valid_credentials = $this->validate_login_fields($this->sanitize_login_fields($credentials));
+    	
+		if ($valid_credentials === 2 ){
+			return ['type' => 'error', 'message' => __("Badly formed email.", NS\PLUGIN_TEXT_DOMAIN)];
+		} else if ($valid_credentials === 3 ){
+			return ['type' => 'error', 'message' => __("All Mindbody passwords must contain 8 to 15 characters and must include both letters and numbers.", NS\PLUGIN_TEXT_DOMAIN)];
+		}
+		
+        $validateLogin = $this->validate_client($valid_credentials);
 		
 		if ( !empty($validateLogin['ValidateLoginResult']['GUID']) ) {
 			if ( $this->create_client_session( $validateLogin ) ) {
-				return ['type' => 'success', 'message' => __('Welcome', 'mz-mindbody-api') . ', ' . $validateLogin['ValidateLoginResult']['Client']['FirstName'] . '.<br/>'];
+				return ['type' => 'success', 'message' => __('Welcome', NS\PLUGIN_TEXT_DOMAIN) . ', ' . $validateLogin['ValidateLoginResult']['Client']['FirstName'] . '.<br/>'];
 			}
-			return ['type' => 'error', 'message' => sprintf(__('Whoops. Please try again, %1$s.', 'mz-mindbody-api'),
+			return ['type' => 'error', 'message' => sprintf(__('Whoops. Please try again, %1$s.', NS\PLUGIN_TEXT_DOMAIN),
             					$validateLogin['ValidateLoginResult']['Client']['FirstName'])];
 		} else {
 			// Otherwise error message
@@ -118,7 +126,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
 
 			} else {
 				// Default fallback message.
-				return ['type' => 'error', 'message' => __('Invalid Login', 'mz-mindbody-api') . '<br/>'];
+				return ['type' => 'error', 'message' => __('Invalid Login', NS\PLUGIN_TEXT_DOMAIN) . '<br/>'];
 
 			}
 		}
@@ -155,13 +163,14 @@ class Retrieve_Client extends Interfaces\Retrieve {
      * @param $validateLoginResult array with MBO result
      */
     public function create_client_session( $validateLoginResult ){
-		
+
 		if (!empty($validateLoginResult['ValidateLoginResult']['GUID'])) {
 			
 			// If validated, create session variables and store
 			$client_details = array(
-				'mbo_result' => $validateLoginResult['ValidateLoginResult']['Client']
+				'mbo_result' => MZ\MZMBO()->helpers->array_map_recursive('sanitize_text_field', $validateLoginResult['ValidateLoginResult']['Client'])
 			);
+
 			$this->session->set( 'MBO_Client', $client_details );
 
 			return true;
@@ -200,7 +209,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
         	"LastName"
         ];
         
-        return array_merge($default_required_fields, $requiredFields['RequiredClientFields']);
+        return array_merge($default_required_fields, array_map('sanitize_text_field', $requiredFields['RequiredClientFields']));
     }
 
     /**
@@ -226,8 +235,8 @@ class Retrieve_Client extends Interfaces\Retrieve {
      */
     public function sanitize_login_fields( $credentials = array() ) {
 
-    	$credentials['username'] = sanitize_email($credentials['username']);
-    	$credentials['password'] = sanitize_text_field($credentials['username']);
+    	$credentials['Username'] = sanitize_email($credentials['Username']);
+    	$credentials['Password'] = sanitize_text_field($credentials['Password']);
     	
     	return $credentials;
     }
@@ -241,16 +250,16 @@ class Retrieve_Client extends Interfaces\Retrieve {
      * return array of sanitized credentials
      */
     public function validate_login_fields( $credentials = array() ) {
-		if (!filter_var($credentials['username'], FILTER_VALIDATE_EMAIL)) {
-			return __("Badly formed email.", NS\PLUGIN_TEXT_DOMAIN);
+		if (false === filter_var($credentials['Username'], FILTER_VALIDATE_EMAIL)) {
+			return 2;
 		}
 		
-		if ( !$this->verify_mbo_pass()){
-			return __("All Mindbody passwords must contain 8 to 15 characters and must include both letters and numbers.", NS\PLUGIN_TEXT_DOMAIN);
+		if ( false === $this->verify_mbo_pass()){
+			return 3;
 		}
 		
-    	$credentials['username'] = $credentials['username'];
-    	$credentials['password'] = $credentials['username'];
+    	$credentials['Username'] = $credentials['Username'];
+    	$credentials['Password'] = $credentials['Password'];
     	
     	return $credentials;
     }
