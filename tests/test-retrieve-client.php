@@ -11,14 +11,6 @@ class Tests_Retrieve_Client extends MZMBOAccess_WPUnitTestCase {
 	public function test_get_signup_form_fields() {
 
         parent::setUp();
-        
-        echo dirname( __FILE__ ) . PHP_EOL;
-        
-        echo dirname( dirname( __FILE__ ) ) . PHP_EOL;
-        
-        echo dirname( dirname( __FILE__ ) )  . '../../mz-mbo-access.php' . PHP_EOL;
-        
-        echo file_exists(dirname( dirname( __FILE__ ) )  . '../../mz-mbo-access.php') . PHP_EOL;
 
         $this->assertTrue(class_exists('MZ_MBO_Access\Client\Retrieve_Client'));
         		                
@@ -190,16 +182,20 @@ class Tests_Retrieve_Client extends MZMBOAccess_WPUnitTestCase {
         
         $get_client_contracts = $client_object->get_client_contracts();
         
+        $get_client_services = $client_object->get_client_services();
+        
         $get_client_purchases = $client_object->get_client_purchases();
         foreach (['client_active_memberships: ' => $client_active_memberships,
         			'get_client_contracts: ' => $get_client_contracts,
-        			'get_client_purchases: ' => $get_client_purchases] as $k => $v) {
+        			'get_client_purchases: ' => $get_client_purchases,
+        			'get_client_services: ' => $get_client_services] as $k => $v) {
         	print_r($k);
         	print_r($v);
         }
         $this->assertTrue(is_array($client_active_memberships));
         $this->assertTrue(isset($get_client_account_balance));
         $this->assertTrue(is_array($get_client_contracts));
+        $this->assertTrue(is_array($get_client_services));
         $this->assertTrue(is_array($get_client_purchases));
 	}
 

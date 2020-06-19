@@ -141,7 +141,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
 			'Username' => $validateLoginResult['Username'],
 			'Password' => $validateLoginResult['Password']
 		));
-		
+				
 		return $result;
 		
     }
@@ -163,7 +163,6 @@ class Retrieve_Client extends Interfaces\Retrieve {
 				'mbo_result' => $validateLoginResult['ValidateLoginResult']['Client']
 			);
 			$this->session->set( 'MBO_Client', $client_details );
-			$client = $this->session->get( 'MBO_Client');
 
 			return true;
 
@@ -270,7 +269,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
         // Create the MBO Object
         $this->get_mbo_results();
 		
-		$result = $this->mb->GetActiveClientMemberships(['clientId' => $client['ID']]); // UniqueID ??
+		$result = $this->mb->GetActiveClientMemberships(['clientId' => $client->ID]); // UniqueID ??
 				
 		return $result['ClientMemberships'];
     }
@@ -293,7 +292,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
         $this->get_mbo_results();
 		
 		// Can accept a list of client id strings
-		$result = $this->mb->GetClientAccountBalances(['clientIds' => $client['ID']]); // UniqueID ??
+		$result = $this->mb->GetClientAccountBalances(['clientIds' => $client->ID]); // UniqueID ??
 		
 		// Just return the first (and only) result
 		return $result['Clients'][0]['AccountBalance'];
@@ -347,7 +346,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
         // Create the MBO Object
         $this->get_mbo_results();
 		
-		$result = $this->mb->GetClientContracts(['clientId' => $client['ID']]); // UniqueID ??
+		$result = $this->mb->GetClientContracts(['clientId' => $client->ID]); // UniqueID ??
 				
 		return $result['Contracts'];
     }
@@ -405,7 +404,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
         // Create the MBO Object
         $this->get_mbo_results();
 		
-		$result = $this->mb->GetClientPurchases(['clientId' => $client['ID']]); // UniqueID ??
+		$result = $this->mb->GetClientPurchases(['clientId' => $client->ID]); // UniqueID ??
 				
 		return $result['Purchases'];
     }
@@ -460,6 +459,8 @@ class Retrieve_Client extends Interfaces\Retrieve {
     public function check_client_logged(){
     
 		$client_info = $this->session->get('MBO_Client');
+		
+		if (empty($client_info)) return false;
 		
         return ( 1 == (bool) $client_info->mbo_result ) ? 1 : 0;
         

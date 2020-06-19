@@ -19,7 +19,7 @@ class MBO_Access_Test_Options
     public static $_CLIENTBIRTHDATE = '10/05/1969';
     public static $_CLIENTID = '';
     // For now manually added:
-    public static $_CLIENTPASSWORD = '';
+    public static $_CLIENTPASSWORD = 'Aa3f5be62';
     // Site IDs: Uru 43474, Medicine: 437889
     
 }

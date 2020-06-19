@@ -388,6 +388,7 @@ class Client_Portal extends Retrieve_Client {
 
     /**
      * Create MBO Account
+     * Not In Use At This Time
      */
     public function ajax_create_mbo_account(){
 

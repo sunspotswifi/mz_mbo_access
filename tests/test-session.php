@@ -35,7 +35,7 @@ class Tests_Session extends MZMBOAccess_WPUnitTestCase {
 	}
 
 	public function test_set() {
-		$this->assertEquals( 'bar', MZ_MBO_Access\Session\MZ_Access_Session::instance()->set( 'foo', 'bar' ) );
+		$this->assertEquals( '"bar"', MZ_MBO_Access\Session\MZ_Access_Session::instance()->set( 'foo', 'bar' ) );
 	}
 
 	public function test_get() {

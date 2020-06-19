@@ -1,5 +1,6 @@
 <?php
 require_once('MBO_Access_Test_Options.php');
+require 'bootstrap.php';
 
 /**
  * Class MZMBO_WPUnitTestCase

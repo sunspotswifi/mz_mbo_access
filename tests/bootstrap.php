@@ -2,7 +2,7 @@
 /**
  * PHPUnit bootstrap file
  *
- * @package Mz_Mindbody_Api
+ * @package Mz_MBO_Access
  */
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
@@ -21,13 +21,12 @@ require_once $_tests_dir . '/includes/functions.php';
 /**
  * Manually load the plugin being tested.
  */
-function _manually_load_plugin() {
-	require dirname( dirname( __FILE__ ) ) . '/mz-mbo-access.php';
-}
-tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+	
+require dirname( dirname( __FILE__ ) ) . '/mz-mbo-access.php';
+
 
 // Start up the WP testing environment.
-require $_tests_dir . '/includes/bootstrap.php';
+require_once $_tests_dir . '/includes/bootstrap.php';
 
 // Register our Autoload function
 // TODO maybe make this work
