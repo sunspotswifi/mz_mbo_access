@@ -183,7 +183,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
     /**
      * Return MBO Account config required fields with what I think are default required fields.
      *
-     * since: 2.5.7
+     * since: 1.0.1
      *
      * return array numeric array of required fields
      */
@@ -217,8 +217,33 @@ class Retrieve_Client extends Interfaces\Retrieve {
     
     }
     
+    /**
+     * Sanitize User Credentials via WP helpers.
+     *
+     * since: 1.0.1
+     *
+     * return array of sanitized credentials
+     */
     public function sanitize_login_fields( $credentials = array() ) {
 
+    	$credentials['username'] = sanitize_email($credentials['username']);
+    	$credentials['password'] = sanitize_text_field($credentials['username']);
+    	
+    	return $credentials;
+    }
+    
+    
+    /**
+     * Sanitize User Credentials via WP helpers.
+     *
+     * since: 1.0.1
+     *
+     * return array of sanitized credentials
+     */
+    public function validate_login_fields( $credentials = array() ) {
+		if (!filter_var($credentials['username'], FILTER_VALIDATE_EMAIL)) {
+			return __("Badly formed email", NS\PLUGIN_TEXT_DOMAIN);
+		}
     	$credentials['username'] = sanitize_email($credentials['username']);
     	$credentials['password'] = sanitize_text_field($credentials['username']);
     	
@@ -228,7 +253,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
     /**
      * Get client details.
      *
-     * since: 2.5.7
+     * since: 1.0.1
      *
      * return array of client info from MBO or require login
      */
@@ -258,7 +283,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
      *          )
      * [Remaining] => 1000, etc..
      *
-     * since: 2.5.7
+     * since: 1.0.1
      *
      * return array numeric array of active memberships
      */
@@ -277,7 +302,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
     /**
      * Get client account balance.
      *
-     * since: 2.5.7
+     * since: 1.0.1
      *
      * This wraps a method for getting balances for multiple accounts, but 
      * we just get it for one.
@@ -412,7 +437,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
     /**
      * Get client services.
      *
-     * since: 2.5.7
+     * since: 1.0.1
      *
      * return array numeric array of required fields
      */
