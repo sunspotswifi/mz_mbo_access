@@ -1,8 +1,8 @@
 <?php
-require_once('MZMBO_WPUnitTestCase.php');
-require_once('Test_Options.php');
+require_once('MZMBOAccess_WPUnitTestCase.php');
+require_once('MBO_Access_Test_Options.php');
 
-class Tests_Retrieve_Client extends MZMBO_WPUnitTestCase {
+class Tests_Retrieve_Client extends MZMBOAccess_WPUnitTestCase {
 
 	public function tearDown() {
 		parent::tearDown();
@@ -11,6 +11,14 @@ class Tests_Retrieve_Client extends MZMBO_WPUnitTestCase {
 	public function test_get_signup_form_fields() {
 
         parent::setUp();
+        
+        echo dirname( __FILE__ ) . PHP_EOL;
+        
+        echo dirname( dirname( __FILE__ ) ) . PHP_EOL;
+        
+        echo dirname( dirname( __FILE__ ) )  . '../../mz-mbo-access.php' . PHP_EOL;
+        
+        echo file_exists(dirname( dirname( __FILE__ ) )  . '../../mz-mbo-access.php') . PHP_EOL;
 
         $this->assertTrue(class_exists('MZ_MBO_Access\Client\Retrieve_Client'));
         		                
@@ -32,7 +40,7 @@ class Tests_Retrieve_Client extends MZMBO_WPUnitTestCase {
 		// So only do this if we haven't already
 		// Check https://developers.mindbodyonline.com/PublicDocumentation/V6#add-a-new-client
 		// For recommended workflow as new feature being added May 11 2020
-		if ( !empty(Test_Options::$_CLIENTPASSWORD) ) return false;
+		if ( !empty(MBO_Access_Test_Options::$_CLIENTPASSWORD) ) return false;
 		
         parent::setUp();
         		                
@@ -49,16 +57,16 @@ class Tests_Retrieve_Client extends MZMBO_WPUnitTestCase {
 		foreach ( $required_fields as $k => $v ) {
         	switch ($v) {
         		case 'FirstName':
-        			$user_data['FirstName'] = Test_Options::$_FIRSTNAME;
+        			$user_data['FirstName'] = MBO_Access_Test_Options::$_FIRSTNAME;
         			break;
         		case 'LastName':
-        			$user_data['LastName'] = Test_Options::$_LASTNAME;
+        			$user_data['LastName'] = MBO_Access_Test_Options::$_LASTNAME;
         			break;
         		case 'Email':
-        			$user_data['Email'] = Test_Options::$_CLIENTEMAIL;
+        			$user_data['Email'] = MBO_Access_Test_Options::$_CLIENTEMAIL;
         			break;
         		case 'State':
-        			$user_data['State'] = Test_Options::$_CLIENTSTATE;
+        			$user_data['State'] = MBO_Access_Test_Options::$_CLIENTSTATE;
         			break;
         		case 'PostalCode':
         			$user_data['PostalCode'] = '32505';
@@ -67,7 +75,7 @@ class Tests_Retrieve_Client extends MZMBO_WPUnitTestCase {
         			$user_data['MobilePhone'] = '8504333202';
         			break;
         		case 'BirthDate':
-        			$user_data['BirthDate'] = Test_Options::$_CLIENTBIRTHDATE;
+        			$user_data['BirthDate'] = MBO_Access_Test_Options::$_CLIENTBIRTHDATE;
         			break;
         		default:
         			$user_data[$v] = $v . '_' . substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1, $length);
@@ -78,15 +86,15 @@ class Tests_Retrieve_Client extends MZMBO_WPUnitTestCase {
         $new_client = $client_object->add_client($user_data);
         
         if ( !empty($new_client['Client']['Id']) ) {
-        	Test_Options::$_CLIENTID = $new_client['Client']['Id']; //100015679
+        	MBO_Access_Test_Options::$_CLIENTID = $new_client['Client']['Id']; //100015679
         }
         
         // TODO More validation tests for various fields
         
         $this->assertTrue(is_array($new_client));
 
-        $this->assertTrue(is_string(Test_Options::$_CLIENTID));
-        $this->assertTrue($new_client['Client']['Email'] == Test_Options::$_CLIENTEMAIL);
+        $this->assertTrue(is_string(MBO_Access_Test_Options::$_CLIENTID));
+        $this->assertTrue($new_client['Client']['Email'] == MBO_Access_Test_Options::$_CLIENTEMAIL);
                 
 	}
 	
@@ -97,20 +105,20 @@ class Tests_Retrieve_Client extends MZMBO_WPUnitTestCase {
         $client_object = new MZ_MBO_Access\Client\Retrieve_Client;
         
         $user_data = [
-        	'UserEmail' => Test_Options::$_CLIENTEMAIL,
-       		'UserFirstName' => Test_Options::$_FIRSTNAME,
-       		'1UserLastName' => Test_Options::$_LASTNAME
+        	'UserEmail' => MBO_Access_Test_Options::$_CLIENTEMAIL,
+       		'UserFirstName' => MBO_Access_Test_Options::$_FIRSTNAME,
+       		'1UserLastName' => MBO_Access_Test_Options::$_LASTNAME
         ];
         
         $client_reset_request = $client_object->password_reset_email_request($user_data);
         
         $this->assertTrue($client_reset_request['Error']['Code'] == 'MissingRequiredFields');
         
-        if ( empty(Test_Options::$_CLIENTPASSWORD) ) {
+        if ( empty(MBO_Access_Test_Options::$_CLIENTPASSWORD) ) {
 			$user_data = [
-				'UserEmail' => Test_Options::$_CLIENTEMAIL,
-				'UserFirstName' => Test_Options::$_FIRSTNAME,
-				'UserLastName' => Test_Options::$_LASTNAME
+				'UserEmail' => MBO_Access_Test_Options::$_CLIENTEMAIL,
+				'UserFirstName' => MBO_Access_Test_Options::$_FIRSTNAME,
+				'UserLastName' => MBO_Access_Test_Options::$_LASTNAME
 			];
 			$client_reset_request = $client_object->password_reset_email_request($user_data);
 			
@@ -124,15 +132,15 @@ class Tests_Retrieve_Client extends MZMBO_WPUnitTestCase {
 	
 	public function test_log_client_in() {
 		
-		if ( empty(Test_Options::$_CLIENTPASSWORD) ) return; // can't login yet.
+		if ( empty(MBO_Access_Test_Options::$_CLIENTPASSWORD) ) return; // can't login yet.
 		
         parent::setUp();
         		                
         $client_object = new MZ_MBO_Access\Client\Retrieve_Client;
         
         $credentials = [
-        	'Username' => Test_Options::$_CLIENTEMAIL,
-       		'Password' => Test_Options::$_CLIENTPASSWORD
+        	'Username' => MBO_Access_Test_Options::$_CLIENTEMAIL,
+       		'Password' => MBO_Access_Test_Options::$_CLIENTPASSWORD
         ];
         
         $validation_result = $client_object->validate_client($credentials);
@@ -157,15 +165,15 @@ class Tests_Retrieve_Client extends MZMBO_WPUnitTestCase {
 	
 	public function test_get_client_details() {
 		
-		if ( empty(Test_Options::$_CLIENTPASSWORD) ) return; // can't login yet.
+		if ( empty(MBO_Access_Test_Options::$_CLIENTPASSWORD) ) return; // can't login yet.
 		
         parent::setUp();
         		                
         $client_object = new MZ_MBO_Access\Client\Retrieve_Client;
         
         $credentials = [
-        	'Username' => Test_Options::$_CLIENTEMAIL,
-       		'Password' => Test_Options::$_CLIENTPASSWORD
+        	'Username' => MBO_Access_Test_Options::$_CLIENTEMAIL,
+       		'Password' => MBO_Access_Test_Options::$_CLIENTPASSWORD
         ];
         
         $validation_result = $client_object->validate_client($credentials);
