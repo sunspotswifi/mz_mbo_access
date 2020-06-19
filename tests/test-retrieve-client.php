@@ -12,9 +12,9 @@ class Tests_Retrieve_Client extends MZMBO_WPUnitTestCase {
 
         parent::setUp();
 
-        $this->assertTrue(class_exists('MZ_Mindbody\Inc\Client\Retrieve_Client'));
+        $this->assertTrue(class_exists('MZ_MBO_Access\Client\Retrieve_Client'));
         		                
-        $client_object = new MZ_Mindbody\Inc\Client\Retrieve_Client;
+        $client_object = new MZ_MBO_Access\Client\Retrieve_Client;
         
 	  	$response = $client_object->get_mbo_results();
 	  	
@@ -36,7 +36,7 @@ class Tests_Retrieve_Client extends MZMBO_WPUnitTestCase {
 		
         parent::setUp();
         		                
-        $client_object = new MZ_Mindbody\Inc\Client\Retrieve_Client;
+        $client_object = new MZ_MBO_Access\Client\Retrieve_Client;
         
         $required_fields = $client_object->get_signup_form_fields();
         
@@ -94,7 +94,7 @@ class Tests_Retrieve_Client extends MZMBO_WPUnitTestCase {
 
         parent::setUp();
         		                
-        $client_object = new MZ_Mindbody\Inc\Client\Retrieve_Client;
+        $client_object = new MZ_MBO_Access\Client\Retrieve_Client;
         
         $user_data = [
         	'UserEmail' => Test_Options::$_CLIENTEMAIL,
@@ -128,7 +128,7 @@ class Tests_Retrieve_Client extends MZMBO_WPUnitTestCase {
 		
         parent::setUp();
         		                
-        $client_object = new MZ_Mindbody\Inc\Client\Retrieve_Client;
+        $client_object = new MZ_MBO_Access\Client\Retrieve_Client;
         
         $credentials = [
         	'Username' => Test_Options::$_CLIENTEMAIL,
@@ -161,7 +161,7 @@ class Tests_Retrieve_Client extends MZMBO_WPUnitTestCase {
 		
         parent::setUp();
         		                
-        $client_object = new MZ_Mindbody\Inc\Client\Retrieve_Client;
+        $client_object = new MZ_MBO_Access\Client\Retrieve_Client;
         
         $credentials = [
         	'Username' => Test_Options::$_CLIENTEMAIL,

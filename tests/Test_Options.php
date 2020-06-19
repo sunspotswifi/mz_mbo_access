@@ -19,7 +19,7 @@ class Test_Options
     public static $_CLIENTBIRTHDATE = '10/05/1969';
     public static $_CLIENTID = '';
     // For now manually added:
-    public static $_CLIENTPASSWORD = 'A3f5be622974';
+    public static $_CLIENTPASSWORD = '';
     // Site IDs: Uru 43474, Medicine: 437889
     
 }
