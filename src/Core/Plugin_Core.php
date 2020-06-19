@@ -120,7 +120,7 @@ class Plugin_Core
 	 * @since 1.0.0
 	 */
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'mz-mbo-access' ), '2.1' );
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', NS\PLUGIN_TEXT_DOMAIN ), '2.1' );
 	}
 
 	/**
@@ -128,7 +128,7 @@ class Plugin_Core
 	 * @since 1.0.0
 	 */
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'mz-mbo-access' ), '2.1' );
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', NS\PLUGIN_TEXT_DOMAIN ), '2.1' );
 	}
 	
 	

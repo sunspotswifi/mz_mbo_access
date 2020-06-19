@@ -117,15 +117,15 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
 
         $this->atts = shortcode_atts(array(
             'siteid' => '',
-            'denied_message' => __('Access to this content requires one of',  'mz-mbo-access'),
-            'call_to_action' => __('Login with your Mindbody account to access this content.', 'mz-mindbpdy-api'),
-            'access_expired' => __('Looks like your access has expired.', 'mz-mindbpdy-api'),
+            'denied_message' => __('Access to this content requires one of',  NS\PLUGIN_TEXT_DOMAIN),
+            'call_to_action' => __('Login with your Mindbody account to access this content.', NS\PLUGIN_TEXT_DOMAIN),
+            'access_expired' => __('Looks like your access has expired.', NS\PLUGIN_TEXT_DOMAIN),
             'level_1_redirect' => '',
             'level_2_redirect' => '',
             'denied_redirect' => '',
             'access_levels' => 1,
             'manage_on_mbo'  => "Visit Mindbody Site",
-            'password_reset_request' => __("Forgot My Password", 'mz-mbo-access')
+            'password_reset_request' => __("Forgot My Password", NS\PLUGIN_TEXT_DOMAIN)
         ), $atts);
                         
         $this->siteID = (isset($atts['siteid'])) ? $atts['siteid'] : MZ\MZMBO()::$basic_options['mz_mindbody_siteID'];

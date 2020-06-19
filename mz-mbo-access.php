@@ -48,7 +48,6 @@ define( NS . 'PLUGIN_TEXT_DOMAIN', 'mz-mbo-access' );
 
 add_action( 'admin_init', __NAMESPACE__ . '\mbo_access_has_mindbody_api' );
 
-
 /**
  * Insure that parent plugin, is active or deactivate plugin.
  */
@@ -70,7 +69,7 @@ function mbo_access_has_mindbody_api() {
  * Child Plugin Notice
  */
 function mbo_access_child_plugin_notice(){
-		?><div class="error"><p>Sorry, but MZ MBO Access plugin requires the parent plugin, MZ Mindbody API, to be installed and active.</p></div><?php
+		?><div class="error"><p><?php __("Sorry, but MZ MBO Access plugin requires the parent plugin, MZ Mindbody API, to be installed and active.", NS\PLUGIN_TEXT_DOMAIN); ?></p></div><?php
 }
 
 /**
