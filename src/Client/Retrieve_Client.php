@@ -102,7 +102,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
      */
     public function log_client_in( $credentials = ['username' => '', 'password' => ''] ){
     
-        $validateLogin = $this->validate_client($credentials);
+        $validateLogin = $this->validate_client($this->sanitize_login_fields($credentials));
 		
 		if ( !empty($validateLogin['ValidateLoginResult']['GUID']) ) {
 			if ( $this->create_client_session( $validateLogin ) ) {
@@ -216,6 +216,14 @@ class Retrieve_Client extends Interfaces\Retrieve {
 		
 		return $signup_result;
     
+    }
+    
+    public function sanitize_login_fields( $credentials = array() ) {
+
+    	$credentials['username'] = sanitize_email($credentials['username']);
+    	$credentials['password'] = sanitize_text_field($credentials['username']);
+    	
+    	return $credentials;
     }
     
     /**
