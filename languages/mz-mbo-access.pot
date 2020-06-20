@@ -1,0 +1,298 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: Mindbody Access Management\n"
+"POT-Creation-Date: 2020-06-19 19:42-0500\n"
+"PO-Revision-Date: 2020-06-19 19:41-0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: mz-mbo-access.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: vendor\n"
+
+#: mz-mbo-access.php:72
+msgid ""
+"Sorry, but MZ MBO Access plugin requires the parent plugin, MZ Mindbody API, "
+"to be installed and active."
+msgstr ""
+
+#: src/Access/Access_Display.php:120
+msgid "Access to this content requires one of"
+msgstr ""
+
+#: src/Access/Access_Display.php:121
+msgid "Login with your Mindbody account to access this content."
+msgstr ""
+
+#: src/Access/Access_Display.php:122
+msgid "Looks like your access has expired."
+msgstr ""
+
+#: src/Access/Access_Display.php:128
+msgid "Forgot My Password"
+msgstr ""
+
+#: src/Access/Access_Display.php:155
+msgid "email"
+msgstr ""
+
+#: src/Access/Access_Display.php:156
+msgid "password"
+msgstr ""
+
+#: src/Access/Access_Display.php:157
+msgid "Login"
+msgstr ""
+
+#: src/Access/Access_Display.php:158
+msgid "Logout"
+msgstr ""
+
+#: src/Access/Access_Display.php:284
+msgid "Error returning schedule from Mindbody in Access Display."
+msgstr ""
+
+#: src/Access/Access_Display.php:316
+msgid "Error. Please try again."
+msgstr ""
+
+#: src/Admin/Admin.php:30
+msgid "Missing Plugin Dependency MZ Mindbody Api."
+msgstr ""
+
+#: src/Backend/Settings_Page.php:44
+msgid "MZ MBO Access Settings"
+msgstr ""
+
+#: src/Backend/Settings_Page.php:52
+msgid "API Version 5"
+msgstr ""
+
+#: src/Backend/Settings_Page.php:86
+msgid "Debug Output"
+msgstr ""
+
+#: src/Backend/Settings_Page.php:97
+msgid "Access Level One Services"
+msgstr ""
+
+#: src/Backend/Settings_Page.php:98 src/Backend/Settings_Page.php:110
+msgid "Comma separated list (or single) MBO Service(s) or Contract(s)"
+msgstr ""
+
+#: src/Backend/Settings_Page.php:109
+msgid "Access Level Two Services"
+msgstr ""
+
+#: src/Backend/Settings_Page.php:121
+msgid "Shortcodes and Atts"
+msgstr ""
+
+#: src/Backend/Settings_Page.php:132
+msgid "Server Check"
+msgstr ""
+
+#: src/Backend/Settings_Page.php:141
+msgid "Restricted content here between both tags"
+msgstr ""
+
+#: src/Backend/Settings_Page.php:143
+msgid "(url string) URL to redirect users with level one access."
+msgstr ""
+
+#: src/Backend/Settings_Page.php:144
+msgid "(url string) URL to redirect users with level two access."
+msgstr ""
+
+#: src/Backend/Settings_Page.php:145
+msgid ""
+"((url string) URL to redirect users to who are logged in but don't have "
+"access."
+msgstr ""
+
+#: src/Backend/Settings_Page.php:146
+msgid "(string) Message inviting user to submit form."
+msgstr ""
+
+#: src/Backend/Settings_Page.php:147
+msgid "(string) Password Reset button text. Blank string to remove button."
+msgstr ""
+
+#: src/Backend/Settings_Page.php:148
+msgid "(string) Link to MBO Site button text. Blank string to remove button."
+msgstr ""
+
+#: src/Backend/Settings_Page.php:149
+msgid "(string) Message preceding list of items required for access."
+msgstr ""
+
+#: src/Backend/Settings_Page.php:150
+msgid "(string) Message alerting client that access has expired."
+msgstr ""
+
+#: src/Backend/Settings_Page.php:151
+#, php-format
+msgid ""
+"(int/list) (Default %1$d) Levels of access required to access content %1$d, "
+"%2$d or %3$s"
+msgstr ""
+
+#: src/Backend/Settings_Page.php:154
+msgid "Note"
+msgstr ""
+
+#: src/Backend/Settings_Page.php:155
+#, php-format
+msgid ""
+"If %1$s %2$s or %3$s are included, the login form will redirect to one of "
+"those urls instead of revealing content. Content, if any, between shortcode "
+"tags will display when page is reloaded by logged in client."
+msgstr ""
+
+#: src/Backend/Settings_Page.php:174
+msgid "SOAP installed! "
+msgstr ""
+
+#: src/Backend/Settings_Page.php:178
+msgid "SOAP is not installed. "
+msgstr ""
+
+#: src/Backend/Settings_Page.php:185
+msgid "PEAR installed! "
+msgstr ""
+
+#: src/Backend/Settings_Page.php:189
+msgid "PEAR is not installed. "
+msgstr ""
+
+#: src/Backend/Settings_Page.php:197
+msgid ""
+"MZ Mindbody API requires SOAP and PEAR. Please contact your hosting provider "
+"or enable via your CPANEL of php.ini file."
+msgstr ""
+
+#: src/Backend/Settings_Page.php:204
+msgid ""
+"Congratulations. Your server appears to be configured to integrate with "
+"mindbodyonline."
+msgstr ""
+
+#: src/Backend/Settings_Page.php:211
+msgid "Test Credentials"
+msgstr ""
+
+#: src/Client/Client_Portal.php:135
+msgid "Logged Out"
+msgstr ""
+
+#: src/Client/Client_Portal.php:288
+msgid "You are already booked at this time."
+msgstr ""
+
+#: src/Client/Client_Portal.php:307
+msgid "Registered via MindBody"
+msgstr ""
+
+#: src/Client/Client_Portal.php:363
+msgid "Leave this empty-slash-blank"
+msgstr ""
+
+#: src/Client/Client_Portal.php:364
+msgid "Email"
+msgstr ""
+
+#: src/Client/Client_Portal.php:365
+msgid "First Name"
+msgstr ""
+
+#: src/Client/Client_Portal.php:366
+msgid "Last Name"
+msgstr ""
+
+#: src/Client/Client_Portal.php:367
+msgid "Sign up"
+msgstr ""
+
+#: src/Client/Client_Portal.php:443
+msgid "Congratulations. You are now logged in with your new Mindbody account."
+msgstr ""
+
+#: src/Client/Client_Portal.php:445
+msgid "Sign-up for some classes."
+msgstr ""
+
+#: src/Client/Client_Portal.php:457
+msgid "Try Again"
+msgstr ""
+
+#: src/Client/Retrieve_Client.php:108
+msgid "Badly formed email."
+msgstr ""
+
+#: src/Client/Retrieve_Client.php:110
+msgid ""
+"All Mindbody passwords must contain 8 to 15 characters and must include both "
+"letters and numbers."
+msgstr ""
+
+#: src/Client/Retrieve_Client.php:117
+msgid "Welcome"
+msgstr ""
+
+#: src/Client/Retrieve_Client.php:119
+#, php-format
+msgid "Whoops. Please try again, %1$s."
+msgstr ""
+
+#: src/Client/Retrieve_Client.php:129
+msgid "Invalid Login"
+msgstr ""
+
+#: src/Client/Retrieve_Client.php:295
+msgid "Please Login"
+msgstr ""
+
+#: src/Core/Plugin_Core.php:123 src/Core/Plugin_Core.php:131
+#: src/Session/MZ_Access_Session.php:228 src/Session/MZ_Access_Session.php:236
+msgid "Cheatin&#8217; huh?"
+msgstr ""
+
+#: src/Session/MZ_Access_Session.php:217
+msgid ""
+"Another plugin is attempting to start a session with WordPress. WP Session "
+"Manager will not work!"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Mindbody Access Management"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.mzoo.org/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Child plugin for mZoo Mindbody Interface, which can limit user access to "
+"content based on MBO client account details."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "mZoo.org"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.mZoo.org/"
+msgstr ""
