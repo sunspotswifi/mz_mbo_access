@@ -1,0 +1,356 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Project-Id-Version: Mindbody Access Management\n"
+"POT-Creation-Date: 2020-06-19 19:42-0500\n"
+"PO-Revision-Date: 2020-06-19 20:25-0500\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: mz-mbo-access.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"Last-Translator: \n"
+"Language: es_CO\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: vendor\n"
+
+#: mz-mbo-access.php:72
+#, fuzzy
+msgid ""
+"Sorry, but MZ MBO Access plugin requires the parent plugin, MZ Mindbody API, "
+"to be installed and active."
+msgstr ""
+"Lo sentimos, pero el plugin MZ MBO Access requiere que el plugin principal, "
+"MZ Mindbody API, esté instalado y activo."
+
+#: src/Access/Access_Display.php:120
+#, fuzzy
+msgid "Access to this content requires one of"
+msgstr "El acceso a este contenido requiere una de las"
+
+#: src/Access/Access_Display.php:121
+#, fuzzy
+msgid "Login with your Mindbody account to access this content."
+msgstr "Inicia sesión con tu cuenta de Mindbody para acceder a este contenido."
+
+#: src/Access/Access_Display.php:122
+#, fuzzy
+msgid "Looks like your access has expired."
+msgstr "Parece que tu acceso ha caducado."
+
+#: src/Access/Access_Display.php:128
+#, fuzzy
+msgid "Forgot My Password"
+msgstr "Olvidé mi contraseña"
+
+#: src/Access/Access_Display.php:155
+msgid "email"
+msgstr "e-mail"
+
+#: src/Access/Access_Display.php:156
+#, fuzzy
+msgid "password"
+msgstr "Contraseña"
+
+#: src/Access/Access_Display.php:157
+msgid "Login"
+msgstr "Conectate"
+
+#: src/Access/Access_Display.php:158
+msgid "Logout"
+msgstr "Cerrar Sesión"
+
+#: src/Access/Access_Display.php:284
+#, fuzzy
+msgid "Error returning schedule from Mindbody in Access Display."
+msgstr "Error al devolver la programación de Mindbody en Access Display."
+
+#: src/Access/Access_Display.php:316
+msgid "Error. Please try again."
+msgstr "Error. Por favor, intenta de nuevo."
+
+#: src/Admin/Admin.php:30
+#, fuzzy
+msgid "Missing Plugin Dependency MZ Mindbody Api."
+msgstr "Falta Plugin Dependencia MZ Mindbody Api."
+
+#: src/Backend/Settings_Page.php:44
+#, fuzzy
+msgid "MZ MBO Access Settings"
+msgstr "Configuración de acceso a MZ MBO"
+
+#: src/Backend/Settings_Page.php:52
+msgid "API Version 5"
+msgstr "API Versión 5"
+
+#: src/Backend/Settings_Page.php:86
+msgid "Debug Output"
+msgstr "Salida de depuracián"
+
+#: src/Backend/Settings_Page.php:97
+#, fuzzy
+msgid "Access Level One Services"
+msgstr "Acceso a servicios de nivel uno"
+
+#: src/Backend/Settings_Page.php:98 src/Backend/Settings_Page.php:110
+#, fuzzy
+msgid "Comma separated list (or single) MBO Service(s) or Contract(s)"
+msgstr ""
+"Lista (o única) Servicio(s) de MBO o Contrato(s) separado(s) por comas (o "
+"único)"
+
+#: src/Backend/Settings_Page.php:109
+#, fuzzy
+msgid "Access Level Two Services"
+msgstr "Acceso a servicios de nivel dos"
+
+#: src/Backend/Settings_Page.php:121
+#, fuzzy
+msgid "Shortcodes and Atts"
+msgstr "Shortcodes and Atts"
+
+#: src/Backend/Settings_Page.php:132
+msgid "Server Check"
+msgstr "Control de servidor"
+
+#: src/Backend/Settings_Page.php:141
+#, fuzzy
+msgid "Restricted content here between both tags"
+msgstr "Contenido restringido aquí entre ambas etiquetas"
+
+#: src/Backend/Settings_Page.php:143
+#, fuzzy
+msgid "(url string) URL to redirect users with level one access."
+msgstr ""
+"(cadena URL) URL para redirigir a los usuarios con acceso de nivel uno."
+
+#: src/Backend/Settings_Page.php:144
+#, fuzzy
+msgid "(url string) URL to redirect users with level two access."
+msgstr ""
+"(cadena URL) URL para redirigir a los usuarios con acceso de nivel dos."
+
+#: src/Backend/Settings_Page.php:145
+#, fuzzy
+msgid ""
+"((url string) URL to redirect users to who are logged in but don't have "
+"access."
+msgstr ""
+"((url string) URL para redirigir a los usuarios a los usuarios que han "
+"iniciado sesión pero no tienen acceso."
+
+#: src/Backend/Settings_Page.php:146
+#, fuzzy
+msgid "(string) Message inviting user to submit form."
+msgstr "(cadena) Mensaje invitando al usuario a enviar el formulario."
+
+#: src/Backend/Settings_Page.php:147
+#, fuzzy
+msgid "(string) Password Reset button text. Blank string to remove button."
+msgstr ""
+"(cadena) Texto del botón de restablecimiento de contraseña. Cadena en blanco "
+"para eliminar el botón."
+
+#: src/Backend/Settings_Page.php:148
+#, fuzzy
+msgid "(string) Link to MBO Site button text. Blank string to remove button."
+msgstr ""
+"(cadena) Enlace al texto del botón Sitio de MBO. Cadena en blanco para "
+"eliminar el botón."
+
+#: src/Backend/Settings_Page.php:149
+#, fuzzy
+msgid "(string) Message preceding list of items required for access."
+msgstr ""
+"(cadena) Mensaje anterior lista de elementos necesarios para el acceso."
+
+#: src/Backend/Settings_Page.php:150
+#, fuzzy
+msgid "(string) Message alerting client that access has expired."
+msgstr "(cadena) Mensaje que alerta al cliente de que el acceso ha caducado."
+
+#: src/Backend/Settings_Page.php:151
+#, fuzzy, php-format
+msgid ""
+"(int/list) (Default %1$d) Levels of access required to access content %1$d, "
+"%2$d or %3$s"
+msgstr ""
+"(int/list) (Predeterminado %1$d) Niveles de acceso necesarios para acceder "
+"al contenido %1$d, %2$d o %3$s"
+
+#: src/Backend/Settings_Page.php:154
+msgid "Note"
+msgstr "Nota"
+
+#: src/Backend/Settings_Page.php:155
+#, fuzzy, php-format
+msgid ""
+"If %1$s %2$s or %3$s are included, the login form will redirect to one of "
+"those urls instead of revealing content. Content, if any, between shortcode "
+"tags will display when page is reloaded by logged in client."
+msgstr ""
+"Si se incluyen %1$s %2$s o %3$s, el formulario de inicio de sesión "
+"redirigirá a una de esas URL en lugar de revelar contenido. El contenido, si "
+"existe, entre las etiquetas de shortcode se mostrará cuando el cliente que "
+"haya iniciado sesión vuelva a cargar la página."
+
+#: src/Backend/Settings_Page.php:174
+msgid "SOAP installed! "
+msgstr "¡SOAP instalado!"
+
+#: src/Backend/Settings_Page.php:178
+msgid "SOAP is not installed. "
+msgstr "SOAP no está instalado."
+
+#: src/Backend/Settings_Page.php:185
+msgid "PEAR installed! "
+msgstr "¡PEAR instalado!"
+
+#: src/Backend/Settings_Page.php:189
+msgid "PEAR is not installed. "
+msgstr "PERA no está instalado."
+
+#: src/Backend/Settings_Page.php:197
+msgid ""
+"MZ Mindbody API requires SOAP and PEAR. Please contact your hosting provider "
+"or enable via your CPANEL of php.ini file."
+msgstr ""
+"MZ Mindbody API requiere PEAR y SOAP. Por favor, póngase en contacto con su "
+"proveedor de hosting o activar a través de su CPANEL del archivo php.ini."
+
+#: src/Backend/Settings_Page.php:204
+msgid ""
+"Congratulations. Your server appears to be configured to integrate with "
+"mindbodyonline."
+msgstr ""
+"Felicidades. El servidor parece configurarse para integrar con "
+"mindbodyonline."
+
+#: src/Backend/Settings_Page.php:211
+msgid "Test Credentials"
+msgstr "Credenciales de prueba"
+
+#: src/Client/Client_Portal.php:135
+msgid "Logged Out"
+msgstr "Sesión cerrada"
+
+#: src/Client/Client_Portal.php:288
+msgid "You are already booked at this time."
+msgstr "Ya estás reservado en este momento."
+
+#: src/Client/Client_Portal.php:307
+msgid "Registered via MindBody"
+msgstr "Registrado vía MindBody"
+
+#: src/Client/Client_Portal.php:363
+msgid "Leave this empty-slash-blank"
+msgstr "Esto deja vacío-slash-blanco"
+
+#: src/Client/Client_Portal.php:364
+msgid "Email"
+msgstr "Correo"
+
+#: src/Client/Client_Portal.php:365
+msgid "First Name"
+msgstr "Primer nombre"
+
+#: src/Client/Client_Portal.php:366
+msgid "Last Name"
+msgstr "Apellido"
+
+#: src/Client/Client_Portal.php:367
+msgid "Sign up"
+msgstr "Registrarse"
+
+#: src/Client/Client_Portal.php:443
+msgid "Congratulations. You are now logged in with your new Mindbody account."
+msgstr "Felicidades. Ahora está conectado con tu cuenta nueva de Mindbody."
+
+#: src/Client/Client_Portal.php:445
+msgid "Sign-up for some classes."
+msgstr "Inscribirse en algunas clases."
+
+#: src/Client/Client_Portal.php:457
+msgid "Try Again"
+msgstr "Vuelva a intentarlo"
+
+#: src/Client/Retrieve_Client.php:108
+#, fuzzy
+msgid "Badly formed email."
+msgstr "Correo electrónico mal formado."
+
+#: src/Client/Retrieve_Client.php:110
+#, fuzzy
+msgid ""
+"All Mindbody passwords must contain 8 to 15 characters and must include both "
+"letters and numbers."
+msgstr ""
+"Todas las contraseñas de Mindbody deben contener de 8 a 15 caracteres y "
+"deben incluir letras y números."
+
+#: src/Client/Retrieve_Client.php:117
+msgid "Welcome"
+msgstr "Bienvenido"
+
+#: src/Client/Retrieve_Client.php:119
+#, fuzzy, php-format
+msgid "Whoops. Please try again, %1$s."
+msgstr "Gritos. Inténtelo de nuevo, %1$s."
+
+#: src/Client/Retrieve_Client.php:129
+msgid "Invalid Login"
+msgstr "Inicio de sesión no válido."
+
+#: src/Client/Retrieve_Client.php:295
+msgid "Please Login"
+msgstr "Por favor Inicie Sesion"
+
+#: src/Core/Plugin_Core.php:123 src/Core/Plugin_Core.php:131
+#: src/Session/MZ_Access_Session.php:228 src/Session/MZ_Access_Session.php:236
+msgid "Cheatin&#8217; huh?"
+msgstr "¿Haciendo trampas, eh?"
+
+#: src/Session/MZ_Access_Session.php:217
+#, fuzzy
+msgid ""
+"Another plugin is attempting to start a session with WordPress. WP Session "
+"Manager will not work!"
+msgstr ""
+"Otro plugin está intentando iniciar una sesión con WordPress. ¡WP Session "
+"Manager no funcionará!"
+
+#. Plugin Name of the plugin/theme
+#, fuzzy
+msgid "Mindbody Access Management"
+msgstr "Mindbody Access Management"
+
+#. Plugin URI of the plugin/theme
+#, fuzzy
+msgid "http://www.mzoo.org/"
+msgstr "http://www.mZoo.org/"
+
+#. Description of the plugin/theme
+#, fuzzy
+msgid ""
+"Child plugin for mZoo Mindbody Interface, which can limit user access to "
+"content based on MBO client account details."
+msgstr ""
+"Complemento infantil para mZoo Mindbody Interface, que puede limitar el "
+"acceso del usuario al contenido en función de los detalles de la cuenta de "
+"cliente de MBO."
+
+#. Author of the plugin/theme
+msgid "mZoo.org"
+msgstr "mZoo.org"
+
+#. Author URI of the plugin/theme
+msgid "http://www.mZoo.org/"
+msgstr "http://www.mZoo.org/"
