@@ -27,9 +27,10 @@
 	},
 	"autoload": {
 		"psr-4": {
-		  "MZ_MBO_Access\\": "src",
-		  "EAMann\\": "libraries/wp-session",
-		  "EAMann\\WPSession\\Objects\\": "libraries/wp-session"
+			"MZ_MBO_Access\\": "src",
+			"EAMann\\": "libraries/wp-sessions",
+			"EAMann\\WPSession\\": "libraries/wp-sessions",
+			"EAMann\\WPSession\\Objects\\": "libraries/wp-sessions"
 		}
 	}
 }
