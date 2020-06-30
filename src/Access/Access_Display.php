@@ -281,7 +281,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
         $this->schedule_object = new Retrieve_Schedule($atts);
 
         // Call the API and if fails, return error message.
-        if (false == $this->schedule_object->get_mbo_results()) echo "<div>" . __("Error returning schedule from Mindbody in Access Display.", 'mz-mindbody-api') . "</div>";
+        if (false == $this->schedule_object->get_mbo_results()) echo "<div>" . __("Error returning schedule from Mindbody in Access Display.", NS\PLUGIN_TEXT_DOMAIN) . "</div>";
 
         // Register attributes
         $this->handleShortcode($atts);
@@ -313,7 +313,7 @@ class Access_Display extends Interfaces\ShortCode_Script_Loader
             $result['horizontal'] = ob_get_clean();
         endif;
 
-        $result['message'] = __('Error. Please try again.', 'mz-mindbody-api');
+        $result['message'] = __('Error. Please try again.', NS\PLUGIN_TEXT_DOMAIN);
 
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             $result = json_encode($result);
