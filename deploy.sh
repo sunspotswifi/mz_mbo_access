@@ -95,6 +95,8 @@ webpack.config.js
 
 echo "Changing directory to SVN and committing to trunk"
 cd $SVNPATH/trunk/
+echo "Run composer install to get dependencies."
+composer install
 # Add all new files that are not set to be ignored
 echo "Doing the file adding"
 svn status | grep -v "^.[ \t]*\..*" | grep "^?" | awk '{print $2}' | xargs svn add
