@@ -4,7 +4,7 @@ namespace MZ_MBO_Access\Access;
 use MZ_MBO_Access as NS;
 use MZ_Mindbody as MZ;
 use MZ_MBO_Access\Core as Core;
-use MZ_Mindbody\Inc\Client as Client;
+use MZ_MBO_Access\Client as Client;
 use MZ_Mindbody\Inc\Common as Common;
 use MZ_Mindbody\Inc\Common\Interfaces as Interfaces;
 
@@ -24,7 +24,7 @@ class Access_Portal extends Access_Utilities
      * @return bool
      */
     public function ajax_login_check_access_permissions( ){
-    
+
         check_ajax_referer($_REQUEST['nonce'], "mz_mbo_access_nonce", false);
 
         // Crate the MBO Object
@@ -51,7 +51,9 @@ class Access_Portal extends Access_Utilities
         
         	$credentials = ['Username' => $params['email'], 'Password' => $params['password']];
         
-        	$login = $this->log_client_in($credentials);
+            $client = new Client\Retrieve_Client;        
+            
+        	$login = $client->log_client_in($credentials);
 				        	
         	if ( $login['type'] == 'error' ) $result['type'] = 'error';
         	        	

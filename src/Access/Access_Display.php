@@ -5,7 +5,7 @@ use MZ_MBO_Access as NS;
 use MZ_Mindbody as MZ;
 use MZ_MBO_Access\Core as Core;
 use MZ_MBO_Access\Session as Session;
-use MZ_Mindbody\Inc\Client as Client;
+use MZ_MBO_Access\Client as Client;
 use MZ_Mindbody\Inc\Site as Site;
 use MZ_Mindbody\Inc\Common as Common;
 use MZ_Mindbody\Inc\Common\Interfaces as Interfaces;
