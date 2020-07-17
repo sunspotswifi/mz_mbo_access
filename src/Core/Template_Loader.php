@@ -47,7 +47,7 @@ class Template_Loader extends Libraries\Gamajo_Template_Loader {
      *
      * @var string
      */
-    protected $plugin_template_directory = 'src/frontend/views';
+    protected $plugin_template_directory = 'src/Frontend/views';
 
 }
 
