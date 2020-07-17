@@ -5,7 +5,8 @@
  * @package MZMBOACCESS
  *
  * @wordpress-plugin
- * Version: 		1.0.3
+ * Version: 		1.0.4
+ * Stable tag: 		1.0.4
  * Author: 			mZoo.org
  * Author URI: 		http://www.mZoo.org/
  * Plugin URI: 		http://www.mzoo.org/
