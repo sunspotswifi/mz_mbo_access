@@ -18,7 +18,6 @@ namespace MZ_MBO_Access;
 
 use MZ_MBO_Access as NS;
 use MZ_Mindbody;
-use MZ_Mindbody\Inc\Client as Client;
 use MZ_Mindbody\Inc\Core as Core;
 
 if ( !defined( 'WPINC' ) ) {
@@ -36,7 +35,7 @@ define( __NAMESPACE__ . '\NS', __NAMESPACE__ . '\\' );
 
 define( NS . 'PLUGIN_NAME', 'mz-mbo-access' );
 
-define( NS . 'PLUGIN_VERSION', '1.0.3' );
+define( NS . 'PLUGIN_VERSION', '1.0.4' );
 
 define( NS . 'PLUGIN_NAME_DIR', plugin_dir_path( __FILE__ ) );
 
