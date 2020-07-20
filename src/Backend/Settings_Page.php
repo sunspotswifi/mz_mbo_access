@@ -150,7 +150,7 @@ class Settings_Page {
         $return .= "<li><strong>access_expired</strong>: " . __("(string) Message alerting client that access has expired.", 'mz-mindbody-api')."</li>";
         $return .= "<li><strong>access_levels</strong>: " . sprintf(__('(int/list) (Default %1$d) Levels of access required to access content %1$d, %2$d or %3$s', 'mz-mindbody-api'), 1, 2, "\"1, 2\"")."</li>";
         $return .= "</ul>";
-        $return .= sprintf('[%1$s %2$s]%3$s[%4$s]', 'mbo-client-access', 'memberships="Corporate Membership, Monthly Membership - Gym Access"', 'Restricted Content', '/mbo-client-access');
+        $return .= sprintf('[%1$s %2$s]%3$s[%4$s]', 'mbo-client-access', 'access_levels="1,2" denied_message="Not so fast, bub."', 'Restricted Content', '/mbo-client-access');
         $return .= '<h3>'. __('Note', 'mz-mindbody-api') . '</h3>';
         $return .= sprintf(__('If %1$s %2$s or %3$s are included, the login form will redirect to one of those urls instead of revealing content. Content, if any, between shortcode tags will display when page is reloaded by logged in client.', 'mz-mindbody-api'), '<code>contract_redirect</code>', '<code>level_2_redirect</code>', '<code>denied_redirect</code>');
         return $return;
