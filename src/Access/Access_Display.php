@@ -10,7 +10,7 @@ use MZ_Mindbody\Inc\Site as Site;
 use MZ_Mindbody\Inc\Common as Common;
 use MZ_Mindbody\Inc\Common\Interfaces as Interfaces;
 
-class Access_Display extends Interfaces\ShortCode_Script_Loader
+class Access_Display extends Interfaces\Shortcode_Script_Loader
 {
 
     /**
