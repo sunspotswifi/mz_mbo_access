@@ -5,8 +5,8 @@
  * @package MZMBOACCESS
  *
  * @wordpress-plugin
- * Version: 		1.0.5
- * Stable tag: 		1.0.5
+ * Version: 		1.0.6
+ * Stable tag: 		1.0.6
  * Author: 			mZoo.org
  * Author URI: 		http://www.mZoo.org/
  * Plugin URI: 		http://www.mzoo.org/
@@ -36,7 +36,7 @@ define( __NAMESPACE__ . '\NS', __NAMESPACE__ . '\\' );
 
 define( NS . 'PLUGIN_NAME', 'mz-mbo-access' );
 
-define( NS . 'PLUGIN_VERSION', '1.0.5' );
+define( NS . 'PLUGIN_VERSION', '1.0.6' );
 
 define( NS . 'PLUGIN_NAME_DIR', plugin_dir_path( __FILE__ ) );
 
@@ -86,17 +86,18 @@ if (!class_exists('\MZ_MBO_Access\Core\Plugin_Core')) {
 
 /**
  * Register Activation and Deactivation Hooks
- * This action is documented in inc/core/class-activator.php
+ * This action is documented in src/core/class-activator.php
  */
 
 register_activation_hook( __FILE__, array( NS . '\Core\Activator', 'activate' ) );
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented inc/core/class-deactivator.php
+ * This action is documented src/core/class-deactivator.php
  */
-
-register_deactivation_hook( __FILE__, array( NS . '\Core\Deactivator', 'deactivate' ) );
+// TODO: This Class is causing a php Warning, then error that it's already
+// been declared. Not doing anything anyway so commenting out for not.
+// register_deactivation_hook( __FILE__, array( NS . '\Core\Deactivator', 'deactivate' ) );
 
 
 class MZ_MBO_Access {
