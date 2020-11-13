@@ -69,7 +69,7 @@ function mbo_access_has_mindbody_api() {
  * Child Plugin Notice
  */
 function mbo_access_child_plugin_notice(){
-		?><div class="error"><p><?php __("Sorry, but MZ MBO Access plugin requires the parent plugin, MZ Mindbody API, to be installed and active.", NS\PLUGIN_TEXT_DOMAIN); ?></p></div><?php
+		?><div class="error"><p><?php echo __("Sorry, but MZ MBO Access plugin requires the parent plugin, MZ Mindbody API, to be installed and active.", NS\PLUGIN_TEXT_DOMAIN); ?></p></div><?php
 }
 
 /**
