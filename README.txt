@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: mindbody, schedule, calendar, yoga, MBO, mindbodyonline, gym, access, restrict
 Requires at least: 3.0.1
 Tested up to: 5.4
-Stable tag: 1.0.6
+Stable tag: 1.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,13 @@ Steps to install and configure MZ MBO Access:
 7. Access Granted.
 
 == Changelog ==
+
+
+= v1.0.8 =
+Bugfix: Correct Namespace in activator call.
+
+= v1.0.7 =
+Bugfix: Correctly echo notice when parent plugin not installed and activated.
 
 = v1.0.6 =
 Bugfix: Remove call to Deactivation hook, which returns error and isn't doing anything.
