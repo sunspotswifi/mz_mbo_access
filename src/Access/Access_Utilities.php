@@ -163,8 +163,6 @@ class Access_Utilities extends Client\Retrieve_Client
 		if ( false == (bool) $purchases[0]['Sale'] ) return 0;
 		
 		foreach( $purchases as $purchase ) {
-		MZ\MZMBO()->helpers->log("purchase");
-		MZ\MZMBO()->helpers->log($purchase);
 			if ( in_array($purchase['Description'], $purchase_types) ) return 1;
 		}
 		
