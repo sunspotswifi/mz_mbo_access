@@ -5,8 +5,8 @@
  * @package MZMBOACCESS
  *
  * @wordpress-plugin
- * Version: 		1.0.8
- * Stable tag: 		1.0.8
+ * Version: 		1.0.9
+ * Stable tag: 		1.0.9
  * Author: 			mZoo.org
  * Author URI: 		http://www.mZoo.org/
  * Plugin URI: 		http://www.mzoo.org/
@@ -163,8 +163,7 @@ class MZ_MBO_Access {
  **/
  if ( ! function_exists( 'MBO_Access' ) ) {
 	function MBO_Access() {
-	return;
-			return NS\MZ_MBO_Access::instance();
+	    return NS\MZ_MBO_Access::instance();
 	}
 }
 
