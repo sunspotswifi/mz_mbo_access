@@ -100,6 +100,8 @@ class Client_Portal extends Retrieve_Client {
         	if ( $login['type'] == 'error' ) $result['type'] = 'error';
         	        	
 			$result['message'] = $login['message'];
+			
+			$result['client_details'] = $login['deeper_client_info'];
         	        	
 			$result['client_id'] = $login['client_id'];
 
