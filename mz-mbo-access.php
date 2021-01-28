@@ -5,8 +5,8 @@
  * @package MZMBOACCESS
  *
  * @wordpress-plugin
- * Version: 		2.0.1
- * Stable tag: 		2.0.1
+ * Version: 		2.0.2
+ * Stable tag: 		2.0.2
  * Author: 			mZoo.org
  * Author URI: 		http://www.mZoo.org/
  * Plugin URI: 		http://www.mzoo.org/
@@ -36,7 +36,7 @@ define( __NAMESPACE__ . '\NS', __NAMESPACE__ . '\\' );
 
 define( NS . 'PLUGIN_NAME', 'mz-mbo-access' );
 
-define( NS . 'PLUGIN_VERSION', '2.0.1' );
+define( NS . 'PLUGIN_VERSION', '2.0.2' );
 
 define( NS . 'PLUGIN_NAME_DIR', plugin_dir_path( __FILE__ ) );
 
