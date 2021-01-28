@@ -36,7 +36,7 @@ define( __NAMESPACE__ . '\NS', __NAMESPACE__ . '\\' );
 
 define( NS . 'PLUGIN_NAME', 'mz-mbo-access' );
 
-define( NS . 'PLUGIN_VERSION', '1.0.8' );
+define( NS . 'PLUGIN_VERSION', '1.0.9' );
 
 define( NS . 'PLUGIN_NAME_DIR', plugin_dir_path( __FILE__ ) );
 

@@ -139,7 +139,9 @@ class Tests_Retrieve_Client extends MZMBOAccess_WPUnitTestCase {
         
         $this->assertTrue(!empty($validation_result['ValidateLoginResult']['GUID']));
         
-        $session_result = $client_object->create_client_session($validation_result);
+        $deeper_client_info = $client_object->get_clients([$validateLogin['ValidateLoginResult']['GUID']]);
+        
+        $session_result = $client_object->create_client_session($validation_result, $deeper_client_info);
         
         $this->assertTrue($session_result);
         

@@ -100,6 +100,8 @@ class Client_Portal extends Retrieve_Client {
         	if ( $login['type'] == 'error' ) $result['type'] = 'error';
         	        	
 			$result['message'] = $login['message'];
+        	        	
+			$result['client_id'] = $login['client_id'];
 
         }
 		
@@ -163,6 +165,34 @@ class Client_Portal extends Retrieve_Client {
         		
         $result['type'] = 'success';
         $result['message'] =  $this->check_client_logged();
+
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            $result = json_encode($result);
+            echo $result;
+        } else {
+            header("Location: " . $_SERVER["HTTP_REFERER"]);
+        }
+
+        die();
+    }
+
+   
+    /**
+     * Get Clients
+     *
+     * Function run by ajax to continually check if client is logged in
+     */
+    public function ajax_get_clients(){
+
+        check_ajax_referer($_REQUEST['nonce'], "mz_client_request", false);
+        
+        MZ\MZMBO()->helpers->log('Clients request');
+        MZ\MZMBO()->helpers->log($_REQUEST);
+        
+        $result = array();
+        		
+        $result['type'] = 'success';
+        $result['message'] =  $this->get_clients(array($_REQUEST['client_id']));
 
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             $result = json_encode($result);
