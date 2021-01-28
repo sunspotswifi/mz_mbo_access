@@ -111,10 +111,21 @@ class Retrieve_Client extends Interfaces\Retrieve {
 		}
 		
         $validateLogin = $this->validate_client($valid_credentials);
-		
+
 		if ( !empty($validateLogin['ValidateLoginResult']['GUID']) ) {
-			if ( $this->create_client_session( $validateLogin ) ) {
-				return ['type' => 'success', 'message' => __('Welcome', NS\PLUGIN_TEXT_DOMAIN) . ', ' . $validateLogin['ValidateLoginResult']['Client']['FirstName'] . '.<br/>'];
+		
+		    // Get Client Details as Well here through second call to API
+		    // This is so we can have Payment and other info
+		    $deeper_client_info = $this->get_clients([$validateLogin['ValidateLoginResult']['Client']['ID']])[0];
+
+		    MZ\MZMBO()->helpers->log($deeper_client_info);
+		    
+			if ( $this->create_client_session( $validateLogin, $deeper_client_info ) ) {
+				return [
+				        'type' => 'success', 'message' => __('Welcome', NS\PLUGIN_TEXT_DOMAIN) . ', ' . $validateLogin['ValidateLoginResult']['Client']['FirstName'],
+				        'client_id' => $validateLogin['ValidateLoginResult']['Client']['ID'],
+				        'deeper_client_info' => $deeper_client_info
+				 ];
 			}
 			return ['type' => 'error', 'message' => sprintf(__('Whoops. Please try again, %1$s.', NS\PLUGIN_TEXT_DOMAIN),
             					$validateLogin['ValidateLoginResult']['Client']['FirstName'])];
@@ -153,6 +164,27 @@ class Retrieve_Client extends Interfaces\Retrieve {
 		return $result;
 		
     }
+	
+	
+    /**
+     * Get Client
+     *
+     * Since 1.0.1
+     *
+     * @param $clientIDs array with result from MBO API
+     */
+    public function get_clients( $clientIDs ){
+		
+		// Create the MBO Object using API VERSION 5!
+        $this->get_mbo_results();
+
+		$result = $this->mb->GetClients(array(
+			'ClientIds' => $clientIDs,
+		));
+				
+		return $result['Clients'];
+		
+    }
     
 
     /**
@@ -162,13 +194,16 @@ class Retrieve_Client extends Interfaces\Retrieve {
      *
      * @param $validateLoginResult array with MBO result
      */
-    public function create_client_session( $validateLoginResult ){
+    public function create_client_session( $validateLoginResult, $deeper_client_info ){
 
 		if (!empty($validateLoginResult['ValidateLoginResult']['GUID'])) {
 			
+			$basic_client_info = MZ\MZMBO()->helpers->array_map_recursive('sanitize_text_field', $validateLoginResult['ValidateLoginResult']['Client']);
+			$deeper_client_info = MZ\MZMBO()->helpers->array_map_recursive('sanitize_text_field', $deeper_client_info);
+			
 			// If validated, create session variables and store
 			$client_details = array(
-				'mbo_result' => MZ\MZMBO()->helpers->array_map_recursive('sanitize_text_field', $validateLoginResult['ValidateLoginResult']['Client'])
+				'mbo_result' => array_merge($basic_client_info, $deeper_client_info)
 			);
 
 			$this->session->set( 'MBO_Client', $client_details );

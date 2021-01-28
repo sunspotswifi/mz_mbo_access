@@ -3,8 +3,8 @@ Contributors: mikeill
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=A95ZEELLHGECE
 Tags: mindbody, schedule, calendar, yoga, MBO, mindbodyonline, gym, access, restrict
 Requires at least: 3.0.1
-Tested up to: 5.4
-Stable tag: 1.0.8
+Tested up to: 5.6
+Stable tag: 2.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,21 @@ Steps to install and configure MZ MBO Access:
 
 == Changelog ==
 
+= v2.0.3 =
+Return client details in ajax call.
+
+= v2.0.2 =
+Remove some debug logging.
+Add new method to return single client details. 
+
+= v2.0.1 =
+Update composer dependencies. 
+
+= v2.0.0 =
+Add more client details, including (limited) credit card 
+
+= v1.0.9 =
+Bugfix: Correct broken code in function that returns main plugin instance!
 
 = v1.0.8 =
 Bugfix: Correct Namespace in activator call.

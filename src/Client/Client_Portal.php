@@ -94,12 +94,16 @@ class Client_Portal extends Retrieve_Client {
         } else {
         
         	$credentials = ['Username' => $params['email'], 'Password' => $params['password']];
-        
+            
         	$login = $this->log_client_in($credentials);
         	
         	if ( $login['type'] == 'error' ) $result['type'] = 'error';
         	        	
 			$result['message'] = $login['message'];
+			
+			$result['client_details'] = $login['deeper_client_info'];
+        	        	
+			$result['client_id'] = $login['client_id'];
 
         }
 		
@@ -163,6 +167,56 @@ class Client_Portal extends Retrieve_Client {
         		
         $result['type'] = 'success';
         $result['message'] =  $this->check_client_logged();
+
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            $result = json_encode($result);
+            echo $result;
+        } else {
+            header("Location: " . $_SERVER["HTTP_REFERER"]);
+        }
+
+        die();
+    }
+
+   
+    /**
+     * Get Clients
+     *
+     * Get multiple clients from MBO
+     */
+    public function ajax_get_clients(){
+
+        check_ajax_referer($_REQUEST['nonce'], "mz_client_request", false);
+        
+        $result = array();
+        		
+        $result['type'] = 'success';
+        $result['message'] =  $this->get_clients(array($_REQUEST['client_id']));
+
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            $result = json_encode($result);
+            echo $result;
+        } else {
+            header("Location: " . $_SERVER["HTTP_REFERER"]);
+        }
+
+        die();
+    }
+
+   
+    /**
+     * Get Client
+     *
+     * Like Get Clients (above), but return only the first client.
+     */
+    public function ajax_get_client(){
+
+        check_ajax_referer($_REQUEST['nonce'], "mz_client_request", false);
+        
+        $result = array();
+        		
+        $result['type'] = 'success';
+        $result['client'] =  $this->get_clients(array($_REQUEST['client_id']))[0];
 
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             $result = json_encode($result);
