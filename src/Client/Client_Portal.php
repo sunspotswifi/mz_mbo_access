@@ -94,7 +94,7 @@ class Client_Portal extends Retrieve_Client {
         } else {
         
         	$credentials = ['Username' => $params['email'], 'Password' => $params['password']];
-        
+            
         	$login = $this->log_client_in($credentials);
         	
         	if ( $login['type'] == 'error' ) $result['type'] = 'error';
@@ -119,7 +119,6 @@ class Client_Portal extends Retrieve_Client {
      * Client Log Out
      */
     public function ajax_client_log_out(){
-		MZ\MZMBO()->helpers->log("ajax_client_log_out");
 
         check_ajax_referer($_REQUEST['nonce'], "mz_client_log_out", false);
 
@@ -144,7 +143,6 @@ class Client_Portal extends Retrieve_Client {
         } else {
             header("Location: " . $_SERVER["HTTP_REFERER"]);
         }
-		MZ\MZMBO()->helpers->log("ajax_client_log_out die");
 
         die();
     }

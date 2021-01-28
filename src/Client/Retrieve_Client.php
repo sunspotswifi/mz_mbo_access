@@ -114,7 +114,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
 		
 		if ( !empty($validateLogin['ValidateLoginResult']['GUID']) ) {
 			if ( $this->create_client_session( $validateLogin ) ) {
-				return ['type' => 'success', 'message' => __('Welcome', NS\PLUGIN_TEXT_DOMAIN) . ', ' . $validateLogin['ValidateLoginResult']['Client']['FirstName'] . '.<br/>'];
+				return ['type' => 'success', 'message' => __('Welcome', NS\PLUGIN_TEXT_DOMAIN) . ', ' . $validateLogin['ValidateLoginResult']['Client']['FirstName']];
 			}
 			return ['type' => 'error', 'message' => sprintf(__('Whoops. Please try again, %1$s.', NS\PLUGIN_TEXT_DOMAIN),
             					$validateLogin['ValidateLoginResult']['Client']['FirstName'])];
