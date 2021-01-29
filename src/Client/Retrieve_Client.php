@@ -220,9 +220,8 @@ class Retrieve_Client extends Interfaces\Retrieve {
         
         // In case sessions not clearing, look into Sessionz\Manager::initialize();
         $this->session->set( 'MBO_Client', []);
-        $this->session->set( 'mbo_result', []);
-        $this->session->set( 'mbo_client', []);
-
+        setcookie('PHPSESSID', false);
+        
         return true;
     }
 
