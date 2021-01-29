@@ -52,6 +52,7 @@ Steps to install and configure MZ MBO Access:
 
 = v2.0.3 =
 Return client details in ajax call.
+Utilize Eric Mann Sessionz more effectively.
 
 = v2.0.2 =
 Remove some debug logging.

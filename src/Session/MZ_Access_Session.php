@@ -161,7 +161,7 @@ class MZ_Access_Session {
 	 * @since  1.0.1
 	 */
 	public function get_blacklist() {
-		$blacklist = apply_filters( 'geot/sessions/session_start_uri_blacklist', [
+		$blacklist = apply_filters( 'mbo_access/sessions/session_start_uri_blacklist', [
 			'feed',
 			'feed/rss',
 			'feed/rss2',

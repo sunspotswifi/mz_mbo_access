@@ -123,7 +123,7 @@ class Client_Portal extends Retrieve_Client {
      * Client Log Out
      */
     public function ajax_client_log_out(){
-
+    
         check_ajax_referer($_REQUEST['nonce'], "mz_client_log_out", false);
 
         ob_start();

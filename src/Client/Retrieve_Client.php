@@ -10,6 +10,7 @@ use MZ_Mindbody\Inc\Common as Common;
 use MZ_Mindbody\Inc\Libraries as Libraries;
 use MZ_Mindbody\Inc\Schedule as Schedule;
 use MZ_Mindbody\Inc\Common\Interfaces as Interfaces;
+use EAMann\Sessionz as Sessionz;
 
 
 /*
@@ -117,8 +118,6 @@ class Retrieve_Client extends Interfaces\Retrieve {
 		    // Get Client Details as Well here through second call to API
 		    // This is so we can have Payment and other info
 		    $deeper_client_info = $this->get_clients([$validateLogin['ValidateLoginResult']['Client']['ID']])[0];
-
-		    MZ\MZMBO()->helpers->log($deeper_client_info);
 		    
 			if ( $this->create_client_session( $validateLogin, $deeper_client_info ) ) {
 				return [
@@ -218,8 +217,11 @@ class Retrieve_Client extends Interfaces\Retrieve {
      * Client Log Out
      */
     public function client_log_out(){
-    
+        
+        // In case sessions not clearing, look into Sessionz\Manager::initialize();
         $this->session->set( 'MBO_Client', []);
+        $this->session->set( 'mbo_result', []);
+        $this->session->set( 'mbo_client', []);
 
         return true;
     }
@@ -326,6 +328,8 @@ class Retrieve_Client extends Interfaces\Retrieve {
     public function get_client_details() {
     
     	$client_info = $this->session->get('MBO_Client');
+        MZ\MZMBO()->helpers->log("get_client_details get");
+        MZ\MZMBO()->helpers->log($client_info);
 
     	if (! (bool) $client_info->mbo_result) return __('Please Login', 'mz-mindbody-api');
     	
