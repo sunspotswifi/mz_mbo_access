@@ -118,8 +118,6 @@ class Retrieve_Client extends Interfaces\Retrieve {
 		if ( !empty($validateLogin['ValidateLoginResult']['GUID']) ) {
 		
             $client_info = $validateLogin['ValidateLoginResult']['Client'];
-        MZ\MZMBO()->helpers->log('Initial CLIENT INFO');
-        MZ\MZMBO()->helpers->log($client_info);
 		    
             if (!empty($additional_details)) {
                 foreach($additional_details as $endpoint) {
@@ -128,26 +126,17 @@ class Retrieve_Client extends Interfaces\Retrieve {
                             $additional = $this->get_clients([$client_info['ID']])[0];
                             if (!is_array($additional)) break;
                             $client_info = array_merge($additional, $client_info);
-        MZ\MZMBO()->helpers->log('client_info after merge: ');
-        MZ\MZMBO()->helpers->log($client_info);
                             break;
                         case 'get_client_purchases':
-                            MZ\MZMBO()->helpers->log('IN THE get_client_purchases LOOP');
                             $additional = $this->get_client_purchases($client_info['ID']);
-        MZ\MZMBO()->helpers->log('additional before merge: ');
-        MZ\MZMBO()->helpers->log($additional);
                             if (!is_array($additional)) break;
                             $client_info = array_merge(['purchases' => $additional], $client_info);
-        MZ\MZMBO()->helpers->log('client_info after merge: ');
-        MZ\MZMBO()->helpers->log($client_info);
                             break;
                     }
                 }
             }
 		    
 			if ( $this->create_client_session( $client_info ) ) {
-        MZ\MZMBO()->helpers->log('log_client_in after create_client_session CLIENT INFO');
-        MZ\MZMBO()->helpers->log($client_info);
 			    
 				return [
 				        'type' => 'success', 
@@ -544,15 +533,11 @@ class Retrieve_Client extends Interfaces\Retrieve {
      * return array numeric array of client purchases
      */
     public function get_client_purchases( $client_id ) {
-            MZ\MZMBO()->helpers->log('GET CLIENT PURCHASES');
     
         // Create the MBO Object
         $this->get_mbo_results();
 		
 		$result = $this->mb->GetClientPurchases(['ClientId' => $client_id]); // UniqueID ??
-            MZ\MZMBO()->helpers->log($result);
-            MZ\MZMBO()->helpers->log('Purchases in Get purchases');
-            MZ\MZMBO()->helpers->log($result['Purchases']);
 				
 		return $result['Purchases'];
     }
