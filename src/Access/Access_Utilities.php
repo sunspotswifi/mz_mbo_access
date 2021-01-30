@@ -18,8 +18,8 @@ class Access_Utilities extends Client\Retrieve_Client
      *
      * @return int indicating client access level, 0, 1 or 2.
      */
-    public function check_access_permissions( ){
-		$result = $this->set_client_access_level();
+    public function check_access_permissions( $client_id ){
+		$result = $this->set_client_access_level( $client_id );
 		return $result;
 				        
     }
@@ -36,7 +36,7 @@ class Access_Utilities extends Client\Retrieve_Client
      *
      * @return bool
      */
-    public function set_client_access_level( ){
+    public function set_client_access_level( $client_id ){
     						
 		// TODO can we avoid doing this here AND in access display?
         $mz_mbo_access_options = get_option('mz_mbo_access');
@@ -45,11 +45,11 @@ class Access_Utilities extends Client\Retrieve_Client
         $level_1_services = array_map('trim', $level_1_services);
         $level_2_services = array_map('trim', $level_2_services);	
         	
-		$services = $this->get_client_services();
+		$services = $this->get_client_services( $client_id );
 				
 		if ( false == (bool) $services['ClientServices'] ) {
 			// Update client session with empty keys just in case
-			return $this->update_client_session(0, []);
+			return $this->update_client_session(['access_level' => 0, []]);
 		}
 		
 		// Comapre level two services first
@@ -57,7 +57,7 @@ class Access_Utilities extends Client\Retrieve_Client
 			if ( in_array($service['Name'], $level_2_services) ) {
 				if (!$this->is_service_valid($service)) continue;
 				// No need to check further
-				return $this->update_client_session(2, $services['ClientServices']);
+				return $this->update_client_session(['access_level' => 2, $services['ClientServices']]);
 			}
 		}
 		// If not level two do we have level one access?
@@ -65,7 +65,7 @@ class Access_Utilities extends Client\Retrieve_Client
 			if ( in_array($service['Name'], $level_1_services) ) {
 				if (!$this->is_service_valid($service)) continue;
 				// No need to check further
-				return $this->update_client_session(1, $services['ClientServices']);
+				return $this->update_client_session(['access_level' => 1, $services['ClientServices']]);
 			}
 		}
 				
@@ -90,29 +90,7 @@ class Access_Utilities extends Client\Retrieve_Client
 		
 		return true;
     }
-    /**
-     * Add Access Level and Services to Client Session
-     *
-     * Since 1.0.0
-     *
-     * @param services array of services returned from MBO
-     * @param access_level int access level based on admin configuration
-     *
-     * @return int access level of client
-     */
-     private function update_client_session($access_level, $services){
-     		// Don't love that we call the database twice here,
-     		// but not sure if there's a better way.
-     		$logged_client = $this->session->get( 'MBO_Client' );
-			$client_details = array(
-				'access_level' => $access_level,
-				'services' => $services,
-				'mbo_result' => $logged_client->mbo_result
-			);
-			$this->session->set( 'MBO_Client', $client_details );
-			
-			return $access_level;
-    }
+    
     /**
      * Compare Client Contract Status
      *

@@ -33,6 +33,7 @@
             header: undefined,
             message: undefined,
             client_first_name: undefined,
+            client_id: undefined,
 
             login_form: $('#mzLogInContainer').html(),
             
@@ -139,6 +140,7 @@
 
 					if (json.type == "success") {
 						mz_mindbody_access_state.logged_in = true;
+						mz_mindbody_access_state.client_id = json.client_id;
 						mz_mindbody_access_state.message = json.logged;
 						// If there are redirects, this is just a login usage
 						if ((json.client_access_level === 1) && (!!atts.level_1_redirect)) {
@@ -320,7 +322,8 @@
 				context: this, // So we have access to form data within ajax results
 				data: {
 						action: 'ajax_check_access_permissions',
-						nonce: mz_mindbody_access.login_nonce
+						nonce: mz_mindbody_access.login_nonce,
+						client_id: mz_mindbody_access.client_id
 					},
 				success: function(json) {
 					if (json.type == "success") {
