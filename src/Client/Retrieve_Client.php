@@ -187,9 +187,9 @@ class Retrieve_Client extends Interfaces\Retrieve {
 	
 	
     /**
-     * Get Client
+     * Get Clients
      *
-     * Since 1.0.1
+     * Since 2.0.6
      *
      * @param $clientIDs array with result from MBO API
      */
@@ -201,6 +201,8 @@ class Retrieve_Client extends Interfaces\Retrieve {
 		$result = $this->mb->GetClients(array(
 			'ClientIds' => $clientIDs,
 		));
+		
+		$this->update_client_session($result['Clients']);
 				
 		return $result['Clients'];
 		
@@ -219,6 +221,8 @@ class Retrieve_Client extends Interfaces\Retrieve {
 		if (!empty($client_info['ID'])) {
 			
 			$sanitized_client_info = MZ\MZMBO()->helpers->array_map_recursive('sanitize_text_field', $client_info);
+			
+			$client_info_with_access = array_merge(['access_level' => 0], $sanitized_client_info);
 			
 			// If validated, create session variables and store
 			$client_details = array(
@@ -242,6 +246,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
      * @param $validateLoginResult array with MBO result
      */
     public function update_client_session( $additional_info ){
+				        MZ\MZMBO()->helpers->log("update_client_session 1");
 
 		$previous_session = (array) $this->session->get( 'MBO_Client')->mbo_result;
 		
@@ -259,6 +264,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
 			);
 
 			$this->session->set( 'MBO_Client', $client_details );
+				        MZ\MZMBO()->helpers->log("update_client_session 2");
 
 			return $this->session->get( 'MBO_Client');
 
@@ -273,6 +279,8 @@ class Retrieve_Client extends Interfaces\Retrieve {
         
         $this->session->set( 'MBO_Client', []);
         setcookie('PHPSESSID', false);
+        
+        MZ\MZMBO()->helpers->log("log client out.");
         
         return true;
     }
@@ -370,13 +378,13 @@ class Retrieve_Client extends Interfaces\Retrieve {
     
     
     /**
-     * Get client details.
+     * Get client details from session
      *
      * since: 1.0.1
      *
      * return array of client info from MBO or require login
      */
-    public function get_client_details() {
+    public function get_client_details_from_session() {
     
     	$client_info = $this->session->get('MBO_Client');
 
@@ -555,6 +563,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
         $this->get_mbo_results();
 		
 		$result = $this->mb->GetClientServices(['clientId' => $client_id]); // UniqueID ??
+				        MZ\MZMBO()->helpers->log("get_client_services");
 				
 		return $result;
     }

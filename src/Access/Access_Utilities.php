@@ -12,6 +12,15 @@ class Access_Utilities extends Client\Retrieve_Client
 {
 
     /**
+     * Access Level
+     *
+     * Since 1.0.5
+     *
+     * @ int indicating client access level, 0, 1 or 2.
+     */
+     public $access_level = 0;
+
+    /**
      * Check Access Permissions
      *
      * Since 1.0.0
@@ -46,7 +55,7 @@ class Access_Utilities extends Client\Retrieve_Client
         $level_2_services = array_map('trim', $level_2_services);	
         	
 		$services = $this->get_client_services( $client_id );
-				
+
 		if ( false == (bool) $services['ClientServices'] ) {
 			// Update client session with empty keys just in case
 			return $this->update_client_session(['access_level' => 0, []]);
@@ -148,8 +157,25 @@ class Access_Utilities extends Client\Retrieve_Client
         
     }
     
-    // get_client_contracts
-    // get_client_purchases
+    
+    
+    
+    /**
+     * Get Client Access Level
+     *
+     * Since 2.5.8
+     *
+     * 
+     *
+     * @return bool
+     */
+    public function get_client_access_level(){
+						
+		return $this->access_level;
+        
+    }
+    
+        
 
 }
 

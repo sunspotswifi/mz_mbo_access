@@ -212,7 +212,7 @@ class Tests_Retrieve_Client extends MZMBOAccess_WPUnitTestCase {
         
         $session_result = $client_object->create_client_session($validation_result);
         
-        $client_details = $client_object->get_client_details( $client_id );
+        $client_details = $client_object->get_client_details_from_session( $client_id );
         
         $client_active_memberships = $client_object->get_client_active_memberships( $client_id );
         
