@@ -187,24 +187,24 @@ class Retrieve_Client extends Interfaces\Retrieve {
 	
 	
     /**
-     * Get Clients
+     * Get Client
      *
      * Since 2.0.6
+     
+     * Get @array of MBO Client IDs
      *
-     * @param $clientIDs array with result from MBO API
+     * @param $clientID
+     ^ @return array _single_ (first) Client from Mindbody
      */
-    public function get_clients( $clientIDs ){
-		
-		// Create the MBO Object using API VERSION 5!
+    public function get_client( $clientID ){
+    		
         $this->get_mbo_results();
 
 		$result = $this->mb->GetClients(array(
-			'ClientIds' => $clientIDs,
+			'ClientIds' => [$clientID],
 		));
 		
-		$this->update_client_session($result['Clients']);
-				
-		return $result['Clients'];
+		return $result['Clients'][0];
 		
     }
     
@@ -213,6 +213,8 @@ class Retrieve_Client extends Interfaces\Retrieve {
      * Create Client Session
      *
      * Since 1.0.0
+     * 
+     * Sanitize array returned from MBO and save in $_SESSION under mbo_result key.
      *
      * @param $validateLoginResult array with MBO result
      */
@@ -243,12 +245,13 @@ class Retrieve_Client extends Interfaces\Retrieve {
      *
      * Since 2.0.5
      *
-     * @param $validateLoginResult array with MBO result
+     * @param $additional_info array with MBO client details to add to Session
      */
     public function update_client_session( $additional_info ){
-				        MZ\MZMBO()->helpers->log("update_client_session 1");
-
-		$previous_session = (array) $this->session->get( 'MBO_Client')->mbo_result;
+		MZ\MZMBO()->helpers->log('update_client_session additional_info');
+		MZ\MZMBO()->helpers->log($additional_info);
+    
+		$previous_session = (array) $this->session->get( 'MBO_Client' )->mbo_result;
 		
 		if (!empty( $previous_session['ID'])) {
 		    
@@ -264,9 +267,8 @@ class Retrieve_Client extends Interfaces\Retrieve {
 			);
 
 			$this->session->set( 'MBO_Client', $client_details );
-				        MZ\MZMBO()->helpers->log("update_client_session 2");
-
-			return $this->session->get( 'MBO_Client');
+			
+			return $new_session;
 
 		} 
 
@@ -279,9 +281,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
         
         $this->session->set( 'MBO_Client', []);
         setcookie('PHPSESSID', false);
-        
-        MZ\MZMBO()->helpers->log("log client out.");
-        
+                
         return true;
     }
 
@@ -544,8 +544,12 @@ class Retrieve_Client extends Interfaces\Retrieve {
     
         // Create the MBO Object
         $this->get_mbo_results();
+		MZ\MZMBO()->helpers->log('get_client_purchases client ID');
+		MZ\MZMBO()->helpers->log($client_id);
 		
 		$result = $this->mb->GetClientPurchases(['ClientId' => $client_id]); // UniqueID ??
+		MZ\MZMBO()->helpers->log('get_client_purchases result');
+		MZ\MZMBO()->helpers->log($result);
 				
 		return $result['Purchases'];
     }

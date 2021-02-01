@@ -54,6 +54,7 @@ Steps to install and configure MZ MBO Access:
 Set access level zero as default.
 Add method to retrieve client access level.
 Update $_Session when client details requested.
+Return full mbo_result from session in get_clients.
 
 = v2.0.5 =
 Pass client_id to methods so can make requests prior to creating $_SESSION.

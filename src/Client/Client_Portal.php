@@ -209,14 +209,17 @@ class Client_Portal extends Retrieve_Client {
      *
      * Like Get Clients (above), but return only the first client.
      */
-    public function ajax_get_client(){
+    public function ajax_get_client_details(){
 
         check_ajax_referer($_REQUEST['nonce'], "mz_client_request", false);
         
         $result = array();
         		
         $result['type'] = 'success';
-        $result['client'] =  $this->get_clients(array($_REQUEST['client_id']))[0];
+        
+        $client = $this->get_client($_REQUEST['client_id']);
+                
+        $result['client'] = $this->update_client_session($client);
 
         if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             $result = json_encode($result);
