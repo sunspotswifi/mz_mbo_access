@@ -49,33 +49,68 @@ class Access_Utilities extends Client\Retrieve_Client
     						
 		// TODO can we avoid doing this here AND in access display?
         $mz_mbo_access_options = get_option('mz_mbo_access');
+        
+        $level_1_contracts = explode(',', $mz_mbo_access_options['level_1_contracts']);
+		$level_2_contracts = explode(',', $mz_mbo_access_options['level_2_contracts']);        
+        $level_1_contracts = array_map('trim', $level_1_contracts);
+        $level_2_contracts = array_map('trim', $level_2_contracts);
+        
+		if (count($level_1_contracts) >= 1 || count($level_2_contracts) >= 1) {
+		    $contracts = $this->get_client_contracts( $client_id );
+
+            if ( empty($contracts) ) {
+		        $this->access_level = 0;
+                // Update client session with empty keys just in case
+                return $this->update_client_session(['access_level' => 0, 'contracts' => []]);
+            }
+        
+            // Comapre level two services first
+            foreach( $contracts as $contract ) {
+                if ( in_array($contract['ContractName'], $level_2_contracts) ) {
+                    // No need to check further
+		            $this->access_level = 2;
+                    return $this->update_client_session(['access_level' => 2, 'contracts' => $contracts]);
+                }
+		        // If not level two do we have level one access?
+                if ( in_array($contract['ContractName'], $level_1_contracts) ) {
+                    // No need to check further
+		            $this->access_level = 1;
+                    return $this->update_client_session(['access_level' => 1, 'contracts' => $contracts]);
+                }
+            }
+		}
+        
+		// No contracts so must be dealing with services
         $level_1_services = explode(',', $mz_mbo_access_options['level_1_services']);
 		$level_2_services = explode(',', $mz_mbo_access_options['level_2_services']);        
         $level_1_services = array_map('trim', $level_1_services);
-        $level_2_services = array_map('trim', $level_2_services);	
-        	
+        $level_2_services = array_map('trim', $level_2_services);
+        
 		$services = $this->get_client_services( $client_id );
 
 		if ( false == (bool) $services['ClientServices'] ) {
+		    $this->access_level = 0;
 			// Update client session with empty keys just in case
-			return $this->update_client_session(['access_level' => 0, []]);
+			return $this->update_client_session(['access_level' => 0, 'services' => []]);
 		}
 		
 		// Comapre level two services first
 		foreach( $services['ClientServices'] as $service ) {
 			if ( in_array($service['Name'], $level_2_services) ) {
 				if (!$this->is_service_valid($service)) continue;
+		        $this->access_level = 2;
 				// No need to check further
-				return $this->update_client_session(['access_level' => 2, $services['ClientServices']]);
+				return $this->update_client_session(['access_level' => 2, 'services' => $services['ClientServices']]);
 			}
-		}
-		// If not level two do we have level one access?
-		foreach( $services['ClientServices'] as $service ) {
+		    // If not level two do we have level one access?
 			if ( in_array($service['Name'], $level_1_services) ) {
 				if (!$this->is_service_valid($service)) continue;
+		        $this->access_level = 1;
 				// No need to check further
-				return $this->update_client_session(['access_level' => 1, $services['ClientServices']]);
+				return $this->update_client_session(['access_level' => 1, 'services' => $services['ClientServices']]);
 			}
+		}
+		foreach( $services['ClientServices'] as $service ) {
 		}
 				
         return $this->access_level;

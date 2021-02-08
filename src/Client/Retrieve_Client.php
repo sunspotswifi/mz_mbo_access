@@ -248,8 +248,6 @@ class Retrieve_Client extends Interfaces\Retrieve {
      * @param $additional_info array with MBO client details to add to Session
      */
     public function update_client_session( $additional_info ){
-		MZ\MZMBO()->helpers->log('update_client_session additional_info');
-		MZ\MZMBO()->helpers->log($additional_info);
     
 		$previous_session = (array) $this->session->get( 'MBO_Client' )->mbo_result;
 		
@@ -544,12 +542,8 @@ class Retrieve_Client extends Interfaces\Retrieve {
     
         // Create the MBO Object
         $this->get_mbo_results();
-		MZ\MZMBO()->helpers->log('get_client_purchases client ID');
-		MZ\MZMBO()->helpers->log($client_id);
 		
-		$result = $this->mb->GetClientPurchases(['ClientId' => $client_id]); // UniqueID ??
-		MZ\MZMBO()->helpers->log('get_client_purchases result');
-		MZ\MZMBO()->helpers->log($result);
+		$result = $this->mb->GetClientPurchases(['ClientId' => $client_id]); // NOT "UniqueID"
 				
 		return $result['Purchases'];
     }
@@ -567,7 +561,6 @@ class Retrieve_Client extends Interfaces\Retrieve {
         $this->get_mbo_results();
 		
 		$result = $this->mb->GetClientServices(['clientId' => $client_id]); // UniqueID ??
-				        MZ\MZMBO()->helpers->log("get_client_services");
 				
 		return $result;
     }
