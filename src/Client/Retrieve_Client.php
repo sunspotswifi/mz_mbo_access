@@ -538,12 +538,17 @@ class Retrieve_Client extends Interfaces\Retrieve {
      *
      * return array numeric array of client purchases
      */
-    public function get_client_purchases( $client_id ) {
+    public function get_client_purchases( $client_id, $additional_arguments = [] ) {
     
         // Create the MBO Object
         $this->get_mbo_results();
+
+		$query = array( 'ClientId' => $client_id ); // NOT "UniqueID"
+		if ( is_array( $additional_arguments ) ) {
+			$query = array_merge( $additional_arguments, $query );
+		}		
 		
-		$result = $this->mb->GetClientPurchases(['ClientId' => $client_id]); // NOT "UniqueID"
+		$result = $this->mb->GetClientPurchases($query);
 				
 		return $result['Purchases'];
     }
