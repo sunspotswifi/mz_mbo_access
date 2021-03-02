@@ -58,10 +58,12 @@ class Access_Portal extends Access_Utilities
         	if ( $login['type'] == 'error' ) $result['type'] = 'error';
         	        	
 			$result['logged'] = $login['message'];
+			
+			$result['client_id'] = $login['client_id'];
 
         }		
 
-		$access_level = $this->check_access_permissions();
+		$access_level = $this->check_access_permissions( $result['client_id'] );
 		
 		if (  0 !== $access_level ) {
 			$result['client_access_level'] = $access_level;
@@ -104,9 +106,12 @@ class Access_Portal extends Access_Utilities
         
         $result['client_access_level'] = 0;
 
-        $result['type'] = 'success';
-		
-		$access_level = $this->check_access_permissions();
+        $result['type'] = 'error';
+        
+		if ($_REQUEST['client_id']) {
+            $access_level = $this->check_access_permissions( $_REQUEST['client_id'] );
+            $result['type'] = 'success';
+        }
 		
 		if (  0 !== $access_level ) {
 			$result['client_access_level'] = $access_level;

@@ -5,8 +5,8 @@
  * @package MZMBOACCESS
  *
  * @wordpress-plugin
- * Version: 		1.0.6
- * Stable tag: 		1.0.6
+ * Version: 		2.0.7
+ * Stable tag: 		2.0.7
  * Author: 			mZoo.org
  * Author URI: 		http://www.mZoo.org/
  * Plugin URI: 		http://www.mzoo.org/
@@ -36,7 +36,7 @@ define( __NAMESPACE__ . '\NS', __NAMESPACE__ . '\\' );
 
 define( NS . 'PLUGIN_NAME', 'mz-mbo-access' );
 
-define( NS . 'PLUGIN_VERSION', '1.0.6' );
+define( NS . 'PLUGIN_VERSION', '2.0.7' );
 
 define( NS . 'PLUGIN_NAME_DIR', plugin_dir_path( __FILE__ ) );
 
@@ -69,7 +69,7 @@ function mbo_access_has_mindbody_api() {
  * Child Plugin Notice
  */
 function mbo_access_child_plugin_notice(){
-		?><div class="error"><p><?php __("Sorry, but MZ MBO Access plugin requires the parent plugin, MZ Mindbody API, to be installed and active.", NS\PLUGIN_TEXT_DOMAIN); ?></p></div><?php
+		?><div class="error"><p><?php echo __("Sorry, but MZ MBO Access plugin requires the parent plugin, MZ Mindbody API, to be installed and active.", NS\PLUGIN_TEXT_DOMAIN); ?></p></div><?php
 }
 
 /**
@@ -89,7 +89,7 @@ if (!class_exists('\MZ_MBO_Access\Core\Plugin_Core')) {
  * This action is documented in src/core/class-activator.php
  */
 
-register_activation_hook( __FILE__, array( NS . '\Core\Activator', 'activate' ) );
+register_activation_hook( __FILE__, array( __NAMESPACE__ . '\Core\Activator', 'activate' ) );
 
 /**
  * The code that runs during plugin deactivation.
@@ -163,7 +163,7 @@ class MZ_MBO_Access {
  **/
  if ( ! function_exists( 'MBO_Access' ) ) {
 	function MBO_Access() {
-			return NS\MZ_MBO_Access::instance();
+	    return NS\MZ_MBO_Access::instance();
 	}
 }
 

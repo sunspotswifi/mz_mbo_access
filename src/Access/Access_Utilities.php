@@ -12,14 +12,23 @@ class Access_Utilities extends Client\Retrieve_Client
 {
 
     /**
+     * Access Level
+     *
+     * Since 1.0.5
+     *
+     * @ int indicating client access level, 0, 1 or 2.
+     */
+     public $access_level = 0;
+
+    /**
      * Check Access Permissions
      *
      * Since 1.0.0
      *
      * @return int indicating client access level, 0, 1 or 2.
      */
-    public function check_access_permissions( ){
-		$result = $this->set_client_access_level();
+    public function check_access_permissions( $client_id ){
+		$result = $this->set_client_access_level( $client_id );
 		return $result;
 				        
     }
@@ -36,37 +45,72 @@ class Access_Utilities extends Client\Retrieve_Client
      *
      * @return bool
      */
-    public function set_client_access_level( ){
+    public function set_client_access_level( $client_id ){
     						
 		// TODO can we avoid doing this here AND in access display?
         $mz_mbo_access_options = get_option('mz_mbo_access');
+        
+        $level_1_contracts = explode(',', $mz_mbo_access_options['level_1_contracts']);
+		$level_2_contracts = explode(',', $mz_mbo_access_options['level_2_contracts']);        
+        $level_1_contracts = array_map('trim', $level_1_contracts);
+        $level_2_contracts = array_map('trim', $level_2_contracts);
+        
+		if (count($level_1_contracts) >= 1 || count($level_2_contracts) >= 1) {
+		    $contracts = $this->get_client_contracts( $client_id );
+
+            if ( empty($contracts) ) {
+		        $this->access_level = 0;
+                // Update client session with empty keys just in case
+                return $this->update_client_session(['access_level' => 0, 'contracts' => []]);
+            }
+        
+            // Comapre level two services first
+            foreach( $contracts as $contract ) {
+                if ( in_array($contract['ContractName'], $level_2_contracts) ) {
+                    // No need to check further
+		            $this->access_level = 2;
+                    return $this->update_client_session(['access_level' => 2, 'contracts' => $contracts]);
+                }
+		        // If not level two do we have level one access?
+                if ( in_array($contract['ContractName'], $level_1_contracts) ) {
+                    // No need to check further
+		            $this->access_level = 1;
+                    return $this->update_client_session(['access_level' => 1, 'contracts' => $contracts]);
+                }
+            }
+		}
+        
+		// No contracts so must be dealing with services
         $level_1_services = explode(',', $mz_mbo_access_options['level_1_services']);
 		$level_2_services = explode(',', $mz_mbo_access_options['level_2_services']);        
         $level_1_services = array_map('trim', $level_1_services);
-        $level_2_services = array_map('trim', $level_2_services);	
-        	
-		$services = $this->get_client_services();
-				
+        $level_2_services = array_map('trim', $level_2_services);
+        
+		$services = $this->get_client_services( $client_id );
+
 		if ( false == (bool) $services['ClientServices'] ) {
+		    $this->access_level = 0;
 			// Update client session with empty keys just in case
-			return $this->update_client_session(0, []);
+			return $this->update_client_session(['access_level' => 0, 'services' => []]);
 		}
 		
 		// Comapre level two services first
 		foreach( $services['ClientServices'] as $service ) {
 			if ( in_array($service['Name'], $level_2_services) ) {
 				if (!$this->is_service_valid($service)) continue;
+		        $this->access_level = 2;
 				// No need to check further
-				return $this->update_client_session(2, $services['ClientServices']);
+				return $this->update_client_session(['access_level' => 2, 'services' => $services['ClientServices']]);
 			}
-		}
-		// If not level two do we have level one access?
-		foreach( $services['ClientServices'] as $service ) {
+		    // If not level two do we have level one access?
 			if ( in_array($service['Name'], $level_1_services) ) {
 				if (!$this->is_service_valid($service)) continue;
+		        $this->access_level = 1;
 				// No need to check further
-				return $this->update_client_session(1, $services['ClientServices']);
+				return $this->update_client_session(['access_level' => 1, 'services' => $services['ClientServices']]);
 			}
+		}
+		foreach( $services['ClientServices'] as $service ) {
 		}
 				
         return $this->access_level;
@@ -90,29 +134,7 @@ class Access_Utilities extends Client\Retrieve_Client
 		
 		return true;
     }
-    /**
-     * Add Access Level and Services to Client Session
-     *
-     * Since 1.0.0
-     *
-     * @param services array of services returned from MBO
-     * @param access_level int access level based on admin configuration
-     *
-     * @return int access level of client
-     */
-     private function update_client_session($access_level, $services){
-     		// Don't love that we call the database twice here,
-     		// but not sure if there's a better way.
-     		$logged_client = $this->session->get( 'MBO_Client' );
-			$client_details = array(
-				'access_level' => $access_level,
-				'services' => $services,
-				'mbo_result' => $logged_client->mbo_result
-			);
-			$this->session->set( 'MBO_Client', $client_details );
-			
-			return $access_level;
-    }
+    
     /**
      * Compare Client Contract Status
      *
@@ -163,8 +185,6 @@ class Access_Utilities extends Client\Retrieve_Client
 		if ( false == (bool) $purchases[0]['Sale'] ) return 0;
 		
 		foreach( $purchases as $purchase ) {
-		MZ\MZMBO()->helpers->log("purchase");
-		MZ\MZMBO()->helpers->log($purchase);
 			if ( in_array($purchase['Description'], $purchase_types) ) return 1;
 		}
 		
@@ -172,8 +192,25 @@ class Access_Utilities extends Client\Retrieve_Client
         
     }
     
-    // get_client_contracts
-    // get_client_purchases
+    
+    
+    
+    /**
+     * Get Client Access Level
+     *
+     * Since 2.5.8
+     *
+     * 
+     *
+     * @return bool
+     */
+    public function get_client_access_level(){
+						
+		return $this->access_level;
+        
+    }
+    
+        
 
 }
 

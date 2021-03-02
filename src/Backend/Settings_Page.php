@@ -92,6 +92,30 @@ class Settings_Page {
         self::$wposa_obj->add_field(
             'mz_mbo_access',
             array(
+                'id'      => 'level_1_contracts',
+                'type'    => 'textarea',
+                'name'    => __( 'Access Level One Contracts', 'mz-mindbody-api' ),
+                'desc'    => __("Comma separated list (or single) MBO Service(s) or Contract(s)", 'mz_mbo_access'),
+                'placeholder'	=> 'Ten Class Pass, Single Class Drop-In'
+            )
+        );
+        
+        // Field: Regenerate Class Owners
+        self::$wposa_obj->add_field(
+            'mz_mbo_access',
+            array(
+                'id'      => 'level_2_contracts',
+                'type'    => 'textarea',
+                'name'    => __( 'Access Level Two Contracts', 'mz-mindbody-api' ),
+                'desc'    => __("Comma separated list (or single) MBO Service(s) or Contract(s)", 'mz_mbo_access'),
+                'placeholder'	=> 'Weekly Class Pass, Monthly Yoga All Access Pass'
+            )
+        );
+        
+        // Field: Regenerate Class Owners
+        self::$wposa_obj->add_field(
+            'mz_mbo_access',
+            array(
                 'id'      => 'level_1_services',
                 'type'    => 'textarea',
                 'name'    => __( 'Access Level One Services', 'mz-mindbody-api' ),

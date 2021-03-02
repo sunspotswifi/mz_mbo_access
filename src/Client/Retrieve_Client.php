@@ -10,6 +10,7 @@ use MZ_Mindbody\Inc\Common as Common;
 use MZ_Mindbody\Inc\Libraries as Libraries;
 use MZ_Mindbody\Inc\Schedule as Schedule;
 use MZ_Mindbody\Inc\Common\Interfaces as Interfaces;
+use EAMann\Sessionz as Sessionz;
 
 
 /*
@@ -96,11 +97,12 @@ class Retrieve_Client extends Interfaces\Retrieve {
      *
      * Since 1.0.1
      *
-     * @param array $credentials with username and password
+     * @param $credentials array $credentials with username and password
+     * @param $additional_details array listing names of additional api endpoints to populate from
      *
      * @return array - result type and message  
      */
-    public function log_client_in( $credentials = ['username' => '', 'password' => ''] ){
+    public function log_client_in( $credentials = ['username' => '', 'password' => ''], $additional_details = [] ){
     
     	$valid_credentials = $this->validate_login_fields($this->sanitize_login_fields($credentials));
     	
@@ -111,10 +113,37 @@ class Retrieve_Client extends Interfaces\Retrieve {
 		}
 		
         $validateLogin = $this->validate_client($valid_credentials);
-		
+        
+ 			    
 		if ( !empty($validateLogin['ValidateLoginResult']['GUID']) ) {
-			if ( $this->create_client_session( $validateLogin ) ) {
-				return ['type' => 'success', 'message' => __('Welcome', NS\PLUGIN_TEXT_DOMAIN) . ', ' . $validateLogin['ValidateLoginResult']['Client']['FirstName'] . '.<br/>'];
+		
+            $client_info = $validateLogin['ValidateLoginResult']['Client'];
+		    
+            if (!empty($additional_details)) {
+                foreach($additional_details as $endpoint) {
+                    switch ($endpoint) {
+                        case 'get_clients':
+                            $additional = $this->get_clients([$client_info['ID']])[0];
+                            if (!is_array($additional)) break;
+                            $client_info = array_merge($additional, $client_info);
+                            break;
+                        case 'get_client_purchases':
+                            $additional = $this->get_client_purchases($client_info['ID']);
+                            if (!is_array($additional)) break;
+                            $client_info = array_merge(['purchases' => $additional], $client_info);
+                            break;
+                    }
+                }
+            }
+		    
+			if ( $this->create_client_session( $client_info ) ) {
+			    
+				return [
+				        'type' => 'success', 
+				        'message' => __('Welcome', NS\PLUGIN_TEXT_DOMAIN) . ', ' . $client_info['FirstName'],
+				        'client_id' => $client_info['ID'],
+				        'client_details' => $client_info
+				 ];
 			}
 			return ['type' => 'error', 'message' => sprintf(__('Whoops. Please try again, %1$s.', NS\PLUGIN_TEXT_DOMAIN),
             					$validateLogin['ValidateLoginResult']['Client']['FirstName'])];
@@ -131,6 +160,8 @@ class Retrieve_Client extends Interfaces\Retrieve {
 			}
 		}
 	}
+    
+  
 	
 	
     /**
@@ -153,27 +184,89 @@ class Retrieve_Client extends Interfaces\Retrieve {
 		return $result;
 		
     }
+	
+	
+    /**
+     * Get Client
+     *
+     * Since 2.0.6
+     
+     * Get @array of MBO Client IDs
+     *
+     * @param $clientID
+     ^ @return array _single_ (first) Client from Mindbody
+     */
+    public function get_client( $clientID ){
+    		
+        $this->get_mbo_results();
+
+		$result = $this->mb->GetClients(array(
+			'ClientIds' => [$clientID],
+		));
+		
+		return $result['Clients'][0];
+		
+    }
     
 
     /**
      * Create Client Session
      *
-     * Since 2.5.7
+     * Since 1.0.0
+     * 
+     * Sanitize array returned from MBO and save in $_SESSION under mbo_result key.
      *
      * @param $validateLoginResult array with MBO result
      */
-    public function create_client_session( $validateLoginResult ){
+    public function create_client_session( $client_info ){
 
-		if (!empty($validateLoginResult['ValidateLoginResult']['GUID'])) {
+		if (!empty($client_info['ID'])) {
+			
+			$sanitized_client_info = MZ\MZMBO()->helpers->array_map_recursive('sanitize_text_field', $client_info);
+			
+			$client_info_with_access = array_merge(['access_level' => 0], $sanitized_client_info);
 			
 			// If validated, create session variables and store
 			$client_details = array(
-				'mbo_result' => MZ\MZMBO()->helpers->array_map_recursive('sanitize_text_field', $validateLoginResult['ValidateLoginResult']['Client'])
+				'mbo_result' => $sanitized_client_info
 			);
 
 			$this->session->set( 'MBO_Client', $client_details );
 
-			return true;
+			return $this->session->get( 'MBO_Client');
+
+		} 
+
+    }
+    
+
+    /**
+     * Update Client Session
+     *
+     * Since 2.0.5
+     *
+     * @param $additional_info array with MBO client details to add to Session
+     */
+    public function update_client_session( $additional_info ){
+    
+		$previous_session = (array) $this->session->get( 'MBO_Client' )->mbo_result;
+		
+		if (!empty( $previous_session['ID'])) {
+		    
+		    $sanitized_additional_info = MZ\MZMBO()->helpers->array_map_recursive('sanitize_text_field', $additional_info);
+		    
+		    $new_session = array_merge($previous_session, $sanitized_additional_info);
+		    
+		    $this->client_log_out();
+			
+			// If validated, create session variables and store
+			$client_details = array(
+				'mbo_result' => $new_session
+			);
+
+			$this->session->set( 'MBO_Client', $client_details );
+			
+			return $new_session;
 
 		} 
 
@@ -183,9 +276,10 @@ class Retrieve_Client extends Interfaces\Retrieve {
      * Client Log Out
      */
     public function client_log_out(){
-    
+        
         $this->session->set( 'MBO_Client', []);
-
+        setcookie('PHPSESSID', false);
+                
         return true;
     }
 
@@ -282,13 +376,13 @@ class Retrieve_Client extends Interfaces\Retrieve {
     
     
     /**
-     * Get client details.
+     * Get client details from session
      *
      * since: 1.0.1
      *
      * return array of client info from MBO or require login
      */
-    public function get_client_details() {
+    public function get_client_details_from_session() {
     
     	$client_info = $this->session->get('MBO_Client');
 
@@ -318,14 +412,12 @@ class Retrieve_Client extends Interfaces\Retrieve {
      *
      * return array numeric array of active memberships
      */
-    public function get_client_active_memberships() {
+    public function get_client_active_memberships( $client_id ) {
     
-    	$client = $this->get_client_details();
-
         // Create the MBO Object
         $this->get_mbo_results();
 		
-		$result = $this->mb->GetActiveClientMemberships(['clientId' => $client->ID]); // UniqueID ??
+		$result = $this->mb->GetActiveClientMemberships(['clientId' => $client_id]); // UniqueID ??
 				
 		return $result['ClientMemberships'];
     }
@@ -340,15 +432,10 @@ class Retrieve_Client extends Interfaces\Retrieve {
      *
      * return string client account balance
      */
-    public function get_client_account_balance() {
-    
-    	$client = $this->get_client_details();
-
-        // Create the MBO Object
-        $this->get_mbo_results();
+    public function get_client_account_balance( $client_id ) {
 		
 		// Can accept a list of client id strings
-		$result = $this->mb->GetClientAccountBalances(['clientIds' => $client->ID]); // UniqueID ??
+		$result = $this->mb->GetClientAccountBalances(['clientIds' => $client_id ]); // UniqueID ??
 		
 		// Just return the first (and only) result
 		return $result['Clients'][0]['AccountBalance'];
@@ -357,7 +444,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
     /**
      * Get client contracts.
      *
-     * Since 2.5.7
+     * Since 1.0.0
      *
      * Returns an array of items that look like this:
      *
@@ -395,14 +482,12 @@ class Retrieve_Client extends Interfaces\Retrieve {
      *
      * return array numeric array of client contracts
      */
-    public function get_client_contracts() {
+    public function get_client_contracts( $client_id ) {
     
-    	$client = $this->get_client_details();
-
         // Create the MBO Object
         $this->get_mbo_results();
 		
-		$result = $this->mb->GetClientContracts(['clientId' => $client->ID]); // UniqueID ??
+		$result = $this->mb->GetClientContracts(['clientId' => $client_id ]); // UniqueID ??
 				
 		return $result['Contracts'];
     }
@@ -410,7 +495,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
     /**
      * Get client purchases.
      *
-     * Since 2.5.7
+     * Since 1.0.0
      *
      * Returns an array of items that look like this:
      * [Sale] => Array
@@ -453,14 +538,12 @@ class Retrieve_Client extends Interfaces\Retrieve {
      *
      * return array numeric array of client purchases
      */
-    public function get_client_purchases() {
+    public function get_client_purchases( $client_id ) {
     
-    	$client = $this->get_client_details();
-
         // Create the MBO Object
         $this->get_mbo_results();
 		
-		$result = $this->mb->GetClientPurchases(['clientId' => $client->ID]); // UniqueID ??
+		$result = $this->mb->GetClientPurchases(['ClientId' => $client_id]); // NOT "UniqueID"
 				
 		return $result['Purchases'];
     }
@@ -472,14 +555,12 @@ class Retrieve_Client extends Interfaces\Retrieve {
      *
      * return array numeric array of required fields
      */
-    public function get_client_services() {
-    
-    	$client = $this->get_client_details();
+    public function get_client_services( $client_id ) {
 
         // Create the MBO Object
         $this->get_mbo_results();
 		
-		$result = $this->mb->GetClientServices(['clientId' => $client->ID]); // UniqueID ??
+		$result = $this->mb->GetClientServices(['clientId' => $client_id]); // UniqueID ??
 				
 		return $result;
     }
@@ -507,7 +588,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
     /**
      * Check Client Logged In
      *
-     * Since 2.5.7
+     * Since 1.0.0
      * Is there a session containing the MBO_GUID of current user
      *
      * @return bool

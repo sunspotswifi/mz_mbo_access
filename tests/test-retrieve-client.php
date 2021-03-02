@@ -139,6 +139,8 @@ class Tests_Retrieve_Client extends MZMBOAccess_WPUnitTestCase {
         
         $this->assertTrue(!empty($validation_result['ValidateLoginResult']['GUID']));
         
+        $deeper_client_info = $client_object->get_clients([$validateLogin['ValidateLoginResult']['GUID']]);
+        
         $session_result = $client_object->create_client_session($validation_result);
         
         $this->assertTrue($session_result);
@@ -197,6 +199,8 @@ class Tests_Retrieve_Client extends MZMBOAccess_WPUnitTestCase {
         		                
         $client_object = new MZ_MBO_Access\Client\Retrieve_Client;
         
+        $client_id = $client_object->Id
+        
         $credentials = [
         	'Username' => MBO_Access_Test_Options::$_CLIENTEMAIL,
        		'Password' => MBO_Access_Test_Options::$_CLIENTPASSWORD
@@ -208,17 +212,17 @@ class Tests_Retrieve_Client extends MZMBOAccess_WPUnitTestCase {
         
         $session_result = $client_object->create_client_session($validation_result);
         
-        $client_details = $client_object->get_client_details();
+        $client_details = $client_object->get_client_details_from_session( $client_id );
         
-        $client_active_memberships = $client_object->get_client_active_memberships();
+        $client_active_memberships = $client_object->get_client_active_memberships( $client_id );
         
-        $get_client_account_balance = $client_object->get_client_account_balance();
+        $get_client_account_balance = $client_object->get_client_account_balance( $client_id );
         
-        $get_client_contracts = $client_object->get_client_contracts();
+        $get_client_contracts = $client_object->get_client_contracts( $client_id );
         
-        $get_client_services = $client_object->get_client_services();
+        $get_client_services = $client_object->get_client_services( $client_id );
         
-        $get_client_purchases = $client_object->get_client_purchases();
+        $get_client_purchases = $client_object->get_client_purchases( $client_id );
         foreach (['client_active_memberships: ' => $client_active_memberships,
         			'get_client_contracts: ' => $get_client_contracts,
         			'get_client_purchases: ' => $get_client_purchases,

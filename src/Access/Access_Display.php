@@ -179,7 +179,7 @@ class Access_Display extends Interfaces\Shortcode_Script_Loader
 				$this->has_access = true;
         	} else {
         		// Need to ping the api
-        		$client_access_level = $access_utilities->check_access_permissions();
+        		$client_access_level = $access_utilities->check_access_permissions( $logged_client->Id );
         		if ( in_array($client_access_level, $this->atts['access_levels']) ) {
 					$this->template_data['has_access'] = true;
 					$this->has_access = true;
@@ -188,11 +188,11 @@ class Access_Display extends Interfaces\Shortcode_Script_Loader
 			
 		}
 				         		
-		if (!empty($logged_client->mbo_result)) {
+		if (!empty($logged_client->Id)) {
 			
 			$this->template_data['logged_in'] = true;
 			$this->logged_in = true;
-			$this->template_data['client_name'] = $logged_client->mbo_result->FirstName;
+			$this->template_data['client_name'] = $logged_client->FirstName;
 		 	
 		} 
 		
