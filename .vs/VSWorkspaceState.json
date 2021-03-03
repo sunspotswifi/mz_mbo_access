@@ -2,8 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\Client"
+    "\\src\\Access",
+    "\\src\\Admin",
+    "\\src\\Client",
+    "\\src\\Session"
   ],
-  "SelectedNode": "\\src\\Client\\Retrieve_Client.php",
+  "SelectedNode": "\\src\\Session\\MZ_Access_Session.php",
   "PreviewInSolutionExplorer": false
 }

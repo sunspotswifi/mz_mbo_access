@@ -94,7 +94,7 @@ class Access_Portal extends Access_Utilities
      */
     public function ajax_check_access_permissions(  ){
 
-        check_ajax_referer($_REQUEST['nonce'], "mz_mbo_access_nonce", false);
+        $valid_nonce = isset($_REQUEST['nonce']) && check_ajax_referer($_REQUEST['nonce'], "mz_mbo_access_nonce", false) === 1;
 
         // Crate the MBO Object
         $this->get_mbo_results();
@@ -108,7 +108,8 @@ class Access_Portal extends Access_Utilities
 
         $result['type'] = 'error';
         
-		if ($_REQUEST['client_id']) {
+        $access_level = 0;
+		if ($valid_nonce && isset($_REQUEST['client_id']) && $_REQUEST['client_id']) {
             $access_level = $this->check_access_permissions( $_REQUEST['client_id'] );
             $result['type'] = 'success';
         }
