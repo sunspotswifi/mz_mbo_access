@@ -386,7 +386,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
     
     	$client_info = $this->session->get('MBO_Client');
 
-    	if (! (bool) $client_info->mbo_result) return __('Please Login', 'mz-mindbody-api');
+    	if ( ! ( isset($client_info->mbo_result) && (bool) $client_info->mbo_result) ) return false;
     	
     	return $client_info->mbo_result;
     	
@@ -550,7 +550,7 @@ class Retrieve_Client extends Interfaces\Retrieve {
 		
 		$result = $this->mb->GetClientPurchases($query);
 				
-		return $result['Purchases'];
+		return isset($result['Purchases']) ? $result['Purchases'] : [];
     }
     
     /**
